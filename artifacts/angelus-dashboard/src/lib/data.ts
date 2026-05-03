@@ -196,3 +196,111 @@ export function generateSampleData() {
 
   return { angelusPrices, competitionPrices, stockRecords };
 }
+
+// ── Historical monthly price data for line charts ─────────────────────────────
+// Returns 7 months of average prices per product (Angelus) and per competitor
+
+export const MONTHS = ["Nov", "Dic", "Ene", "Feb", "Mar", "Abr", "May"];
+
+export interface PriceHistoryPoint {
+  mes: string;
+  [product: string]: number | string;
+}
+
+/**
+ * Generates a deterministic monthly price history for the top N Angelus products
+ * and their average competitor price, suitable for LineChart rendering.
+ */
+export function generatePriceHistory(canal: "Droguería" | "Farmacia" = "Droguería", topN = 5) {
+  // Base prices per product (stable seed so lines look realistic)
+  const basePrices: Record<string, number> = {
+    "Amoxicilina 500mg":    12.50,
+    "Ibuprofeno 400mg":     8.20,
+    "Losartán 50mg":        14.80,
+    "Metformina 850mg":     10.60,
+    "Omeprazol 20mg":       16.90,
+    "Atorvastatina 20mg":   22.40,
+    "Amlodipino 5mg":       18.70,
+    "Ciprofloxacina 500mg": 26.30,
+    "Diclofenaco 50mg":     9.10,
+    "Metronidazol 500mg":   11.50,
+    "Azitromicina 500mg":   28.80,
+    "Captopril 25mg":       7.40,
+    "Glibenclamida 5mg":    6.80,
+    "Hidroclorotiazida 25mg": 5.90,
+    "Ranitidina 150mg":     13.20,
+    "Paracetamol 500mg":    4.50,
+    "Dexametasona 4mg":     19.60,
+    "Vitamina C 1g":        8.90,
+  };
+
+  // Canal multiplier: farmacias charge more
+  const canalMult = canal === "Farmacia" ? 1.22 : 1.0;
+
+  const selectedProducts = PRODUCTS.slice(0, topN).map(p => p.name);
+
+  // Monthly drift factors to simulate realistic price evolution
+  // Slight upward trend with small random noise baked-in (deterministic by index)
+  const drifts = [0.0, 0.012, 0.008, 0.019, 0.011, 0.025, 0.014];
+
+  const history: PriceHistoryPoint[] = MONTHS.map((mes, mIdx) => {
+    const point: PriceHistoryPoint = { mes };
+    const cumDrift = drifts.slice(0, mIdx + 1).reduce((a, b) => a + b, 0);
+    const noiseSeed = mIdx * 0.003; // tiny deterministic noise per month
+
+    selectedProducts.forEach((prod, pIdx) => {
+      const base = (basePrices[prod] ?? 10) * canalMult;
+      // Each product has a slightly different drift pattern
+      const prodDrift = cumDrift + (pIdx % 3 === 0 ? noiseSeed : -noiseSeed / 2);
+      point[prod] = Number((base * (1 + prodDrift)).toFixed(2));
+    });
+
+    return point;
+  });
+
+  return { history, selectedProducts };
+}
+
+/**
+ * Generates monthly Angelus avg vs Competencia avg price history for a single product.
+ */
+export function generateProductHistory(productoAngelus: string, canal: "Droguería" | "Farmacia" = "Droguería") {
+  const basePrices: Record<string, number> = {
+    "Amoxicilina 500mg":    12.50,
+    "Ibuprofeno 400mg":     8.20,
+    "Losartán 50mg":        14.80,
+    "Metformina 850mg":     10.60,
+    "Omeprazol 20mg":       16.90,
+    "Atorvastatina 20mg":   22.40,
+    "Amlodipino 5mg":       18.70,
+    "Ciprofloxacina 500mg": 26.30,
+    "Diclofenaco 50mg":     9.10,
+    "Metronidazol 500mg":   11.50,
+    "Azitromicina 500mg":   28.80,
+    "Captopril 25mg":       7.40,
+    "Glibenclamida 5mg":    6.80,
+    "Hidroclorotiazida 25mg": 5.90,
+    "Ranitidina 150mg":     13.20,
+    "Paracetamol 500mg":    4.50,
+    "Dexametasona 4mg":     19.60,
+    "Vitamina C 1g":        8.90,
+  };
+
+  const canalMult = canal === "Farmacia" ? 1.22 : 1.0;
+  const base = (basePrices[productoAngelus] ?? 12) * canalMult;
+  const compBase = base * 1.08; // competitor slightly higher at start
+
+  // Angelus has moderate upward drift; competitor grows faster → alert signal
+  const angelusDrifts = [0.0, 0.010, 0.006, 0.014, 0.009, 0.020, 0.012];
+  const compDrifts    = [0.0, 0.014, 0.011, 0.022, 0.018, 0.031, 0.025];
+
+  return MONTHS.map((mes, i) => {
+    const aDrift = angelusDrifts.slice(0, i + 1).reduce((a, b) => a + b, 0);
+    const cDrift = compDrifts.slice(0, i + 1).reduce((a, b) => a + b, 0);
+    return {
+      mes,
+      Angelus:      Number((base * (1 + aDrift)).toFixed(2)),
+      Competencia:  Number((compBase * (1 + cDrift)).toFixed(2)),
+    };
+  });
+}
