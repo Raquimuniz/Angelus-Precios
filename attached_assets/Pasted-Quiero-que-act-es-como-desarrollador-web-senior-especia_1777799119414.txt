@@ -1,0 +1,975 @@
+Quiero que actúes como desarrollador web senior, especialista en dashboards comerciales, análisis de precios farmacéuticos, inteligencia de mercado y visualización de data.
+Necesito que crees una página web / dashboard interactivo de análisis de precios para una empresa farmacéutica llamada Angelus.
+La plataforma debe permitir cargar, visualizar, comparar y analizar precios de productos propios vs. competencia, tanto en droguerías como en farmacias con data online.
+El objetivo es identificar oportunidades de ajuste de precios, alertas comerciales, brechas entre canal mayorista y detal, productos sobrevalorados, productos demasiado baratos y oportunidades para competir mejor contra el mercado.
+
+1. Objetivo general del dashboard
+Crear una página web limpia, profesional, moderna y corporativa que permita:
+
+
+Cargar data de precios propios por producto, droguería y farmacia.
+
+
+Cargar data de precios de la competencia por producto, droguería y farmacia.
+
+
+Comparar precios dentro de Angelus.
+
+
+Comparar precios Angelus vs. competencia.
+
+
+Detectar alertas automáticas de precios.
+
+
+Sugerir precios competitivos.
+
+
+Permitir editar precios sugeridos.
+
+
+Guardar escenarios.
+
+
+Descargar los resultados en Excel.
+
+
+Analizar niveles de stock por droguería y producto.
+
+
+
+2. Estilo visual deseado
+Diseña una interfaz:
+
+
+Súper limpia.
+
+
+Fondo blanco.
+
+
+Estilo corporativo farmacéutico.
+
+
+Profesional, moderna y minimalista.
+
+
+Con tarjetas, tablas y gráficos fáciles de leer.
+
+
+Usar colores tipo Angelus: azul corporativo, acentos turquesa/verde agua, gris claro y detalles sutiles.
+
+
+Evitar una apariencia recargada.
+
+
+El dashboard debe sentirse como una herramienta de inteligencia comercial de alto nivel.
+
+
+Debe tener:
+
+
+Sidebar o navegación superior por secciones.
+
+
+Cards de resumen ejecutivo.
+
+
+Filtros visibles.
+
+
+Tablas ordenables.
+
+
+Gráficos claros.
+
+
+Alertas con semáforos visuales.
+
+
+Botones de descarga.
+
+
+Campos editables donde aplique.
+
+
+
+3. Estructura general de la página
+La página debe tener las siguientes secciones principales:
+
+
+Resumen Ejecutivo
+
+
+Sección 1: Angelus vs. Angelus
+
+
+Sección 2: Angelus vs. Competencia
+
+
+Sección 3: Alertas y Precio Sugerido
+
+
+Sección 4: Stock por Droguería
+
+
+Exportación y Escenarios
+
+
+
+4. Carga de data
+El sistema debe permitir cargar archivos tipo Excel o CSV con la siguiente información.
+Base de precios Angelus
+Columnas sugeridas:
+
+
+Producto Angelus
+
+
+Presentación
+
+
+Categoría
+
+
+Canal
+
+
+Droguería
+
+
+Farmacia
+
+
+
+
+Nombre del cliente / punto de venta
+
+
+Tipo de cliente
+
+
+Droguería
+
+
+Farmacia independiente
+
+
+Cadena de farmacia
+
+
+Farmacia online
+
+
+
+
+Precio
+
+
+Fecha de actualización
+
+
+Ciudad / Estado
+
+
+Observaciones
+
+
+Base de precios competencia
+Columnas sugeridas:
+
+
+Producto Angelus de referencia
+
+
+Producto competidor
+
+
+Laboratorio competidor
+
+
+Presentación competidor
+
+
+Categoría
+
+
+Canal
+
+
+Droguería
+
+
+Farmacia
+
+
+
+
+Nombre del cliente / punto de venta
+
+
+Precio competidor
+
+
+Fecha de actualización
+
+
+Ciudad / Estado
+
+
+Observaciones
+
+
+Base de stock en droguerías
+Columnas sugeridas:
+
+
+Producto Angelus
+
+
+Droguería
+
+
+Stock disponible
+
+
+Stock mínimo esperado
+
+
+Stock ideal
+
+
+Ventas promedio
+
+
+Días de inventario
+
+
+Fecha de actualización
+
+
+Estado / región
+
+
+
+5. Filtros generales
+El dashboard debe tener filtros globales para:
+
+
+Producto
+
+
+Categoría
+
+
+Canal: Droguería / Farmacia
+
+
+Droguería
+
+
+Farmacia
+
+
+Competidor
+
+
+Laboratorio competidor
+
+
+Estado / región
+
+
+Fecha de actualización
+
+
+Rango de precios
+
+
+Nivel de alerta
+
+
+Los filtros deben afectar las tablas, gráficos y cards.
+
+6. Resumen Ejecutivo
+Crear una primera vista con indicadores clave:
+Cards principales
+
+
+Total de productos analizados.
+
+
+Total de precios Angelus cargados.
+
+
+Total de precios de competencia cargados.
+
+
+Precio promedio Angelus en droguería.
+
+
+Precio promedio Angelus en farmacia.
+
+
+Precio promedio competencia en droguería.
+
+
+Precio promedio competencia en farmacia.
+
+
+Número de alertas críticas.
+
+
+Número de productos donde Angelus es más barato.
+
+
+Número de productos donde la competencia es más barata.
+
+
+Número de productos con brecha riesgosa entre droguería y farmacia.
+
+
+Número de productos con riesgo de quiebre de stock.
+
+
+Gráficos sugeridos
+
+
+Distribución de precios por canal.
+
+
+Top 10 productos con mayor variación de precio.
+
+
+Productos con más alertas.
+
+
+Comparativo general Angelus vs. competencia.
+
+
+Mapa o tabla por región si existe data geográfica.
+
+
+
+7. Sección 1: Angelus vs. Angelus
+Esta sección debe analizar mis propios productos contra mis propios precios.
+El objetivo es entender si mis productos tienen precios coherentes entre diferentes droguerías y farmacias.
+Debe poder analizarse por separado:
+
+
+Droguería.
+
+
+Farmacia.
+
+
+Ambos canales, pero claramente segmentados.
+
+
+Tabla principal
+Crear una tabla con las siguientes columnas:
+
+
+Producto Angelus
+
+
+Canal
+
+
+Precio mínimo Angelus
+
+
+Cliente con precio mínimo
+
+
+Precio máximo Angelus
+
+
+Cliente con precio máximo
+
+
+Precio promedio
+
+
+Mediana de precio
+
+
+Diferencia absoluta entre mínimo y máximo
+
+
+Variación porcentual entre mínimo y máximo
+
+
+Número de clientes analizados
+
+
+Nivel de alerta
+
+
+Gráficos
+Agregar gráficos para:
+
+
+Precio mínimo, promedio y máximo por producto.
+
+
+Boxplot o gráfico de dispersión por producto y canal.
+
+
+Ranking de productos con mayor variación.
+
+
+Comparativo droguería vs. farmacia por producto.
+
+
+Evolución de precios en el tiempo si existe fecha histórica.
+
+
+Alertas dentro de esta sección
+Identificar automáticamente:
+
+
+Productos con precio demasiado alto en alguna droguería.
+
+
+Productos con precio demasiado alto en alguna farmacia.
+
+
+Productos con variación excesiva entre puntos de venta.
+
+
+Productos donde el precio en farmacia está por debajo del precio de droguería.
+
+
+Productos donde el precio en farmacia está apenas por encima de la droguería, generando poco margen comercial.
+
+
+Reglas sugeridas de alerta
+Usar estas reglas iniciales, pero permitir que sean configurables:
+
+
+Variación baja: 0% a 10%
+
+
+Variación media: 10% a 20%
+
+
+Variación alta: 20% a 35%
+
+
+Variación crítica: mayor a 35%
+
+
+Para la brecha droguería vs. farmacia:
+
+
+Riesgo crítico: farmacia más barata que la droguería más barata.
+
+
+Riesgo alto: farmacia solo 0% a 5% por encima de la droguería más barata.
+
+
+Riesgo medio: farmacia 5% a 10% por encima.
+
+
+Saludable: farmacia más de 10% por encima.
+
+
+
+8. Sección 2: Angelus vs. Competencia
+Esta sección debe comparar los precios de Angelus contra la competencia.
+Debe poder cambiar entre:
+
+
+Vista Droguería.
+
+
+Vista Farmacia.
+
+
+Usar un selector visible tipo toggle:
+Canal de análisis: Droguería / Farmacia
+Tabla principal requerida
+Crear una tabla con esta estructura:
+Producto AngelusMi precio más baratoDónde soy más baratoCompetidor más baratoPrecio competidor más baratoDónde la competencia es más barataVariación % Angelus vs. CompetenciaResultado
+La lógica debe ser:
+
+
+Para cada producto Angelus, identificar mi precio más bajo dentro del canal seleccionado.
+
+
+Identificar en qué droguería o farmacia tengo ese precio más bajo.
+
+
+Identificar el competidor más barato asociado a ese producto.
+
+
+Identificar el precio más bajo de ese competidor en el canal seleccionado.
+
+
+Identificar en qué droguería o farmacia está ese precio competidor más bajo.
+
+
+Calcular la variación porcentual entre mi precio más barato y el precio más barato de la competencia.
+
+
+Fórmula de variación
+Usar esta fórmula:
+Variación % = ((Mi precio más barato - Precio competidor más barato) / Precio competidor más barato) * 100
+Interpretación del resultado
+Crear una columna de resultado con etiquetas:
+
+
+Angelus más competitivo: si mi precio es menor al precio de la competencia.
+
+
+Empatado o similar: si la diferencia está entre -3% y +3%.
+
+
+Competencia más barata: si mi precio está más de 3% por encima.
+
+
+Alerta crítica: si mi precio está más de 15% por encima de la competencia más barata.
+
+
+Gráficos
+Agregar gráficos para:
+
+
+Ranking de productos donde Angelus es más caro.
+
+
+Ranking de productos donde Angelus es más barato.
+
+
+Comparativo de precio mínimo Angelus vs. precio mínimo competencia.
+
+
+Diferencia porcentual por producto.
+
+
+Distribución de competitividad por categoría.
+
+
+Participación de alertas por canal.
+
+
+
+9. Sección 3: Alertas y Precio Sugerido
+Esta sección debe consolidar todas las alertas de precios, ordenadas desde la más crítica hasta la menos crítica.
+El objetivo es que el usuario pueda identificar qué precios debe revisar primero.
+Tabla principal de alertas
+Crear una tabla con las siguientes columnas:
+Nivel de alertaCanalProducto AngelusMi precio actual más baratoDónde soy más baratoCompetidor más baratoPrecio competencia más baratoDónde está la competencia más barataPrecio sugerido automáticoPrecio sugerido editableVariación vs. precio actualVariación vs. competenciaAcción recomendada
+Lógica del precio sugerido automático
+El precio sugerido automático debe calcularse como:
+Precio sugerido automático = Precio competencia más barato * 0.90
+Es decir, debe ser 10% menor que la competencia más barata.
+Campo editable
+Debe existir un campo editable llamado:
+Precio sugerido editable
+Cuando el usuario coloque un precio manual, el sistema debe recalcular automáticamente:
+
+
+Variación vs. precio actual.
+
+
+Variación vs. competencia.
+
+
+Margen de diferencia frente al competidor más barato.
+
+
+Nueva clasificación de competitividad.
+
+
+Orden de alertas
+Ordenar de mayor a menor prioridad:
+
+
+Angelus más de 15% por encima de la competencia.
+
+
+Farmacia más barata que droguería.
+
+
+Farmacia con brecha menor a 5% sobre droguería.
+
+
+Variación interna de precio mayor a 35%.
+
+
+Stock crítico en droguería.
+
+
+Producto sin precio de competencia.
+
+
+Producto sin precio actualizado.
+
+
+Acciones recomendadas
+La tabla debe generar automáticamente una recomendación, por ejemplo:
+
+
+Ajustar precio sugerido.
+
+
+Revisar precio en droguería.
+
+
+Revisar precio en farmacia online.
+
+
+Validar data de competencia.
+
+
+Evaluar promoción comercial.
+
+
+Monitorear antes de ajustar.
+
+
+Revisar margen antes de aplicar descuento.
+
+
+Priorizar abastecimiento.
+
+
+
+10. Guardado y descarga de escenarios
+La sección 3 debe permitir:
+
+
+Editar precios sugeridos.
+
+
+Guardar el escenario actual.
+
+
+Nombrar el escenario.
+
+
+Descargar el escenario como Excel.
+
+
+El Excel descargable debe incluir:
+
+
+Producto.
+
+
+Canal.
+
+
+Precio actual Angelus.
+
+
+Cliente donde Angelus es más barato.
+
+
+Competidor más barato.
+
+
+Precio competencia más barato.
+
+
+Cliente donde la competencia es más barata.
+
+
+Precio sugerido automático.
+
+
+Precio sugerido editable.
+
+
+Variación vs. precio actual.
+
+
+Variación vs. competencia.
+
+
+Nivel de alerta.
+
+
+Acción recomendada.
+
+
+Fecha de descarga.
+
+
+
+11. Sección 4: Stock por Droguería
+Esta sección debe analizar los niveles de stock de productos Angelus en cada droguería.
+El objetivo es identificar puntos de quiebre, sobre stock, bajo stock y riesgo comercial.
+Tabla principal de stock
+Crear una tabla con las siguientes columnas:
+Producto AngelusDrogueríaStock actualStock mínimo esperadoStock idealVentas promedioDías de inventarioEstado de stockNivel de alertaAcción recomendada
+Clasificación del stock
+Usar esta lógica inicial:
+
+
+Quiebre de stock: stock actual = 0
+
+
+Stock crítico: stock actual menor al stock mínimo esperado
+
+
+Stock bajo: stock actual entre stock mínimo y 70% del stock ideal
+
+
+Stock saludable: stock actual entre 70% y 120% del stock ideal
+
+
+Sobre stock: stock actual mayor al 120% del stock ideal
+
+
+Alertas de stock
+Identificar:
+
+
+Productos con quiebre de stock.
+
+
+Productos con stock crítico.
+
+
+Productos con bajo stock.
+
+
+Droguerías con concentración de sobre stock.
+
+
+Productos con sobre stock y bajo movimiento.
+
+
+Productos con precio competitivo pero sin stock suficiente.
+
+
+Productos con oportunidad comercial por buen precio y buen stock.
+
+
+Gráficos de stock
+Agregar gráficos para:
+
+
+Stock actual vs. stock ideal por producto.
+
+
+Stock por droguería.
+
+
+Productos con mayor riesgo de quiebre.
+
+
+Distribución de estado de stock.
+
+
+Relación entre precio competitivo y nivel de stock.
+
+
+Ranking de droguerías con más alertas de stock.
+
+
+
+12. Lógica comercial adicional importante
+El sistema debe entender que:
+
+
+Droguería y farmacia son canales distintos.
+
+
+Droguería es canal mayorista.
+
+
+Farmacia es canal detal.
+
+
+El precio de farmacia normalmente debe estar por encima del precio de droguería.
+
+
+Si una farmacia tiene precio menor que una droguería, debe activarse una alerta.
+
+
+Si la farmacia está apenas por encima de la droguería, también debe alertar.
+
+
+No se deben mezclar los análisis de droguería y farmacia sin identificarlos claramente.
+
+
+Las comparaciones contra competencia deben hacerse por canal.
+
+
+El precio más bajo es clave para entender competitividad.
+
+
+La variación porcentual debe mostrarse siempre.
+
+
+Las alertas deben estar ordenadas por impacto comercial.
+
+
+
+13. Componentes técnicos requeridos
+Crear la web usando:
+
+
+React.
+
+
+Tailwind CSS.
+
+
+Componentes modernos.
+
+
+Tablas interactivas.
+
+
+Gráficos con Recharts.
+
+
+Carga de archivos CSV / Excel.
+
+
+Exportación a Excel.
+
+
+Estados editables.
+
+
+Filtros dinámicos.
+
+
+Diseño responsive.
+
+
+Datos de ejemplo precargados para probar la interfaz.
+
+
+Incluir datos ficticios de ejemplo para que pueda visualizar cómo funciona la página antes de cargar la data real.
+
+14. Funcionalidades clave
+La página debe permitir:
+
+
+Subir data.
+
+
+Limpiar data básica.
+
+
+Validar columnas requeridas.
+
+
+Mostrar errores si faltan columnas.
+
+
+Filtrar por canal.
+
+
+Filtrar por producto.
+
+
+Filtrar por droguería.
+
+
+Filtrar por farmacia.
+
+
+Filtrar por competidor.
+
+
+Ver tablas.
+
+
+Ver gráficos.
+
+
+Editar precios sugeridos.
+
+
+Guardar escenarios.
+
+
+Descargar Excel.
+
+
+Visualizar alertas.
+
+
+Ordenar alertas de mayor a menor criticidad.
+
+
+
+15. Resultado esperado
+Quiero que me entregues:
+
+
+El código completo de la página.
+
+
+Una interfaz visualmente profesional.
+
+
+Datos de ejemplo precargados.
+
+
+Tablas funcionales.
+
+
+Gráficos funcionales.
+
+
+Alertas automáticas.
+
+
+Campos editables.
+
+
+Exportación a Excel.
+
+
+Una experiencia limpia y fácil de usar.
+
+
+
+16. Importante
+No quiero una página genérica.
+Quiero una herramienta pensada específicamente para análisis de precios farmacéuticos, considerando:
+
+
+Productos Angelus.
+
+
+Competencia.
+
+
+Droguerías.
+
+
+Farmacias.
+
+
+Canal mayorista.
+
+
+Canal detal.
+
+
+Alertas de precio.
+
+
+Brechas droguería/farmacia.
+
+
+Precio sugerido competitivo.
+
+
+Stock en droguería.
+
+
+Oportunidades comerciales.
+
+
+La prioridad es que la herramienta ayude a tomar decisiones comerciales rápidas, claras y accionables.
