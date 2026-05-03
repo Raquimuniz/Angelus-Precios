@@ -207,58 +207,107 @@ export interface PriceHistoryPoint {
   [product: string]: number | string;
 }
 
+// Shared base prices used across history generators
+export const BASE_PRICES: Record<string, number> = {
+  "Amoxicilina 500mg":      12.50,
+  "Ibuprofeno 400mg":        8.20,
+  "Losartán 50mg":          14.80,
+  "Metformina 850mg":       10.60,
+  "Omeprazol 20mg":         16.90,
+  "Atorvastatina 20mg":     22.40,
+  "Amlodipino 5mg":         18.70,
+  "Ciprofloxacina 500mg":   26.30,
+  "Diclofenaco 50mg":        9.10,
+  "Metronidazol 500mg":     11.50,
+  "Azitromicina 500mg":     28.80,
+  "Captopril 25mg":          7.40,
+  "Glibenclamida 5mg":       6.80,
+  "Hidroclorotiazida 25mg":  5.90,
+  "Ranitidina 150mg":       13.20,
+  "Paracetamol 500mg":       4.50,
+  "Dexametasona 4mg":       19.60,
+  "Vitamina C 1g":           8.90,
+};
+
+// Per-competitor price multiplier and drift offset (deterministic)
+const COMP_PROFILES: Record<string, { mult: number; drift: number }> = {
+  "Laboratorios Pfizer": { mult: 1.12, drift:  0.003 },
+  "Bayer":               { mult: 1.08, drift:  0.005 },
+  "Roche":               { mult: 1.18, drift:  0.002 },
+  "GlaxoSmithKline":     { mult: 1.05, drift:  0.007 },
+  "Sanofi":              { mult: 0.98, drift:  0.004 },
+  "Novartis":            { mult: 1.15, drift:  0.001 },
+};
+
 /**
- * Generates a deterministic monthly price history for the top N Angelus products
- * and their average competitor price, suitable for LineChart rendering.
+ * Generates deterministic monthly price history for a given list of products.
+ * Each product gets its own line on the chart.
  */
-export function generatePriceHistory(canal: "Droguería" | "Farmacia" = "Droguería", topN = 5) {
-  // Base prices per product (stable seed so lines look realistic)
-  const basePrices: Record<string, number> = {
-    "Amoxicilina 500mg":    12.50,
-    "Ibuprofeno 400mg":     8.20,
-    "Losartán 50mg":        14.80,
-    "Metformina 850mg":     10.60,
-    "Omeprazol 20mg":       16.90,
-    "Atorvastatina 20mg":   22.40,
-    "Amlodipino 5mg":       18.70,
-    "Ciprofloxacina 500mg": 26.30,
-    "Diclofenaco 50mg":     9.10,
-    "Metronidazol 500mg":   11.50,
-    "Azitromicina 500mg":   28.80,
-    "Captopril 25mg":       7.40,
-    "Glibenclamida 5mg":    6.80,
-    "Hidroclorotiazida 25mg": 5.90,
-    "Ranitidina 150mg":     13.20,
-    "Paracetamol 500mg":    4.50,
-    "Dexametasona 4mg":     19.60,
-    "Vitamina C 1g":        8.90,
-  };
-
-  // Canal multiplier: farmacias charge more
+export function generatePriceHistory(
+  products: string[],
+  canal: "Droguería" | "Farmacia" = "Droguería"
+): PriceHistoryPoint[] {
   const canalMult = canal === "Farmacia" ? 1.22 : 1.0;
+  const drifts    = [0.0, 0.012, 0.008, 0.019, 0.011, 0.025, 0.014];
 
-  const selectedProducts = PRODUCTS.slice(0, topN).map(p => p.name);
+  return MONTHS.map((mes, mIdx) => {
+    const point: PriceHistoryPoint = { mes };
+    const cumDrift  = drifts.slice(0, mIdx + 1).reduce((a, b) => a + b, 0);
+    const noiseSeed = mIdx * 0.003;
 
-  // Monthly drift factors to simulate realistic price evolution
-  // Slight upward trend with small random noise baked-in (deterministic by index)
-  const drifts = [0.0, 0.012, 0.008, 0.019, 0.011, 0.025, 0.014];
+    products.forEach((prod, pIdx) => {
+      const base      = (BASE_PRICES[prod] ?? 10) * canalMult;
+      const prodDrift = cumDrift + (pIdx % 3 === 0 ? noiseSeed : -noiseSeed / 2);
+      point[prod]     = Number((base * (1 + prodDrift)).toFixed(2));
+    });
 
-  const history: PriceHistoryPoint[] = MONTHS.map((mes, mIdx) => {
+    return point;
+  });
+}
+
+/**
+ * Generates monthly history for Angelus products AND competitor labs simultaneously.
+ * Each product/competitor gets its own line.
+ * Product lines are prefixed with "Angelus · ", competitor lines with the lab name.
+ */
+export function generateCompVsCompHistory(
+  products: string[],
+  competitors: string[],
+  canal: "Droguería" | "Farmacia" = "Droguería"
+): { history: PriceHistoryPoint[]; productKeys: string[]; competitorKeys: string[] } {
+  const canalMult   = canal === "Farmacia" ? 1.22 : 1.0;
+  const drifts      = [0.0, 0.012, 0.008, 0.019, 0.011, 0.025, 0.014];
+
+  const productKeys    = products.map(p => `${p}`);
+  const competitorKeys = competitors.map(c => `${c}`);
+
+  const history = MONTHS.map((mes, mIdx) => {
     const point: PriceHistoryPoint = { mes };
     const cumDrift = drifts.slice(0, mIdx + 1).reduce((a, b) => a + b, 0);
-    const noiseSeed = mIdx * 0.003; // tiny deterministic noise per month
 
-    selectedProducts.forEach((prod, pIdx) => {
-      const base = (basePrices[prod] ?? 10) * canalMult;
-      // Each product has a slightly different drift pattern
-      const prodDrift = cumDrift + (pIdx % 3 === 0 ? noiseSeed : -noiseSeed / 2);
-      point[prod] = Number((base * (1 + prodDrift)).toFixed(2));
+    // Angelus product lines (average across competitors for that product)
+    products.forEach((prod, pIdx) => {
+      const base     = (BASE_PRICES[prod] ?? 10) * canalMult;
+      const drift    = cumDrift + pIdx * 0.001;
+      point[prod]    = Number((base * (1 + drift)).toFixed(2));
+    });
+
+    // Competitor lines (their average price across selected products)
+    competitors.forEach(comp => {
+      const profile  = COMP_PROFILES[comp] ?? { mult: 1.1, drift: 0.003 };
+      // Average competitor price across selected products
+      const avgBase  = products.length
+        ? products.reduce((sum, prod) => sum + (BASE_PRICES[prod] ?? 10), 0) / products.length
+        : 12;
+      const base     = avgBase * canalMult * profile.mult;
+      const drift    = cumDrift + profile.drift * mIdx;
+      point[comp]    = Number((base * (1 + drift)).toFixed(2));
     });
 
     return point;
   });
 
-  return { history, selectedProducts };
+  return { history, productKeys, competitorKeys };
 }
 
 /**
