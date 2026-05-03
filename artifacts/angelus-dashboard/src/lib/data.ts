@@ -311,6 +311,37 @@ export function generateCompVsCompHistory(
 }
 
 /**
+ * ONE product vs MULTIPLE competitors — the primary chart function.
+ * Returns monthly history with:
+ *   "Angelus" → Angelus price for this product
+ *   "<LabName>" → that competitor's price for this product
+ */
+export function generateProductVsCompetitors(
+  product: string,
+  competitors: string[],
+  canal: "Droguería" | "Farmacia" = "Droguería"
+): PriceHistoryPoint[] {
+  const canalMult  = canal === "Farmacia" ? 1.22 : 1.0;
+  const base       = (BASE_PRICES[product] ?? 12) * canalMult;
+  const drifts     = [0.0, 0.010, 0.006, 0.014, 0.009, 0.020, 0.012];
+
+  return MONTHS.map((mes, i) => {
+    const aDrift = drifts.slice(0, i + 1).reduce((a, b) => a + b, 0);
+    const point: PriceHistoryPoint = {
+      mes,
+      Angelus: Number((base * (1 + aDrift)).toFixed(2)),
+    };
+    competitors.forEach(comp => {
+      const profile = COMP_PROFILES[comp] ?? { mult: 1.1, drift: 0.004 };
+      const cBase   = base * profile.mult;
+      const cDrift  = drifts.slice(0, i + 1).reduce((a, b) => a + b, 0) + profile.drift * i;
+      point[comp]   = Number((cBase * (1 + cDrift)).toFixed(2));
+    });
+    return point;
+  });
+}
+
+/**
  * Generates monthly Angelus avg vs Competencia avg price history for a single product.
  */
 export function generateProductHistory(productoAngelus: string, canal: "Droguería" | "Farmacia" = "Droguería") {

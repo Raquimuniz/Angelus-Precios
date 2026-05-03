@@ -13,32 +13,29 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
 } from "recharts";
-import { generatePriceHistory, PRODUCTS } from "@/lib/data";
+import { generateProductVsCompetitors, PRODUCTS, COMPETITORS } from "@/lib/data";
 import { MultiSelect } from "@/components/MultiSelect";
 
 const ALL_PRODUCT_NAMES = PRODUCTS.map(p => p.name);
-
-const LINE_COLORS = [
-  "#1B4F8A", "#00B4B4", "#10B981", "#F59E0B", "#E11D48",
-  "#6366F1", "#F97316", "#8B5CF6", "#EC4899", "#14B8A6",
-];
+const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64748B"];
 
 export default function AngelusVsAngelus() {
   const { angelusPrices } = useData();
 
-  // ── Shared filters (control both table AND chart) ─────────────────────────
-  const [filterProduct, setFilterProduct] = useState("");
-  const [filterCanal, setFilterCanal]     = useState<string>("Todos");
+  // ── Shared filters (table + chart) ────────────────────────────────────────
+  const [filterText,    setFilterText]    = useState("");
+  const [filterCanal,   setFilterCanal]   = useState<string>("Todos");
 
-  // ── Chart-specific: multi-select which products to show as lines ───────────
-  const [chartProducts, setChartProducts] = useState<string[]>(ALL_PRODUCT_NAMES.slice(0, 5));
+  // ── Chart selectors ────────────────────────────────────────────────────────
+  const [chartProduct,     setChartProduct]     = useState<string>(ALL_PRODUCT_NAMES[0]);
+  const [chartCompetitors, setChartCompetitors] = useState<string[]>(COMPETITORS.slice(0, 3));
 
   // ── Table data ─────────────────────────────────────────────────────────────
   const tableData = useMemo(() => {
     let filtered = angelusPrices;
-    if (filterProduct) {
+    if (filterText) {
       filtered = filtered.filter(p =>
-        p.productoAngelus.toLowerCase().includes(filterProduct.toLowerCase())
+        p.productoAngelus.toLowerCase().includes(filterText.toLowerCase())
       );
     }
     if (filterCanal !== "Todos") {
@@ -57,8 +54,7 @@ export default function AngelusVsAngelus() {
       const minP     = sorted[0];
       const maxP     = sorted[sorted.length - 1];
       const avg      = prices.reduce((a, b) => a + b.precio, 0) / prices.length;
-      const diff     = maxP.precio - minP.precio;
-      const varPct   = (diff / minP.precio) * 100;
+      const varPct   = ((maxP.precio - minP.precio) / minP.precio) * 100;
 
       let alertLevel = "Verde";
       if (varPct > 35)      alertLevel = "Rojo";
@@ -77,45 +73,41 @@ export default function AngelusVsAngelus() {
         alertLevel,
       };
     }).sort((a, b) => b.varPct - a.varPct);
-  }, [angelusPrices, filterProduct, filterCanal]);
+  }, [angelusPrices, filterText, filterCanal]);
 
   // ── Farmacia < Droguería alerts ────────────────────────────────────────────
   const farmaciaMenorDrogAlerts = useMemo(() => {
     const alerts: string[] = [];
-    const prods = new Set(angelusPrices.map(p => p.productoAngelus));
-    for (const prod of prods) {
+    for (const prod of new Set(angelusPrices.map(p => p.productoAngelus))) {
       const drog = angelusPrices.filter(p => p.productoAngelus === prod && p.canal === "Droguería");
       const farm = angelusPrices.filter(p => p.productoAngelus === prod && p.canal === "Farmacia");
-      if (drog.length && farm.length) {
-        if (Math.min(...farm.map(p => p.precio)) < Math.max(...drog.map(p => p.precio))) {
-          alerts.push(prod);
-        }
+      if (drog.length && farm.length &&
+          Math.min(...farm.map(p => p.precio)) < Math.max(...drog.map(p => p.precio))) {
+        alerts.push(prod);
       }
     }
     return alerts;
   }, [angelusPrices]);
 
-  // ── Line chart: multi-product price evolution, same canal filter ───────────
+  // ── Line chart: selected product — Angelus vs competitors ─────────────────
   const effectiveCanal = filterCanal === "Todos" ? "Droguería" : filterCanal as "Droguería" | "Farmacia";
 
   const lineHistory = useMemo(
-    () => generatePriceHistory(
-      chartProducts.length ? chartProducts : ["Amoxicilina 500mg"],
-      effectiveCanal
-    ),
-    [chartProducts, effectiveCanal]
+    () => generateProductVsCompetitors(chartProduct, chartCompetitors, effectiveCanal),
+    [chartProduct, chartCompetitors, effectiveCanal]
   );
 
+  const allLineKeys = ["Angelus", ...chartCompetitors];
   const yDomain = useMemo(() => {
     const allVals = lineHistory
-      .flatMap(row => chartProducts.map(p => (row[p] as number) ?? 0))
+      .flatMap(row => allLineKeys.map(k => (row[k] as number) ?? 0))
       .filter(v => v > 0);
     if (!allVals.length) return [0, 50];
     const lo  = Math.min(...allVals);
     const hi  = Math.max(...allVals);
-    const pad = Math.max((hi - lo) * 0.18, 1);
+    const pad = Math.max((hi - lo) * 0.2, 1);
     return [Math.max(0, lo - pad), hi + pad];
-  }, [lineHistory, chartProducts]);
+  }, [lineHistory, allLineKeys]);
 
   const getAlertColor = (level: string) => {
     switch (level) {
@@ -130,26 +122,24 @@ export default function AngelusVsAngelus() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-primary">Angelus vs Angelus</h2>
-        <p className="text-muted-foreground">Análisis de consistencia de precios internos por canal.</p>
+        <p className="text-muted-foreground">Consistencia interna de precios — mi producto vs competencia.</p>
       </div>
 
       {farmaciaMenorDrogAlerts.length > 0 && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>ALERTA: Farmacia más barata que Droguería detectada</AlertTitle>
-          <AlertDescription>
-            Revisar: {farmaciaMenorDrogAlerts.join(", ")}
-          </AlertDescription>
+          <AlertTitle>ALERTA: Farmacia más barata que Droguería</AlertTitle>
+          <AlertDescription>Revisar: {farmaciaMenorDrogAlerts.join(", ")}</AlertDescription>
         </Alert>
       )}
 
-      {/* ── Shared filters (affect table + chart canal) ── */}
+      {/* ── Shared filters ── */}
       <div className="flex flex-wrap gap-3 items-center bg-card p-4 rounded-lg shadow-sm border">
         <div className="flex-1 min-w-[160px] max-w-sm">
           <Input
             placeholder="Buscar producto en tabla..."
-            value={filterProduct}
-            onChange={(e) => setFilterProduct(e.target.value)}
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
           />
         </div>
         <div className="w-48">
@@ -164,9 +154,7 @@ export default function AngelusVsAngelus() {
             </SelectContent>
           </Select>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Filtros aplicados a tabla y gráfico
-        </p>
+        <p className="text-xs text-muted-foreground">Canal del gráfico: <strong>{effectiveCanal}</strong></p>
       </div>
 
       {/* ── Line chart ── */}
@@ -174,55 +162,73 @@ export default function AngelusVsAngelus() {
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <CardTitle className="text-base">Evolución de Precios — Multi-Producto</CardTitle>
+              <CardTitle className="text-base">Mi Producto vs Competencia — Evolución de Precios</CardTitle>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Canal: <strong>{effectiveCanal}</strong> · Eje X: mes · Eje Y: precio USD
+                Eje X: mes · Eje Y: precio USD ·
+                <span className="text-[#1B4F8A] font-semibold"> Azul sólido = Angelus</span> ·
+                <span className="text-destructive font-semibold"> Punteado = Competidores</span>
               </p>
             </div>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Select value={chartProduct} onValueChange={setChartProduct}>
+              <SelectTrigger className="h-8 w-52 text-xs">
+                <SelectValue placeholder="Producto..." />
+              </SelectTrigger>
+              <SelectContent>
+                {ALL_PRODUCT_NAMES.map(p => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <MultiSelect
-              options={ALL_PRODUCT_NAMES}
-              selected={chartProducts}
-              onChange={setChartProducts}
-              placeholder="Seleccionar productos..."
+              options={COMPETITORS}
+              selected={chartCompetitors}
+              onChange={setChartCompetitors}
+              placeholder="Competidores..."
+              className="h-8 text-xs"
             />
           </div>
         </CardHeader>
-        <CardContent className="h-[320px]">
-          {chartProducts.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-              Selecciona al menos un producto para ver el gráfico
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={{ stroke: "#d1d5db" }} />
-                <YAxis
-                  domain={yDomain}
-                  tickFormatter={(v) => `$${Number(v).toFixed(0)}`}
-                  tick={{ fontSize: 11, fill: "#6b7280" }}
-                  axisLine={{ stroke: "#d1d5db" }}
-                  width={54}
+        <CardContent className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={{ stroke: "#d1d5db" }} />
+              <YAxis
+                domain={yDomain}
+                tickFormatter={(v) => `$${Number(v).toFixed(0)}`}
+                tick={{ fontSize: 11, fill: "#6b7280" }}
+                axisLine={{ stroke: "#d1d5db" }}
+                width={54}
+              />
+              <RechartsTooltip
+                formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name]}
+                contentStyle={{ fontSize: 12, borderRadius: 8 }}
+              />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Line
+                type="monotone"
+                dataKey="Angelus"
+                stroke="#1B4F8A"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+              {chartCompetitors.map((comp, i) => (
+                <Line
+                  key={comp}
+                  type="monotone"
+                  dataKey={comp}
+                  stroke={COMP_COLORS[i % COMP_COLORS.length]}
+                  strokeWidth={2}
+                  strokeDasharray="5 3"
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
                 />
-                <RechartsTooltip
-                  formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name]}
-                  contentStyle={{ fontSize: 12, borderRadius: 8 }}
-                />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                {chartProducts.map((prod, i) => (
-                  <Line
-                    key={prod}
-                    type="monotone"
-                    dataKey={prod}
-                    stroke={LINE_COLORS[i % LINE_COLORS.length]}
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          )}
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
 
