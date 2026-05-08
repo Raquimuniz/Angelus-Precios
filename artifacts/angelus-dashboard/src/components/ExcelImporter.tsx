@@ -6,82 +6,190 @@ import { useData } from "@/context/DataContext";
 import { AngelusPriceRecord, CompetitionPriceRecord, StockRecord } from "@/lib/data";
 import { FileSpreadsheet, Download, RotateCcw } from "lucide-react";
 
-const generateId = () => Math.random().toString(36).substring(2, 9);
-
 // ── helpers ────────────────────────────────────────────────────────────────────
 
-function toNum(v: unknown): number {
-  const n = Number(v);
+const generateId = () => Math.random().toString(36).substring(2, 9);
+
+/** Parse "$ 4.59", "BSS 29.57", "5.56" → number */
+function parsePrice(v: unknown): number {
+  if (v == null) return 0;
+  const s = String(v).replace(/[$ ,BSS\s]/gi, "").replace(",", ".").trim();
+  const n = parseFloat(s);
   return isNaN(n) ? 0 : n;
+}
+
+/** Remove embedded newlines and trailing extra text from provider names */
+function cleanLabel(v: unknown): string {
+  if (v == null) return "";
+  return String(v).split(/\r\n|\n|\r/)[0].trim();
 }
 
 function toStr(v: unknown): string {
   return v == null ? "" : String(v).trim();
 }
 
-function parseAngelusSheet(rows: Record<string, unknown>[]): AngelusPriceRecord[] {
-  return rows.map((r) => ({
-    id:                 generateId(),
-    productoAngelus:    toStr(r["productoAngelus"]    ?? r["Producto Angelus"]    ?? r["producto"]),
-    presentacion:       toStr(r["presentacion"]       ?? r["Presentacion"]        ?? ""),
-    categoria:          toStr(r["categoria"]          ?? r["Categoria"]           ?? ""),
-    canal:              (toStr(r["canal"] ?? r["Canal"]) as "Droguería" | "Farmacia") || "Droguería",
-    drogueria:          toStr(r["drogueria"]           ?? r["Drogueria"]          ?? r["Cliente"]),
-    tipoCliente:        (toStr(r["tipoCliente"]        ?? r["Tipo Cliente"]       ?? "Droguería") as AngelusPriceRecord["tipoCliente"]),
-    precio:             toNum(r["precio"]              ?? r["Precio"]),
-    fechaActualizacion: toStr(r["fechaActualizacion"]  ?? r["Fecha"]              ?? new Date().toISOString()),
-    ciudad:             toStr(r["ciudad"]              ?? r["Ciudad"]             ?? ""),
-    observaciones:      toStr(r["observaciones"]       ?? r["Observaciones"]      ?? ""),
-  })).filter(r => r.productoAngelus && r.precio > 0);
+// ── format detectors ───────────────────────────────────────────────────────────
+
+type RawRow = Record<string, unknown>;
+
+function hasAllCols(row: RawRow, cols: string[]): boolean {
+  return cols.every(c => Object.keys(row).some(k => k.trim() === c.trim()));
 }
 
-function parseCompetenciaSheet(rows: Record<string, unknown>[]): CompetitionPriceRecord[] {
-  return rows.map((r) => ({
-    id:                        generateId(),
-    productoAngelusReferencia: toStr(r["productoAngelusReferencia"] ?? r["Producto Angelus Referencia"] ?? r["productoAngelus"] ?? r["Producto Angelus"]),
-    productoCompetidor:        toStr(r["productoCompetidor"]        ?? r["Producto Competidor"]         ?? r["Competidor"]),
-    laboratorioCompetidor:     toStr(r["laboratorioCompetidor"]     ?? r["Laboratorio"]                ?? ""),
-    presentacionCompetidor:    toStr(r["presentacionCompetidor"]    ?? r["Presentacion Competidor"]    ?? ""),
-    categoria:                 toStr(r["categoria"]                 ?? r["Categoria"]                  ?? ""),
-    canal:                     (toStr(r["canal"] ?? r["Canal"]) as "Droguería" | "Farmacia") || "Droguería",
-    cliente:                   toStr(r["cliente"]                   ?? r["Cliente"]                    ?? ""),
-    precioCompetidor:          toNum(r["precioCompetidor"]          ?? r["Precio Competidor"]          ?? r["Precio"]),
-    fechaActualizacion:        toStr(r["fechaActualizacion"]        ?? r["Fecha"]                      ?? new Date().toISOString()),
-    ciudad:                    toStr(r["ciudad"]                    ?? r["Ciudad"]                     ?? ""),
-    observaciones:             toStr(r["observaciones"]             ?? r["Observaciones"]              ?? ""),
-  })).filter(r => r.productoAngelusReferencia && r.precioCompetidor > 0);
+/**
+ * FORMAT A — "Mis productos x Droguería"
+ * Cols: DESCRIPCIÓN | MÁS BARATO | COBECA03 | DRONENA … (price per droguería)
+ * → AngelusPriceRecord[]
+ */
+function parseFormatA(rows: RawRow[]): AngelusPriceRecord[] {
+  const out: AngelusPriceRecord[] = [];
+  const excluded = new Set(["DESCRIPCIÓN", "MÁS BARATO"]);
+
+  // Droguería columns = every key except excluded
+  const sampleKeys = Object.keys(rows[0] ?? {});
+  const drogCols = sampleKeys.filter(k => !excluded.has(k.trim()));
+
+  for (const row of rows) {
+    const producto = toStr(row["DESCRIPCIÓN"]).replace(/\(ANGELUS\)/gi, "").trim();
+    if (!producto) continue;
+
+    for (const col of drogCols) {
+      const precio = parsePrice(row[col]);
+      if (precio <= 0) continue; // skip "$ 0.00" (not available)
+
+      out.push({
+        id:                 generateId(),
+        productoAngelus:    producto,
+        presentacion:       "",
+        categoria:          "",
+        canal:              "Droguería",
+        drogueria:          col.trim(),
+        tipoCliente:        "Droguería",
+        precio,
+        fechaActualizacion: new Date().toISOString().slice(0, 10),
+        ciudad:             "",
+        observaciones:      toStr(row["MÁS BARATO"]),
+      });
+    }
+  }
+  return out;
 }
 
-function parseStockSheet(rows: Record<string, unknown>[]): StockRecord[] {
-  return rows.map((r) => {
-    const actual   = toNum(r["stockActual"]         ?? r["Stock Actual"]   ?? r["Stock"]);
-    const minimo   = toNum(r["stockMinimoEsperado"] ?? r["Stock Minimo"]   ?? r["Minimo"]);
-    const ideal    = toNum(r["stockIdeal"]          ?? r["Stock Ideal"]    ?? r["Ideal"]);
-    const dias     = toNum(r["diasInventario"]       ?? r["Dias"]          ?? 0);
-    const rawEstado = toStr(r["estadoStock"] ?? r["Estado Stock"] ?? r["Estado"]);
-    const estadoStock = (["Quiebre","Crítico","Bajo","Saludable","Sobre Stock"].includes(rawEstado)
-      ? rawEstado : actual === 0 ? "Quiebre" : actual < minimo ? "Crítico" : "Saludable"
-    ) as StockRecord["estadoStock"];
-    const rawAlerta = toStr(r["nivelAlerta"] ?? r["Nivel Alerta"] ?? "");
-    const nivelAlerta = (["Crítico","Alto","Medio","Normal"].includes(rawAlerta)
-      ? rawAlerta : estadoStock === "Quiebre" || estadoStock === "Crítico" ? "Crítico" : "Normal"
-    ) as StockRecord["nivelAlerta"];
+/**
+ * FORMAT B — "Mis Productos X Otros Laboratorios"
+ * Cols: BARRA | MARCA / PROVEEDOR | PRODUCTO | UM | INV | MOLÉCULA | PG | PU | PE | VARIACIÓN
+ * → CompetitionPriceRecord[] (droguería channel)
+ */
+function parseFormatB(rows: RawRow[]): CompetitionPriceRecord[] {
+  return rows
+    .map(r => {
+      const precioCompetidor = parsePrice(r["PU"]);
+      if (precioCompetidor <= 0) return null;
 
-    return {
-      id:                 generateId(),
-      productoAngelus:    toStr(r["productoAngelus"]    ?? r["Producto Angelus"] ?? r["Producto"]),
-      drogueria:          toStr(r["drogueria"]           ?? r["Drogueria"]        ?? r["Cliente"]),
-      stockActual:        actual,
-      stockMinimoEsperado: minimo,
-      stockIdeal:         ideal,
-      ventasPromedio:     toNum(r["ventasPromedio"]      ?? r["Ventas Promedio"]  ?? 0),
-      diasInventario:     dias,
-      fechaActualizacion: toStr(r["fechaActualizacion"]  ?? r["Fecha"]            ?? new Date().toISOString()),
-      estado:             rawEstado,
-      estadoStock,
-      nivelAlerta,
-    };
-  }).filter(r => r.productoAngelus);
+      const laboratorio = cleanLabel(r["MARCA / PROVEEDOR"]);
+      const productoCompetidor = toStr(r["PRODUCTO"]);
+      const molecula = toStr(r["MOLÉCULA"]);
+
+      return {
+        id:                        generateId(),
+        productoAngelusReferencia: molecula, // molecule as reference link
+        productoCompetidor,
+        laboratorioCompetidor:     laboratorio,
+        presentacionCompetidor:    toStr(r["UM"]),
+        categoria:                 "",
+        canal:                     "Droguería" as const,
+        cliente:                   "Droguería General",
+        precioCompetidor,
+        fechaActualizacion:        new Date().toISOString().slice(0, 10),
+        ciudad:                    "",
+        observaciones:             `INV: ${toStr(r["INV"])} | VAR: ${toStr(r["VARIACIÓN"])}`,
+      } satisfies CompetitionPriceRecord;
+    })
+    .filter(Boolean) as CompetitionPriceRecord[];
+}
+
+/**
+ * FORMAT C — "Productos unificados"
+ * Cols: Farmacia | Fecha | Búsqueda | Medicamento | Laboratorio | Concentración | Presentación | Precio $
+ * → CompetitionPriceRecord[] (farmacia channel)
+ */
+function parseFormatC(rows: RawRow[]): CompetitionPriceRecord[] {
+  return rows
+    .map(r => {
+      const precioCompetidor = parsePrice(r["Precio $"]);
+      if (precioCompetidor <= 0) return null;
+
+      return {
+        id:                        generateId(),
+        productoAngelusReferencia: toStr(r["Búsqueda"]),
+        productoCompetidor:        toStr(r["Medicamento"]),
+        laboratorioCompetidor:     toStr(r["Laboratorio"]),
+        presentacionCompetidor:    `${toStr(r["Concentración"])} ${toStr(r["Presentación"])}`.trim(),
+        categoria:                 "",
+        canal:                     "Farmacia" as const,
+        cliente:                   toStr(r["Farmacia"]),
+        precioCompetidor,
+        fechaActualizacion:        toStr(r["Fecha"]) || new Date().toISOString().slice(0, 10),
+        ciudad:                    "",
+        observaciones:             "",
+      } satisfies CompetitionPriceRecord;
+    })
+    .filter(Boolean) as CompetitionPriceRecord[];
+}
+
+/**
+ * Generic fallback parser that tries to map common column names
+ * for files the user uploads with a custom structure.
+ */
+function detectAndParse(rows: RawRow[]): {
+  angelus: AngelusPriceRecord[];
+  competencia: CompetitionPriceRecord[];
+  stock: StockRecord[];
+} {
+  if (!rows.length) return { angelus: [], competencia: [], stock: [] };
+
+  const keys = Object.keys(rows[0]).map(k => k.trim());
+
+  // Format A — Angelus per droguería pivot
+  if (keys.includes("DESCRIPCIÓN") && keys.includes("MÁS BARATO")) {
+    return { angelus: parseFormatA(rows), competencia: [], stock: [] };
+  }
+
+  // Format B — Competitor catalog (droguería)
+  if (keys.includes("MOLÉCULA") && (keys.includes("PU") || keys.includes("PG"))) {
+    return { angelus: [], competencia: parseFormatB(rows), stock: [] };
+  }
+
+  // Format C — Unified competitor (farmacia retail)
+  if (keys.some(k => k === "Búsqueda" || k === "Busqueda") && keys.includes("Farmacia")) {
+    return { angelus: [], competencia: parseFormatC(rows), stock: [] };
+  }
+
+  // Generic stock sheet
+  if (keys.some(k => /stock/i.test(k)) && keys.some(k => /producto/i.test(k))) {
+    const stock: StockRecord[] = rows.map(r => {
+      const actual  = Number(r["stockActual"] ?? r["Stock Actual"] ?? r["Stock"] ?? 0);
+      const minimo  = Number(r["stockMinimoEsperado"] ?? r["Stock Minimo"] ?? r["Minimo"] ?? 0);
+      const ideal   = Number(r["stockIdeal"] ?? r["Stock Ideal"] ?? r["Ideal"] ?? 0);
+      const rawE    = toStr(r["estadoStock"] ?? r["Estado Stock"] ?? r["Estado"] ?? "");
+      const estadoStock: StockRecord["estadoStock"] = (["Quiebre","Crítico","Bajo","Saludable","Sobre Stock"].includes(rawE) ? rawE : actual === 0 ? "Quiebre" : actual < minimo ? "Crítico" : "Saludable") as StockRecord["estadoStock"];
+      const rawA    = toStr(r["nivelAlerta"] ?? r["Nivel Alerta"] ?? "");
+      const nivelAlerta: StockRecord["nivelAlerta"] = (["Crítico","Alto","Medio","Normal"].includes(rawA) ? rawA : estadoStock === "Quiebre" || estadoStock === "Crítico" ? "Crítico" : "Normal") as StockRecord["nivelAlerta"];
+      return {
+        id: generateId(),
+        productoAngelus:     toStr(r["productoAngelus"] ?? r["Producto Angelus"] ?? r["Producto"]),
+        drogueria:           toStr(r["drogueria"] ?? r["Drogueria"] ?? r["Cliente"]),
+        stockActual: actual, stockMinimoEsperado: minimo, stockIdeal: ideal,
+        ventasPromedio:      Number(r["ventasPromedio"] ?? 0),
+        diasInventario:      Number(r["diasInventario"] ?? 0),
+        fechaActualizacion:  toStr(r["fechaActualizacion"] ?? r["Fecha"] ?? new Date().toISOString().slice(0,10)),
+        estado: rawE, estadoStock, nivelAlerta,
+      };
+    }).filter(r => r.productoAngelus);
+    return { angelus: [], competencia: [], stock };
+  }
+
+  return { angelus: [], competencia: [], stock: [] };
 }
 
 // ── template generator ─────────────────────────────────────────────────────────
@@ -89,47 +197,29 @@ function parseStockSheet(rows: Record<string, unknown>[]): StockRecord[] {
 function downloadTemplate() {
   const wb = XLSX.utils.book_new();
 
-  const angelusCols = [
-    "productoAngelus","presentacion","categoria","canal","drogueria",
-    "tipoCliente","precio","fechaActualizacion","ciudad","observaciones",
+  // Sheet 1 — Angelus por droguería (formato real)
+  const angelusSample = [
+    { "DESCRIPCIÓN": "AMOXICILINA 500MG X30 (ANGELUS)", "MÁS BARATO": "COBECA $ 12.50", "COBECA03": "$ 12.50", "COBECA13": "$ 12.75", "DRONENA": "$ 13.00", "INSUAMINCA (M)": "$ 0.00" },
   ];
-  const angelusSample = [{
-    productoAngelus: "Amoxicilina 500mg", presentacion: "Caja x30 Cap",
-    categoria: "Antibióticos", canal: "Droguería", drogueria: "Cobeca",
-    tipoCliente: "Droguería", precio: 12.50,
-    fechaActualizacion: new Date().toISOString().slice(0, 10),
-    ciudad: "Caracas", observaciones: "",
-  }];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(angelusSample, { header: angelusCols }), "Precios Angelus");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(angelusSample), "Mis productos x Droguería");
 
-  const compCols = [
-    "productoAngelusReferencia","productoCompetidor","laboratorioCompetidor",
-    "presentacionCompetidor","categoria","canal","cliente","precioCompetidor",
-    "fechaActualizacion","ciudad","observaciones",
+  // Sheet 2 — Competidores droguería
+  const compDrogSample = [
+    { "BARRA": "12345", "MARCA / PROVEEDOR": "PFIZER", "PRODUCTO": "AMOXIL 500MG X30", "UM": "30", "INV": "50.00", "MOLÉCULA": "AMOXICILINA 500MG", "PG": "BSS 15.00", "PU": "BSS 15.00", "PE": "BSS 15.00", "VARIACIÓN": "0.00 %" },
   ];
-  const compSample = [{
-    productoAngelusReferencia: "Amoxicilina 500mg", productoCompetidor: "Amoxil 500mg",
-    laboratorioCompetidor: "Pfizer", presentacionCompetidor: "Caja x30 Cap",
-    categoria: "Antibióticos", canal: "Droguería", cliente: "Locatel Droguería",
-    precioCompetidor: 14.20,
-    fechaActualizacion: new Date().toISOString().slice(0, 10),
-    ciudad: "Caracas", observaciones: "",
-  }];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compSample, { header: compCols }), "Precios Competencia");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compDrogSample), "Mis Productos X Otros Labs");
 
-  const stockCols = [
-    "productoAngelus","drogueria","stockActual","stockMinimoEsperado",
-    "stockIdeal","ventasPromedio","diasInventario","fechaActualizacion",
-    "estadoStock","nivelAlerta",
+  // Sheet 3 — Competidores farmacias
+  const compFarmSample = [
+    { "Farmacia": "LOCATEL", "Fecha": "07/05/2026", "Búsqueda": "AMOXICILINA", "Medicamento": "AMOXIL 500MG X30", "Laboratorio": "PFIZER", "Concentración": "500MG", "Presentación": "30 Cápsulas", "Precio $": "14.20" },
   ];
-  const stockSample = [{
-    productoAngelus: "Amoxicilina 500mg", drogueria: "Cobeca",
-    stockActual: 250, stockMinimoEsperado: 50, stockIdeal: 300,
-    ventasPromedio: 30, diasInventario: 8,
-    fechaActualizacion: new Date().toISOString().slice(0, 10),
-    estadoStock: "Saludable", nivelAlerta: "Normal",
-  }];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(stockSample, { header: stockCols }), "Stock");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compFarmSample), "Productos unificados");
+
+  // Sheet 4 — Stock (manual)
+  const stockSample = [
+    { productoAngelus: "AMOXICILINA 500MG", drogueria: "COBECA03", stockActual: 250, stockMinimoEsperado: 50, stockIdeal: 300, ventasPromedio: 30, diasInventario: 8, estadoStock: "Saludable", nivelAlerta: "Normal" },
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(stockSample), "Stock");
 
   XLSX.writeFile(wb, "Angelus_Plantilla.xlsx");
 }
@@ -141,65 +231,67 @@ export function ExcelImporter() {
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!inputRef.current) return;
-    inputRef.current.value = "";           // allow re-selecting same file
-    if (!file) return;
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (inputRef.current) inputRef.current.value = "";
+    if (!files.length) return;
 
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const wb = XLSX.read(ev.target?.result, { type: "array" });
+    let totalAngelus = 0, totalComp = 0, totalStock = 0;
+    const allAngelus: AngelusPriceRecord[] = [];
+    const allComp: CompetitionPriceRecord[] = [];
+    const allStock: StockRecord[] = [];
+    let errors = 0;
 
-        let angelusLoaded = 0, compLoaded = 0, stockLoaded = 0;
+    const processFile = (file: File): Promise<void> =>
+      new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const wb = XLSX.read(ev.target?.result, { type: "array" });
+            wb.SheetNames.forEach(sheetName => {
+              const rows = XLSX.utils.sheet_to_json<RawRow>(wb.Sheets[sheetName]);
+              if (!rows.length) return;
+              const { angelus, competencia, stock } = detectAndParse(rows);
+              allAngelus.push(...angelus);
+              allComp.push(...competencia);
+              allStock.push(...stock);
+              totalAngelus += angelus.length;
+              totalComp += competencia.length;
+              totalStock += stock.length;
+            });
+          } catch {
+            errors++;
+          }
+          resolve();
+        };
+        reader.readAsArrayBuffer(file);
+      });
 
-        // Accept multiple possible sheet-name spellings
-        const sheetMatch = (names: string[]) =>
-          wb.SheetNames.find(n => names.some(m => n.toLowerCase().includes(m.toLowerCase())));
+    Promise.all(files.map(processFile)).then(() => {
+      if (allAngelus.length)  setAngelusPrices(allAngelus);
+      if (allComp.length)     setCompetitionPrices(allComp);
+      if (allStock.length)    setStockRecords(allStock);
 
-        const angelusSheet = sheetMatch(["precios angelus","angelus precio","angelus"]);
-        const compSheet    = sheetMatch(["competencia","competidor","comp"]);
-        const stockSheet   = sheetMatch(["stock"]);
-
-        if (angelusSheet) {
-          const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[angelusSheet]);
-          const parsed = parseAngelusSheet(rows);
-          if (parsed.length) { setAngelusPrices(parsed); angelusLoaded = parsed.length; }
-        }
-        if (compSheet) {
-          const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[compSheet]);
-          const parsed = parseCompetenciaSheet(rows);
-          if (parsed.length) { setCompetitionPrices(parsed); compLoaded = parsed.length; }
-        }
-        if (stockSheet) {
-          const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[stockSheet]);
-          const parsed = parseStockSheet(rows);
-          if (parsed.length) { setStockRecords(parsed); stockLoaded = parsed.length; }
-        }
-
-        const total = angelusLoaded + compLoaded + stockLoaded;
-        if (total === 0) {
-          toast({
-            title: "No se encontraron datos",
-            description: "Verifica que el archivo tenga las hojas correctas: 'Precios Angelus', 'Precios Competencia', 'Stock'.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Excel cargado correctamente",
-            description: `${angelusLoaded} precios Angelus · ${compLoaded} competencia · ${stockLoaded} stock`,
-          });
-        }
-      } catch (err) {
+      const total = totalAngelus + totalComp + totalStock;
+      if (total === 0) {
         toast({
-          title: "Error al leer el archivo",
-          description: "Asegúrate de que sea un archivo .xlsx o .xls válido.",
+          title: "No se reconoció el formato",
+          description: errors > 0
+            ? "Uno o más archivos no se pudieron leer."
+            : "Verifica que los archivos tengan el formato correcto.",
           variant: "destructive",
         });
+      } else {
+        const parts: string[] = [];
+        if (totalAngelus) parts.push(`${totalAngelus} precios Angelus`);
+        if (totalComp)    parts.push(`${totalComp} competencia`);
+        if (totalStock)   parts.push(`${totalStock} stock`);
+        toast({
+          title: `${files.length} archivo${files.length > 1 ? "s" : ""} cargado${files.length > 1 ? "s" : ""}`,
+          description: parts.join(" · "),
+        });
       }
-    };
-    reader.readAsArrayBuffer(file);
+    });
   };
 
   return (
@@ -208,14 +300,15 @@ export function ExcelImporter() {
         ref={inputRef}
         type="file"
         accept=".xlsx,.xls"
+        multiple
         className="hidden"
-        onChange={handleFile}
+        onChange={handleFiles}
       />
       <Button
         variant="outline"
         size="sm"
         className="h-8 gap-1.5 text-xs"
-        onClick={() => downloadTemplate()}
+        onClick={downloadTemplate}
         title="Descargar plantilla Excel con el formato correcto"
       >
         <Download className="h-3.5 w-3.5" />
@@ -225,17 +318,17 @@ export function ExcelImporter() {
         size="sm"
         className="h-8 gap-1.5 text-xs bg-primary hover:bg-primary/90"
         onClick={() => inputRef.current?.click()}
-        title="Cargar datos desde un archivo Excel de tu computadora"
+        title="Cargar 1, 2 o los 3 archivos Excel a la vez"
       >
         <FileSpreadsheet className="h-3.5 w-3.5" />
-        Cargar Excel
+        Cargar Excel (hasta 3)
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        className="h-8 gap-1.5 text-xs text-muted-foreground"
+        className="h-8 w-8 p-0 text-muted-foreground"
         onClick={() => { resetToSampleData(); toast({ title: "Datos de ejemplo restaurados" }); }}
-        title="Volver a los datos de muestra"
+        title="Restaurar datos de ejemplo"
       >
         <RotateCcw className="h-3.5 w-3.5" />
       </Button>
