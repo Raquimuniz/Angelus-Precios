@@ -19,7 +19,7 @@ import { MultiSelect } from "@/components/MultiSelect";
 const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64748B"];
 
 export default function AngelusVsAngelus() {
-  const { angelusPrices, productNames, competitors } = useData();
+  const { angelusPrices, competitionPrices, productNames } = useData();
 
   const [filterText,  setFilterText]  = useState("");
   const [filterCanal, setFilterCanal] = useState<string>("Todos");
@@ -33,9 +33,21 @@ export default function AngelusVsAngelus() {
     if (productNames.length) setChartProduct(p => p && productNames.includes(p) ? p : productNames[0]);
   }, [productNames]);
 
+  // Competitors available for the selected product only
+  const productCompetitors = useMemo(() =>
+    Array.from(new Set(
+      competitionPrices
+        .filter(p => p.productoAngelusReferencia === chartProduct)
+        .map(p => p.laboratorioCompetidor)
+        .filter(Boolean)
+    )).sort(),
+    [competitionPrices, chartProduct]
+  );
+
+  // Reset selection when product changes
   useEffect(() => {
-    if (competitors.length) setChartCompetitors(competitors.slice(0, 3));
-  }, [competitors]);
+    setChartCompetitors(productCompetitors.slice(0, 3));
+  }, [productCompetitors]);
 
   const tableData = useMemo(() => {
     let filtered = angelusPrices;
@@ -183,7 +195,7 @@ export default function AngelusVsAngelus() {
               </SelectContent>
             </Select>
             <MultiSelect
-              options={competitors}
+              options={productCompetitors}
               selected={chartCompetitors}
               onChange={setChartCompetitors}
               placeholder="Competidores..."

@@ -58,21 +58,33 @@ function ProductCombobox({ value, onChange, options }: { value: string; onChange
 }
 
 export default function Dashboard() {
-  const { angelusPrices, competitionPrices, stockRecords, productNames, competitors } = useData();
+  const { angelusPrices, competitionPrices, stockRecords, productNames } = useData();
   const [, setLocation] = useLocation();
 
   const [canal,            setCanal]            = useState<"Droguería" | "Farmacia">("Droguería");
   const [chartProduct,     setChartProduct]     = useState<string>("");
   const [chartCompetitors, setChartCompetitors] = useState<string[]>([]);
 
-  // Sync selectors when data changes (e.g. after Excel load)
+  // Sync product when data loads
   useEffect(() => {
     if (productNames.length) setChartProduct(p => p || productNames[0]);
   }, [productNames]);
 
+  // Competitors available for the selected product only
+  const productCompetitors = useMemo(() =>
+    Array.from(new Set(
+      competitionPrices
+        .filter(p => p.productoAngelusReferencia === chartProduct)
+        .map(p => p.laboratorioCompetidor)
+        .filter(Boolean)
+    )).sort(),
+    [competitionPrices, chartProduct]
+  );
+
+  // Reset competitor selection when product changes
   useEffect(() => {
-    if (competitors.length) setChartCompetitors(competitors.slice(0, 3));
-  }, [competitors]);
+    setChartCompetitors(productCompetitors.slice(0, 3));
+  }, [productCompetitors]);
 
   const drogueriaPrices = angelusPrices.filter(p => p.canal === "Droguería");
   const farmaciaPrices  = angelusPrices.filter(p => p.canal === "Farmacia");
@@ -192,7 +204,7 @@ export default function Dashboard() {
             <div className="flex flex-wrap gap-2 mt-2">
               <ProductCombobox value={chartProduct} onChange={setChartProduct} options={productNames} />
               <MultiSelect
-                options={competitors}
+                options={productCompetitors}
                 selected={chartCompetitors}
                 onChange={setChartCompetitors}
                 placeholder="Competidores..."

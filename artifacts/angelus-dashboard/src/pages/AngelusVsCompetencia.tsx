@@ -14,21 +14,33 @@ import {
 import { generateProductVsCompetitors } from "@/lib/data";
 
 export default function AngelusVsCompetencia() {
-  const { angelusPrices, competitionPrices, productNames, competitors } = useData();
+  const { angelusPrices, competitionPrices, productNames } = useData();
 
   const [canal, setCanal] = useState<"Droguería" | "Farmacia">("Droguería");
 
   const [chartProduct,    setChartProduct]    = useState<string>("");
   const [chartCompetitor, setChartCompetitor] = useState<string>("");
 
-  // Sync selectors when data changes
+  // Sync product when data loads
   useEffect(() => {
     if (productNames.length) setChartProduct(p => p && productNames.includes(p) ? p : productNames[0]);
   }, [productNames]);
 
+  // Competitors available for the selected product only
+  const productCompetitors = useMemo(() =>
+    Array.from(new Set(
+      competitionPrices
+        .filter(p => p.productoAngelusReferencia === chartProduct)
+        .map(p => p.laboratorioCompetidor)
+        .filter(Boolean)
+    )).sort(),
+    [competitionPrices, chartProduct]
+  );
+
+  // Reset competitor selection when product changes
   useEffect(() => {
-    if (competitors.length) setChartCompetitor(c => c && competitors.includes(c) ? c : competitors[0]);
-  }, [competitors]);
+    setChartCompetitor(productCompetitors[0] ?? "");
+  }, [productCompetitors]);
 
   const tableData = useMemo(() => {
     const myPrices   = angelusPrices.filter(p => p.canal === canal);
@@ -139,7 +151,7 @@ export default function AngelusVsCompetencia() {
               <Select value={chartCompetitor} onValueChange={setChartCompetitor}>
                 <SelectTrigger className="h-8 w-48 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {competitors.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  {productCompetitors.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
