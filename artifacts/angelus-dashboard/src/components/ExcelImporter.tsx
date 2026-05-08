@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useData } from "@/context/DataContext";
 import { AngelusPriceRecord, CompetitionPriceRecord, StockRecord } from "@/lib/data";
-import { FileSpreadsheet, RotateCcw } from "lucide-react";
+import { FileSpreadsheet, RotateCcw, CheckCircle2, Loader2 } from "lucide-react";
 
 interface LastLoad {
   angelus: AngelusPriceRecord[];
@@ -12,6 +12,8 @@ interface LastLoad {
   stock: StockRecord[];
   label: string;
 }
+
+type ProcessStatus = "idle" | "processing" | "done";
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -199,50 +201,31 @@ function detectAndParse(rows: RawRow[]): {
   return { angelus: [], competencia: [], stock: [] };
 }
 
-// ── template generator ─────────────────────────────────────────────────────────
-
-function downloadTemplate() {
-  const wb = XLSX.utils.book_new();
-
-  // Sheet 1 — Angelus por droguería (formato real)
-  const angelusSample = [
-    { "DESCRIPCIÓN": "AMOXICILINA 500MG X30 (ANGELUS)", "MÁS BARATO": "COBECA $ 12.50", "COBECA03": "$ 12.50", "COBECA13": "$ 12.75", "DRONENA": "$ 13.00", "INSUAMINCA (M)": "$ 0.00" },
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(angelusSample), "Mis productos x Droguería");
-
-  // Sheet 2 — Competidores droguería
-  const compDrogSample = [
-    { "BARRA": "12345", "MARCA / PROVEEDOR": "PFIZER", "PRODUCTO": "AMOXIL 500MG X30", "UM": "30", "INV": "50.00", "MOLÉCULA": "AMOXICILINA 500MG", "PG": "BSS 15.00", "PU": "BSS 15.00", "PE": "BSS 15.00", "VARIACIÓN": "0.00 %" },
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compDrogSample), "Mis Productos X Otros Labs");
-
-  // Sheet 3 — Competidores farmacias
-  const compFarmSample = [
-    { "Farmacia": "LOCATEL", "Fecha": "07/05/2026", "Búsqueda": "AMOXICILINA", "Medicamento": "AMOXIL 500MG X30", "Laboratorio": "PFIZER", "Concentración": "500MG", "Presentación": "30 Cápsulas", "Precio $": "14.20" },
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(compFarmSample), "Productos unificados");
-
-  // Sheet 4 — Stock (manual)
-  const stockSample = [
-    { productoAngelus: "AMOXICILINA 500MG", drogueria: "COBECA03", stockActual: 250, stockMinimoEsperado: 50, stockIdeal: 300, ventasPromedio: 30, diasInventario: 8, estadoStock: "Saludable", nivelAlerta: "Normal" },
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(stockSample), "Stock");
-
-  XLSX.writeFile(wb, "Angelus_Plantilla.xlsx");
-}
-
 // ── component ──────────────────────────────────────────────────────────────────
 
 export function ExcelImporter() {
   const { setAngelusPrices, setCompetitionPrices, setStockRecords } = useData();
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [lastLoad, setLastLoad] = useState<LastLoad | null>(null);
+
+  const [lastLoad,   setLastLoad]   = useState<LastLoad | null>(null);
+  const [status,     setStatus]     = useState<ProcessStatus>("idle");
+  const [secsLeft,   setSecsLeft]   = useState(0);
+  const [totalRecs,  setTotalRecs]  = useState(0);
+
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const doneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => () => {
+    if (timerRef.current)     clearInterval(timerRef.current);
+    if (doneTimerRef.current) clearTimeout(doneTimerRef.current);
+  }, []);
 
   const applyLoad = (load: LastLoad) => {
-    if (load.angelus.length)    setAngelusPrices(load.angelus);
+    if (load.angelus.length)     setAngelusPrices(load.angelus);
     if (load.competencia.length) setCompetitionPrices(load.competencia);
-    if (load.stock.length)      setStockRecords(load.stock);
+    if (load.stock.length)       setStockRecords(load.stock);
   };
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,10 +233,22 @@ export function ExcelImporter() {
     if (inputRef.current) inputRef.current.value = "";
     if (!files.length) return;
 
+    // Estimate processing time from total file size (conservative: ~25 KB/s net parse work)
+    const totalBytes   = files.reduce((s, f) => s + f.size, 0);
+    const estimatedSec = Math.max(2, Math.ceil(totalBytes / 25_000));
+
+    // Start countdown
+    setStatus("processing");
+    setSecsLeft(estimatedSec);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setSecsLeft(prev => (prev > 1 ? prev - 1 : 1)); // hold at 1 until actually done
+    }, 1000);
+
     let totalAngelus = 0, totalComp = 0, totalStock = 0;
-    const allAngelus: AngelusPriceRecord[] = [];
-    const allComp: CompetitionPriceRecord[] = [];
-    const allStock: StockRecord[] = [];
+    const allAngelus: AngelusPriceRecord[]      = [];
+    const allComp:    CompetitionPriceRecord[]  = [];
+    const allStock:   StockRecord[]             = [];
     let errors = 0;
 
     const processFile = (file: File): Promise<void> =>
@@ -270,8 +265,8 @@ export function ExcelImporter() {
               allComp.push(...competencia);
               allStock.push(...stock);
               totalAngelus += angelus.length;
-              totalComp += competencia.length;
-              totalStock += stock.length;
+              totalComp    += competencia.length;
+              totalStock   += stock.length;
             });
           } catch {
             errors++;
@@ -282,8 +277,13 @@ export function ExcelImporter() {
       });
 
     Promise.all(files.map(processFile)).then(() => {
+      // Stop countdown
+      if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+
       const total = totalAngelus + totalComp + totalStock;
+
       if (total === 0) {
+        setStatus("idle");
         toast({
           title: "No se reconoció el formato",
           description: errors > 0
@@ -294,6 +294,7 @@ export function ExcelImporter() {
         return;
       }
 
+      // Apply data immediately — no need to press restore
       const load: LastLoad = {
         angelus:     allAngelus,
         competencia: allComp,
@@ -301,34 +302,49 @@ export function ExcelImporter() {
         label:       files.map(f => f.name).join(", "),
       };
       setLastLoad(load);
+      setTotalRecs(total);
       applyLoad(load);
 
+      // Show "done" state
+      setSecsLeft(0);
+      setStatus("done");
+
       const parts: string[] = [];
-      if (totalAngelus) parts.push(`${totalAngelus} precios Angelus`);
+      if (totalAngelus) parts.push(`${totalAngelus} Angelus`);
       if (totalComp)    parts.push(`${totalComp} competencia`);
       if (totalStock)   parts.push(`${totalStock} stock`);
       toast({
-        title: `${files.length} archivo${files.length > 1 ? "s" : ""} cargado${files.length > 1 ? "s" : ""}`,
+        title: "✓ Dashboard actualizado",
         description: parts.join(" · "),
       });
+
+      // Reset button to idle after 4 s
+      if (doneTimerRef.current) clearTimeout(doneTimerRef.current);
+      doneTimerRef.current = setTimeout(() => setStatus("idle"), 4000);
     });
   };
 
   const handleReload = () => {
-    if (!lastLoad) {
-      toast({
-        title: "Sin carga previa",
-        description: "Primero carga un archivo Excel.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!lastLoad) return;
     applyLoad(lastLoad);
-    toast({
-      title: "Dashboard actualizado",
-      description: `Recargado desde: ${lastLoad.label}`,
-    });
+    toast({ title: "Dashboard actualizado", description: `Recargado desde última carga (${totalRecs.toLocaleString()} registros)` });
   };
+
+  // Button appearance based on status
+  const btnClass =
+    status === "processing" ? "h-8 gap-1.5 text-xs bg-amber-500 hover:bg-amber-500 text-white cursor-not-allowed" :
+    status === "done"       ? "h-8 gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-600 text-white" :
+                              "h-8 gap-1.5 text-xs bg-primary hover:bg-primary/90";
+
+  const btnLabel =
+    status === "processing" ? `Procesando… ${secsLeft}s` :
+    status === "done"       ? `✓ ${totalRecs.toLocaleString()} registros` :
+                              "Cargar Excel";
+
+  const BtnIcon =
+    status === "processing" ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> :
+    status === "done"       ? <CheckCircle2 className="h-3.5 w-3.5" /> :
+                              <FileSpreadsheet className="h-3.5 w-3.5" />;
 
   return (
     <div className="flex items-center gap-2">
@@ -342,20 +358,25 @@ export function ExcelImporter() {
       />
       <Button
         size="sm"
-        className="h-8 gap-1.5 text-xs bg-primary hover:bg-primary/90"
-        onClick={() => inputRef.current?.click()}
-        title="Cargar 1, 2 o los 3 archivos Excel a la vez"
+        className={btnClass}
+        disabled={status === "processing"}
+        onClick={() => status === "idle" && inputRef.current?.click()}
+        title={
+          status === "processing" ? "Procesando archivos…" :
+          status === "done"       ? "Datos cargados correctamente" :
+                                    "Cargar 1, 2 o los 3 archivos Excel a la vez"
+        }
       >
-        <FileSpreadsheet className="h-3.5 w-3.5" />
-        Cargar Excel
+        {BtnIcon}
+        {btnLabel}
       </Button>
       <Button
         variant="outline"
         size="sm"
         className="h-8 w-8 p-0 text-muted-foreground"
         onClick={handleReload}
-        title={lastLoad ? `Recargar última carga: ${lastLoad.label}` : "Sin carga previa"}
-        disabled={!lastLoad}
+        title={lastLoad ? `Recargar última carga (${totalRecs.toLocaleString()} registros)` : "Sin carga previa"}
+        disabled={!lastLoad || status === "processing"}
       >
         <RotateCcw className="h-3.5 w-3.5" />
       </Button>
