@@ -7,21 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
+import { FileSpreadsheet } from "lucide-react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip as RechartsTooltip, ResponsiveContainer, Cell,
 } from "recharts";
-import { generateProductVsCompetitors } from "@/lib/data";
+
+const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64748B"];
 
 export default function AngelusVsCompetencia() {
-  const { angelusPrices, competitionPrices, productNames } = useData();
+  const { angelusPrices, competitionPrices, productNames, isDataLoaded } = useData();
 
   const [canal, setCanal] = useState<"Droguería" | "Farmacia">("Droguería");
-
   const [chartProduct,    setChartProduct]    = useState<string>("");
   const [chartCompetitor, setChartCompetitor] = useState<string>("");
 
-  // Sync product when data loads
   useEffect(() => {
     if (productNames.length) setChartProduct(p => p && productNames.includes(p) ? p : productNames[0]);
   }, [productNames]);
@@ -37,7 +37,6 @@ export default function AngelusVsCompetencia() {
     [competitionPrices, chartProduct]
   );
 
-  // Reset competitor selection when product changes
   useEffect(() => {
     setChartCompetitor(productCompetitors[0] ?? "");
   }, [productCompetitors]);
@@ -61,30 +60,57 @@ export default function AngelusVsCompetencia() {
       else if (varPct <= 15) resultBadge = { label: "Competencia más barata",  color: "bg-orange-500" };
       else                   resultBadge = { label: "Alerta Crítica",           color: "bg-destructive text-destructive-foreground" };
 
-      return { producto: prod, miPrecio: myBest.precio, miDonde: myBest.drogueria, compNombre: compBest.productoCompetidor, compPrecio: compBest.precioCompetidor, compDonde: compBest.cliente, varPct, resultBadge };
+      return {
+        producto: prod, miPrecio: myBest.precio, miDonde: myBest.drogueria,
+        compNombre: compBest.productoCompetidor, compPrecio: compBest.precioCompetidor,
+        compDonde: compBest.cliente, compLab: compBest.laboratorioCompetidor,
+        varPct, resultBadge,
+      };
     }).filter(Boolean) as any[];
   }, [angelusPrices, competitionPrices, canal]);
 
-  const lineHistory = useMemo(
-    () => chartProduct && chartCompetitor
-      ? generateProductVsCompetitors(chartProduct, [chartCompetitor], canal)
-      : [],
-    [chartProduct, chartCompetitor, canal]
-  );
+  // Bar chart: Angelus min + all records of selected competitor for the product
+  const barData = useMemo(() => {
+    if (!chartProduct) return [];
+    const myPrices = angelusPrices.filter(p => p.productoAngelus === chartProduct && p.canal === canal);
+    if (!myPrices.length) return [];
+    const myMin = Math.min(...myPrices.map(p => p.precio));
+    const bars: { name: string; precio: number; type: string }[] = [
+      { name: "Angelus (mín)", precio: myMin, type: "angelus" },
+    ];
+    if (chartCompetitor) {
+      const cp = competitionPrices.filter(p =>
+        p.productoAngelusReferencia === chartProduct &&
+        p.canal === canal &&
+        p.laboratorioCompetidor === chartCompetitor
+      );
+      cp.forEach((r, i) => {
+        bars.push({ name: r.productoCompetidor || `${chartCompetitor} ${i + 1}`, precio: r.precioCompetidor, type: "comp" });
+      });
+    }
+    return bars.sort((a, b) => a.precio - b.precio);
+  }, [angelusPrices, competitionPrices, chartProduct, chartCompetitor, canal]);
 
-  const yDomain = useMemo(() => {
-    const vals = lineHistory.flatMap(r => ["Angelus", chartCompetitor].map(k => (r[k] as number) ?? 0)).filter(v => v > 0);
-    if (!vals.length) return [0, 50];
-    const lo = Math.min(...vals), hi = Math.max(...vals), pad = Math.max((hi - lo) * 0.2, 1);
-    return [Math.max(0, lo - pad), hi + pad];
-  }, [lineHistory, chartCompetitor]);
+  if (!isDataLoaded) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center">
+        <FileSpreadsheet className="h-16 w-16 text-muted-foreground/40" />
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">No hay datos cargados</h2>
+          <p className="text-muted-foreground mt-2 max-w-sm">
+            Usa el botón <strong>Cargar Excel</strong> para importar tus archivos.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-primary">Angelus vs Competencia</h2>
-          <p className="text-muted-foreground">Comparativa de precios contra líderes del mercado.</p>
+          <p className="text-muted-foreground">Comparativa de precios actuales contra el mercado.</p>
         </div>
         <ToggleGroup type="single" value={canal} onValueChange={(v) => v && setCanal(v as "Droguería" | "Farmacia")}>
           <ToggleGroupItem value="Droguería" className="px-6">Droguerías</ToggleGroupItem>
@@ -98,10 +124,10 @@ export default function AngelusVsCompetencia() {
             <TableRow>
               <TableHead>Producto Angelus</TableHead>
               <TableHead>Mi Mejor Precio</TableHead>
-              <TableHead>Dónde soy más barato</TableHead>
+              <TableHead>Dónde</TableHead>
               <TableHead>Competidor Mínimo</TableHead>
-              <TableHead>Precio Competidor</TableHead>
-              <TableHead>Dónde (Comp)</TableHead>
+              <TableHead>Laboratorio</TableHead>
+              <TableHead>Precio Comp.</TableHead>
               <TableHead>Brecha %</TableHead>
               <TableHead>Estado</TableHead>
             </TableRow>
@@ -112,9 +138,9 @@ export default function AngelusVsCompetencia() {
                 <TableCell className="font-medium">{row.producto}</TableCell>
                 <TableCell className="font-bold text-primary">{formatCurrency(row.miPrecio)}</TableCell>
                 <TableCell className="text-xs text-muted-foreground">{row.miDonde}</TableCell>
-                <TableCell>{row.compNombre}</TableCell>
-                <TableCell className="font-bold text-muted-foreground">{formatCurrency(row.compPrecio)}</TableCell>
-                <TableCell className="text-xs text-muted-foreground">{row.compDonde}</TableCell>
+                <TableCell className="text-xs">{row.compNombre}</TableCell>
+                <TableCell className="text-xs text-muted-foreground">{row.compLab}</TableCell>
+                <TableCell className="font-bold">{formatCurrency(row.compPrecio)}</TableCell>
                 <TableCell className={`font-medium ${row.varPct > 0 ? "text-destructive" : "text-emerald-600"}`}>
                   {row.varPct > 0 ? "+" : ""}{formatPercentage(row.varPct)}
                 </TableCell>
@@ -122,7 +148,7 @@ export default function AngelusVsCompetencia() {
               </TableRow>
             ))}
             {tableData.length === 0 && (
-              <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No hay datos de competencia para el canal seleccionado</TableCell></TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Sin datos de competencia para el canal seleccionado</TableCell></TableRow>
             )}
           </TableBody>
         </Table>
@@ -132,9 +158,11 @@ export default function AngelusVsCompetencia() {
 
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base">Evolución de Precios — Mi Producto vs Competidor</CardTitle>
+          <CardTitle className="text-base">Angelus vs Competidor — Precios Actuales</CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Canal: <strong>{canal}</strong> · <span className="text-[#1B4F8A] font-semibold">Azul = Angelus</span> · <span className="text-destructive font-semibold">Rojo = Competidor</span>
+            Canal: <strong>{canal}</strong> ·
+            <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus mín.</span> ·
+            <span className="text-destructive font-semibold"> Rojo = productos competidor</span>
           </p>
           <div className="flex flex-wrap gap-3 mt-3">
             <div className="flex items-center gap-2">
@@ -158,23 +186,23 @@ export default function AngelusVsCompetencia() {
           </div>
         </CardHeader>
         <CardContent className="h-[300px]">
-          {lineHistory.length === 0 ? (
+          {barData.length === 0 ? (
             <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-              Selecciona un producto y competidor
+              {chartProduct ? "Sin datos para este producto/canal/competidor" : "Selecciona un producto"}
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} />
-                <YAxis domain={yDomain} tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
-                <RechartsTooltip formatter={(v: number, n: string) => [`$${v.toFixed(2)}`, n]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Line type="monotone" dataKey="Angelus" stroke="#1B4F8A" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                {chartCompetitor && (
-                  <Line type="monotone" dataKey={chartCompetitor} stroke="#E11D48" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                )}
-              </LineChart>
+              <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 40 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#6b7280" }} angle={-35} textAnchor="end" interval={0} />
+                <YAxis tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
+                <RechartsTooltip formatter={(v: number) => [`$${v.toFixed(2)}`, "Precio"]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+                <Bar dataKey="precio" radius={[4, 4, 0, 0]}>
+                  {barData.map((entry, i) => (
+                    <Cell key={i} fill={entry.type === "angelus" ? "#1B4F8A" : COMP_COLORS[i % COMP_COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           )}
         </CardContent>

@@ -4,12 +4,11 @@ import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
-  PieChart, Pie, Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip as RechartsTooltip, ResponsiveContainer, Cell,
+  PieChart, Pie,
 } from "recharts";
-import { AlertCircle, DollarSign, Package, TrendingDown, TrendingUp } from "lucide-react";
-import { generateProductVsCompetitors } from "@/lib/data";
+import { AlertCircle, DollarSign, Package, TrendingDown, TrendingUp, FileSpreadsheet } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MultiSelect } from "@/components/MultiSelect";
 import { Separator } from "@/components/ui/separator";
@@ -28,7 +27,6 @@ function ProductCombobox({ value, onChange, options }: { value: string; onChange
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const filtered = options.filter(p => p.toLowerCase().includes(search.toLowerCase()));
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -58,14 +56,13 @@ function ProductCombobox({ value, onChange, options }: { value: string; onChange
 }
 
 export default function Dashboard() {
-  const { angelusPrices, competitionPrices, stockRecords, productNames } = useData();
+  const { angelusPrices, competitionPrices, stockRecords, productNames, isDataLoaded, dataDate } = useData();
   const [, setLocation] = useLocation();
 
   const [canal,            setCanal]            = useState<"Droguería" | "Farmacia">("Droguería");
   const [chartProduct,     setChartProduct]     = useState<string>("");
   const [chartCompetitors, setChartCompetitors] = useState<string[]>([]);
 
-  // Sync product when data loads
   useEffect(() => {
     if (productNames.length) setChartProduct(p => p || productNames[0]);
   }, [productNames]);
@@ -81,7 +78,6 @@ export default function Dashboard() {
     [competitionPrices, chartProduct]
   );
 
-  // Reset competitor selection when product changes
   useEffect(() => {
     setChartCompetitors(productCompetitors.slice(0, 3));
   }, [productCompetitors]);
@@ -117,24 +113,33 @@ export default function Dashboard() {
 
   const alertDistribution = [
     { name: "Crítico", value: alertasCriticas },
-    { name: "Alto",    value: Math.max(1, Math.floor(totalProductos * 0.3)) },
-    { name: "Medio",   value: Math.max(1, Math.floor(totalProductos * 0.4)) },
-    { name: "Normal",  value: Math.max(1, Math.floor(totalProductos * 0.8)) },
-  ];
+    { name: "Alto",    value: Math.max(0, Math.floor(totalProductos * 0.3)) },
+    { name: "Medio",   value: Math.max(0, Math.floor(totalProductos * 0.4)) },
+    { name: "Normal",  value: Math.max(0, Math.floor(totalProductos * 0.8)) },
+  ].filter(d => d.value > 0);
 
-  const lineHistory = useMemo(
-    () => chartProduct && chartCompetitors.length
-      ? generateProductVsCompetitors(chartProduct, chartCompetitors, canal)
-      : [],
-    [chartProduct, chartCompetitors, canal]
-  );
-  const allLineKeys = ["Angelus", ...chartCompetitors];
-  const yDomain = useMemo(() => {
-    const vals = lineHistory.flatMap(r => allLineKeys.map(k => (r[k] as number) ?? 0)).filter(v => v > 0);
-    if (!vals.length) return [0, 50];
-    const lo = Math.min(...vals), hi = Math.max(...vals), pad = Math.max((hi - lo) * 0.2, 1);
-    return [Math.max(0, lo - pad), hi + pad];
-  }, [lineHistory, allLineKeys]);
+  // Real bar chart data: Angelus price + selected competitors for the chosen product
+  const barData = useMemo(() => {
+    if (!chartProduct) return [];
+    const myPrices = angelusPrices.filter(p => p.productoAngelus === chartProduct && p.canal === canal);
+    if (!myPrices.length) return [];
+    const myMin = Math.min(...myPrices.map(p => p.precio));
+    const bars: { name: string; precio: number; colorIdx: number }[] = [
+      { name: "Angelus", precio: myMin, colorIdx: -1 },
+    ];
+    chartCompetitors.forEach((comp, i) => {
+      const cp = competitionPrices.filter(p =>
+        p.productoAngelusReferencia === chartProduct &&
+        p.canal === canal &&
+        p.laboratorioCompetidor === comp
+      );
+      if (cp.length) {
+        const avg = cp.reduce((a, b) => a + b.precioCompetidor, 0) / cp.length;
+        bars.push({ name: comp, precio: Number(avg.toFixed(2)), colorIdx: i });
+      }
+    });
+    return bars;
+  }, [angelusPrices, competitionPrices, chartProduct, chartCompetitors, canal]);
 
   const kpiCard = (
     title: string, value: ReactNode, sub: string,
@@ -155,12 +160,29 @@ export default function Dashboard() {
     </Card>
   );
 
+  if (!isDataLoaded) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center">
+        <FileSpreadsheet className="h-16 w-16 text-muted-foreground/40" />
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">No hay datos cargados</h2>
+          <p className="text-muted-foreground mt-2 max-w-sm">
+            Usa el botón <strong>Cargar Excel</strong> en la barra superior para importar tus archivos de precios.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-primary">Resumen Ejecutivo</h2>
-          <p className="text-muted-foreground">Visión general del mercado y precios de Angelus.</p>
+          <p className="text-muted-foreground">
+            Visión general del mercado y precios de Angelus.
+            {dataDate && <span className="ml-2 text-xs font-medium text-emerald-600">Datos al {dataDate}</span>}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">Canal:</span>
@@ -179,7 +201,7 @@ export default function Dashboard() {
           `En ${totalPuntos} puntos de venta`, <Package className="h-4 w-4 text-muted-foreground" />, "/angelus-vs-angelus")}
         {kpiCard("Alertas Críticas", <span className="text-destructive">{alertasCriticas}</span>,
           "Requieren atención inmediata", <AlertCircle className="h-4 w-4 text-destructive" />, "/alertas",
-          "border-destructive/20 bg-destructive/5")}
+          alertasCriticas > 0 ? "border-destructive/20 bg-destructive/5" : "")}
         {kpiCard(`Precio Promedio — ${canal}`, <span>{formatCurrency(avgCanal)}</span>,
           `Drog: ${formatCurrency(avgDrogueria)} · Farm: ${formatCurrency(avgFarmacia)}`,
           <DollarSign className="h-4 w-4 text-muted-foreground" />, "/angelus-vs-angelus")}
@@ -198,8 +220,8 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="text-base">Mi Producto vs Competencia</CardTitle>
             <p className="text-xs text-muted-foreground">
-              Canal: <strong>{canal}</strong> · Eje X: mes · Eje Y: precio USD ·
-              <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus</span>
+              Canal: <strong>{canal}</strong> · Precio actual (snapshot) ·
+              <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus mín.</span>
             </p>
             <div className="flex flex-wrap gap-2 mt-2">
               <ProductCombobox value={chartProduct} onChange={setChartProduct} options={productNames} />
@@ -213,25 +235,23 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent className="h-[290px]">
-            {lineHistory.length === 0 ? (
+            {barData.length === 0 ? (
               <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                Selecciona un producto y competidores
+                {chartProduct ? "Sin datos de competencia para este producto/canal" : "Selecciona un producto"}
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} />
-                  <YAxis domain={yDomain} tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
-                  <RechartsTooltip formatter={(v: number, n: string) => [`$${v.toFixed(2)}`, n]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Line type="monotone" dataKey="Angelus" stroke="#1B4F8A" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                  {chartCompetitors.map((comp, i) => (
-                    <Line key={comp} type="monotone" dataKey={comp}
-                      stroke={COMP_COLORS[i % COMP_COLORS.length]} strokeWidth={2}
-                      strokeDasharray="5 3" dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                  ))}
-                </LineChart>
+                <BarChart data={barData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#6b7280" }} />
+                  <YAxis tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
+                  <RechartsTooltip formatter={(v: number) => [`$${v.toFixed(2)}`, "Precio"]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+                  <Bar dataKey="precio" radius={[4, 4, 0, 0]}>
+                    {barData.map((entry, i) => (
+                      <Cell key={i} fill={entry.colorIdx === -1 ? "#1B4F8A" : COMP_COLORS[entry.colorIdx % COMP_COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             )}
           </CardContent>
@@ -243,25 +263,29 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">Haz clic en un nivel para ver los productos</p>
           </CardHeader>
           <CardContent className="h-[330px] flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={alertDistribution}
-                  cx="50%" cy="50%"
-                  innerRadius={70} outerRadius={115} paddingAngle={4}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                  onClick={() => setLocation("/alertas")}
-                  style={{ cursor: "pointer" }}
-                >
-                  {alertDistribution.map((entry, i) => (
-                    <Cell key={i} fill={ALERT_COLORS[entry.name] ?? "#94a3b8"} />
-                  ))}
-                </Pie>
-                <RechartsTooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            {alertDistribution.length === 0 ? (
+              <p className="text-muted-foreground text-sm">Sin alertas detectadas</p>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={alertDistribution}
+                    cx="50%" cy="50%"
+                    innerRadius={70} outerRadius={115} paddingAngle={4}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
+                    onClick={() => setLocation("/alertas")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {alertDistribution.map((entry, i) => (
+                      <Cell key={i} fill={ALERT_COLORS[entry.name] ?? "#94a3b8"} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
       </div>
