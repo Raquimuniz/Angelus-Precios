@@ -12,7 +12,6 @@ import {
   Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import { generateProductVsCompetitors, PRODUCTS, COMPETITORS } from "@/lib/data";
-import { MultiSelect } from "@/components/MultiSelect";
 
 const ALL_PRODUCT_NAMES = PRODUCTS.map(p => p.name);
 const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64748B"];
@@ -20,14 +19,14 @@ const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64
 export default function AngelusVsCompetencia() {
   const { angelusPrices, competitionPrices } = useData();
 
-  // ── Shared filter ──────────────────────────────────────────────────────────
+  // Shared canal filter
   const [canal, setCanal] = useState<"Droguería" | "Farmacia">("Droguería");
 
-  // ── Chart selectors ────────────────────────────────────────────────────────
-  const [chartProduct,     setChartProduct]     = useState<string>(ALL_PRODUCT_NAMES[0]);
-  const [chartCompetitors, setChartCompetitors] = useState<string[]>(COMPETITORS.slice(0, 3));
+  // Chart selectors — single product, single competitor
+  const [chartProduct,    setChartProduct]    = useState<string>(ALL_PRODUCT_NAMES[0]);
+  const [chartCompetitor, setChartCompetitor] = useState<string>(COMPETITORS[0]);
 
-  // ── Table data ─────────────────────────────────────────────────────────────
+  // Table data
   const tableData = useMemo(() => {
     const myPrices   = angelusPrices.filter(p => p.canal === canal);
     const compPrices = competitionPrices.filter(p => p.canal === canal);
@@ -38,9 +37,8 @@ export default function AngelusVsCompetencia() {
       const compProd = compPrices.filter(p => p.productoAngelusReferencia === prod).sort((a, b) => a.precioCompetidor - b.precioCompetidor);
       if (!myProd.length || !compProd.length) return null;
 
-      const myBest   = myProd[0];
-      const compBest = compProd[0];
-      const varPct   = ((myBest.precio - compBest.precioCompetidor) / compBest.precioCompetidor) * 100;
+      const myBest = myProd[0], compBest = compProd[0];
+      const varPct = ((myBest.precio - compBest.precioCompetidor) / compBest.precioCompetidor) * 100;
 
       let resultBadge = { label: "", color: "" };
       if (varPct < -3)       resultBadge = { label: "Angelus más competitivo", color: "bg-emerald-500" };
@@ -48,56 +46,37 @@ export default function AngelusVsCompetencia() {
       else if (varPct <= 15) resultBadge = { label: "Competencia más barata",  color: "bg-orange-500" };
       else                   resultBadge = { label: "Alerta Crítica",           color: "bg-destructive text-destructive-foreground" };
 
-      return {
-        producto:   prod,
-        miPrecio:   myBest.precio,
-        miDonde:    myBest.drogueria,
-        compNombre: compBest.productoCompetidor,
-        compPrecio: compBest.precioCompetidor,
-        compDonde:  compBest.cliente,
-        varPct,
-        resultBadge,
-      };
+      return { producto: prod, miPrecio: myBest.precio, miDonde: myBest.drogueria, compNombre: compBest.productoCompetidor, compPrecio: compBest.precioCompetidor, compDonde: compBest.cliente, varPct, resultBadge };
     }).filter(Boolean) as any[];
   }, [angelusPrices, competitionPrices, canal]);
 
-  // ── Line chart: one product vs multiple competitors ────────────────────────
+  // Line chart — one product vs one competitor
   const lineHistory = useMemo(
-    () => generateProductVsCompetitors(chartProduct, chartCompetitors, canal),
-    [chartProduct, chartCompetitors, canal]
+    () => generateProductVsCompetitors(chartProduct, [chartCompetitor], canal),
+    [chartProduct, chartCompetitor, canal]
   );
 
-  const allLineKeys = ["Angelus", ...chartCompetitors];
   const yDomain = useMemo(() => {
-    const allVals = lineHistory
-      .flatMap(row => allLineKeys.map(k => (row[k] as number) ?? 0))
-      .filter(v => v > 0);
-    if (!allVals.length) return [0, 50];
-    const lo  = Math.min(...allVals);
-    const hi  = Math.max(...allVals);
-    const pad = Math.max((hi - lo) * 0.2, 1);
+    const vals = lineHistory.flatMap(r => ["Angelus", chartCompetitor].map(k => (r[k] as number) ?? 0)).filter(v => v > 0);
+    if (!vals.length) return [0, 50];
+    const lo = Math.min(...vals), hi = Math.max(...vals), pad = Math.max((hi - lo) * 0.2, 1);
     return [Math.max(0, lo - pad), hi + pad];
-  }, [lineHistory, allLineKeys]);
+  }, [lineHistory, chartCompetitor]);
 
   return (
     <div className="space-y-6">
-      {/* Header + shared canal filter */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-primary">Angelus vs Competencia</h2>
           <p className="text-muted-foreground">Comparativa de precios contra líderes del mercado.</p>
         </div>
-        <ToggleGroup
-          type="single"
-          value={canal}
-          onValueChange={(v) => v && setCanal(v as "Droguería" | "Farmacia")}
-        >
+        <ToggleGroup type="single" value={canal} onValueChange={(v) => v && setCanal(v as "Droguería" | "Farmacia")}>
           <ToggleGroupItem value="Droguería" className="px-6">Droguerías</ToggleGroupItem>
           <ToggleGroupItem value="Farmacia"  className="px-6">Farmacias</ToggleGroupItem>
         </ToggleGroup>
       </div>
 
-      {/* ── Table ── */}
+      {/* Table first */}
       <div className="rounded-md border bg-card shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
@@ -124,9 +103,7 @@ export default function AngelusVsCompetencia() {
                 <TableCell className={`font-medium ${row.varPct > 0 ? "text-destructive" : "text-emerald-600"}`}>
                   {row.varPct > 0 ? "+" : ""}{formatPercentage(row.varPct)}
                 </TableCell>
-                <TableCell>
-                  <Badge className={row.resultBadge.color}>{row.resultBadge.label}</Badge>
-                </TableCell>
+                <TableCell><Badge className={row.resultBadge.color}>{row.resultBadge.label}</Badge></TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -135,93 +112,48 @@ export default function AngelusVsCompetencia() {
 
       <Separator />
 
-      {/* ── Line chart ── */}
+      {/* Line chart — single product vs single competitor */}
       <Card className="shadow-sm">
         <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <CardTitle className="text-base">Evolución de Precios — Mi Producto vs Competidores</CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Canal: <strong>{canal}</strong> · Eje X: mes · Eje Y: precio USD ·
-                <span className="text-[#1B4F8A] font-semibold"> Azul sólido = Angelus</span> ·
-                <span className="text-destructive font-semibold"> Punteado = Competidores</span>
-              </p>
-            </div>
-          </div>
-          {/* Chart-specific selectors */}
-          <div className="flex flex-wrap gap-2 mt-3">
+          <CardTitle className="text-base">Evolución de Precios — Mi Producto vs Competidor</CardTitle>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Canal: <strong>{canal}</strong> · Eje X: mes · Eje Y: precio USD ·
+            <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus</span> ·
+            <span className="text-destructive font-semibold"> Rojo = Competidor</span>
+          </p>
+          <div className="flex flex-wrap gap-3 mt-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">Producto:</span>
+              <span className="text-xs text-muted-foreground font-medium">Producto:</span>
               <Select value={chartProduct} onValueChange={setChartProduct}>
-                <SelectTrigger className="h-8 w-52 text-xs">
-                  <SelectValue placeholder="Producto..." />
-                </SelectTrigger>
+                <SelectTrigger className="h-8 w-52 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {ALL_PRODUCT_NAMES.map(p => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
-                  ))}
+                  {ALL_PRODUCT_NAMES.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">Competidores:</span>
-              <MultiSelect
-                options={COMPETITORS}
-                selected={chartCompetitors}
-                onChange={setChartCompetitors}
-                placeholder="Seleccionar..."
-                className="h-8 text-xs"
-              />
+              <span className="text-xs text-muted-foreground font-medium">Competidor:</span>
+              <Select value={chartCompetitor} onValueChange={setChartCompetitor}>
+                <SelectTrigger className="h-8 w-48 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {COMPETITORS.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="h-[320px]">
-          {chartCompetitors.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-              Selecciona al menos un competidor para comparar
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={{ stroke: "#d1d5db" }} />
-                <YAxis
-                  domain={yDomain}
-                  tickFormatter={(v) => `$${Number(v).toFixed(0)}`}
-                  tick={{ fontSize: 11, fill: "#6b7280" }}
-                  axisLine={{ stroke: "#d1d5db" }}
-                  width={54}
-                />
-                <RechartsTooltip
-                  formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name]}
-                  contentStyle={{ fontSize: 12, borderRadius: 8 }}
-                />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                {/* Angelus — solid blue, thicker */}
-                <Line
-                  type="monotone"
-                  dataKey="Angelus"
-                  stroke="#1B4F8A"
-                  strokeWidth={3}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-                {/* Competitors — dashed, warm palette */}
-                {chartCompetitors.map((comp, i) => (
-                  <Line
-                    key={comp}
-                    type="monotone"
-                    dataKey={comp}
-                    stroke={COMP_COLORS[i % COMP_COLORS.length]}
-                    strokeWidth={2}
-                    strokeDasharray="5 3"
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          )}
+        <CardContent className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <YAxis domain={yDomain} tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
+              <RechartsTooltip formatter={(v: number, n: string) => [`$${v.toFixed(2)}`, n]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Line type="monotone" dataKey="Angelus" stroke="#1B4F8A" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey={chartCompetitor} stroke="#E11D48" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 3 }} activeDot={{ r: 5 }} />
+            </LineChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>

@@ -384,3 +384,36 @@ export function generateProductHistory(productoAngelus: string, canal: "Droguer�
     };
   });
 }
+
+/**
+ * Generates deterministic monthly stock history for a product at a given droguería.
+ * Simulates a partial stock crisis (drop then recovery) for realism.
+ */
+export function generateStockHistory(
+  product: string,
+  drogueria: string
+): { mes: string; stockActual: number; stockMinimo: number; stockIdeal: number }[] {
+  const prodIdx  = PRODUCTS.findIndex(p => p.name === product);
+  const drogIdx  = DROGUERIAS.indexOf(drogueria);
+  const seed     = (prodIdx < 0 ? 5 : prodIdx) * 31 + (drogIdx < 0 ? 2 : drogIdx) * 17;
+  const baseStock = 120 + (seed % 180); // 120–300
+  const minStock  = Math.round(baseStock * 0.20);
+  const idealStock = baseStock;
+
+  // Different crisis shapes per seed
+  const shapeIdx = seed % 4;
+  const patterns: number[][] = [
+    [1.0, 0.85, 0.65, 0.40, 0.60, 0.80, 0.95],  // gradual drop then recovery
+    [0.90, 0.70, 0.45, 0.15, 0.30, 0.65, 0.85],  // severe crisis
+    [1.0, 0.95, 0.88, 0.75, 0.90, 1.05, 1.10],   // mild dip + overstock
+    [0.85, 0.60, 0.30, 0.05, 0.40, 0.75, 0.90],  // quiebre + restocking
+  ];
+  const pattern = patterns[shapeIdx];
+
+  return MONTHS.map((mes, i) => ({
+    mes,
+    stockActual:  Math.max(0, Math.round(baseStock * pattern[i])),
+    stockMinimo:  minStock,
+    stockIdeal:   idealStock,
+  }));
+}

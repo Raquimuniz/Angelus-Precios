@@ -10,100 +10,92 @@ import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AlertasPrecio() {
-  const { angelusPrices, competitionPrices, stockRecords } = useData();
+  const { angelusPrices, competitionPrices } = useData();
   const { toast } = useToast();
-  
-  const [edits, setEdits] = useState<Record<string, number>>({});
+
+  // Store edits as raw strings so user can type digit-by-digit freely
+  const [edits, setEdits] = useState<Record<string, string>>({});
 
   const alerts = useMemo(() => {
     const list: any[] = [];
-
-    // Analyze each product / channel
     const products = Array.from(new Set(angelusPrices.map(p => p.productoAngelus)));
 
     products.forEach(prod => {
       ["Droguería", "Farmacia"].forEach(canal => {
-        const myPrices = angelusPrices.filter(p => p.productoAngelus === prod && p.canal === canal).sort((a, b) => a.precio - b.precio);
+        const myPrices   = angelusPrices.filter(p => p.productoAngelus === prod && p.canal === canal).sort((a, b) => a.precio - b.precio);
         const compPrices = competitionPrices.filter(p => p.productoAngelusReferencia === prod && p.canal === canal).sort((a, b) => a.precioCompetidor - b.precioCompetidor);
-
         if (!myPrices.length || !compPrices.length) return;
 
-        const myBest = myPrices[0];
+        const myBest  = myPrices[0];
         const compBest = compPrices[0];
-
-        const varVsComp = ((myBest.precio - compBest.precioCompetidor) / compBest.precioCompetidor) * 100;
-        const myMax = Math.max(...myPrices.map(p => p.precio));
+        const varVsComp  = ((myBest.precio - compBest.precioCompetidor) / compBest.precioCompetidor) * 100;
+        const myMax      = Math.max(...myPrices.map(p => p.precio));
         const internalVar = ((myMax - myBest.precio) / myBest.precio) * 100;
 
-        let alertLevel = "Normal";
-        let recommendedAction = "";
-
-        if (varVsComp > 15) {
-          alertLevel = "Crítico";
-          recommendedAction = "Ajustar precio sugerido";
-        } else if (internalVar > 35) {
-          alertLevel = "Crítico";
-          recommendedAction = `Revisar precio en \${canal.toLowerCase()}`;
-        } else if (varVsComp > 5) {
-          alertLevel = "Alto";
-          recommendedAction = "Monitorear competencia";
-        }
+        let alertLevel = "Normal", recommendedAction = "";
+        if (varVsComp > 15)       { alertLevel = "Crítico"; recommendedAction = "Ajustar precio sugerido"; }
+        else if (internalVar > 35) { alertLevel = "Crítico"; recommendedAction = `Revisar precio en ${canal.toLowerCase()}`; }
+        else if (varVsComp > 5)    { alertLevel = "Alto";    recommendedAction = "Monitorear competencia"; }
 
         if (alertLevel !== "Normal") {
-          const autoPrice = compBest.precioCompetidor * 0.90;
-          const id = `\${prod}-\${canal}`;
-
           list.push({
-            id,
-            nivelAlerta: alertLevel,
+            id:             `${prod}-${canal}`,
+            nivelAlerta:    alertLevel,
             canal,
-            producto: prod,
+            producto:       prod,
             miPrecioActual: myBest.precio,
             dondeSoyBarato: myBest.drogueria,
-            compBarato: compBest.productoCompetidor,
-            precioComp: compBest.precioCompetidor,
-            dondeComp: compBest.cliente,
-            sugeridoAuto: autoPrice,
-            recomendacion: recommendedAction
+            compBarato:     compBest.productoCompetidor,
+            precioComp:     compBest.precioCompetidor,
+            dondeComp:      compBest.cliente,
+            sugeridoAuto:   compBest.precioCompetidor * 0.90,
+            recomendacion:  recommendedAction,
           });
         }
       });
     });
 
-    return list.sort((a, b) => a.nivelAlerta === "Crítico" ? -1 : 1);
+    return list.sort((a, b) => (a.nivelAlerta === "Crítico" ? -1 : 1));
   }, [angelusPrices, competitionPrices]);
 
-  const handleEdit = (id: string, val: string) => {
-    const num = parseFloat(val);
-    setEdits(prev => ({ ...prev, [id]: isNaN(num) ? 0 : num }));
+  // Get the current numeric value for a row (for calculations)
+  const getNumericPrice = (alert: any): number => {
+    const raw = edits[alert.id];
+    if (raw !== undefined) {
+      const parsed = parseFloat(raw);
+      return isNaN(parsed) ? alert.sugeridoAuto : parsed;
+    }
+    return alert.sugeridoAuto;
   };
 
-  const getEditablePrice = (alert: any) => edits[alert.id] !== undefined ? edits[alert.id] : alert.sugeridoAuto;
+  // Get the raw string for the input
+  const getRawString = (alert: any): string => {
+    return edits[alert.id] !== undefined ? edits[alert.id] : alert.sugeridoAuto.toFixed(2);
+  };
 
   const exportExcel = () => {
     const dataToExport = alerts.map(a => {
-      const suggested = getEditablePrice(a);
+      const suggested = getNumericPrice(a);
       return {
-        "Nivel Alerta": a.nivelAlerta,
-        "Canal": a.canal,
-        "Producto": a.producto,
+        "Nivel Alerta":        a.nivelAlerta,
+        "Canal":               a.canal,
+        "Producto":            a.producto,
         "Precio Actual Angelus": a.miPrecioActual,
         "Cliente Angelus Barato": a.dondeSoyBarato,
         "Competidor Más Barato": a.compBarato,
-        "Precio Competencia": a.precioComp,
+        "Precio Competencia":  a.precioComp,
         "Cliente Competencia": a.dondeComp,
         "Precio Sugerido Auto": a.sugeridoAuto,
         "Precio Sugerido Final": suggested,
         "Variación vs Actual %": ((suggested - a.miPrecioActual) / a.miPrecioActual) * 100,
-        "Variación vs Comp %": ((suggested - a.precioComp) / a.precioComp) * 100,
-        "Acción Recomendada": a.recomendacion
+        "Variación vs Comp %":   ((suggested - a.precioComp) / a.precioComp) * 100,
+        "Acción Recomendada":  a.recomendacion,
       };
     });
-
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Alertas");
-    XLSX.writeFile(workbook, "Angelus_Alertas_Precios.xlsx");
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Alertas");
+    XLSX.writeFile(wb, "Angelus_Alertas_Precios.xlsx");
     toast({ title: "Exportación exitosa", description: "El archivo Excel se ha descargado." });
   };
 
@@ -124,7 +116,7 @@ export default function AlertasPrecio() {
         </div>
       </div>
 
-      <div className="rounded-md border bg-card shadow-sm overflow-hidden">
+      <div className="rounded-md border bg-card shadow-sm overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -134,7 +126,7 @@ export default function AlertasPrecio() {
               <TableHead>Mi Actual</TableHead>
               <TableHead>Comp. Actual</TableHead>
               <TableHead>Sugerido Auto</TableHead>
-              <TableHead className="w-32">Sugerido (Editar)</TableHead>
+              <TableHead className="w-32">Precio Sugerido</TableHead>
               <TableHead>Var vs Actual</TableHead>
               <TableHead>Var vs Comp</TableHead>
               <TableHead>Acción Recomendada</TableHead>
@@ -142,14 +134,14 @@ export default function AlertasPrecio() {
           </TableHeader>
           <TableBody>
             {alerts.map((row) => {
-              const suggested = getEditablePrice(row);
+              const suggested = getNumericPrice(row);
               const varActual = ((suggested - row.miPrecioActual) / row.miPrecioActual) * 100;
-              const varComp = ((suggested - row.precioComp) / row.precioComp) * 100;
+              const varComp   = ((suggested - row.precioComp) / row.precioComp) * 100;
 
               return (
                 <TableRow key={row.id}>
                   <TableCell>
-                    <Badge className={row.nivelAlerta === 'Crítico' ? 'bg-destructive' : 'bg-orange-500'}>
+                    <Badge className={row.nivelAlerta === "Crítico" ? "bg-destructive" : "bg-orange-500"}>
                       {row.nivelAlerta}
                     </Badge>
                   </TableCell>
@@ -159,11 +151,20 @@ export default function AlertasPrecio() {
                   <TableCell>{formatCurrency(row.precioComp)}</TableCell>
                   <TableCell className="text-muted-foreground italic">{formatCurrency(row.sugeridoAuto)}</TableCell>
                   <TableCell>
-                    <Input 
-                      type="number" 
-                      value={suggested.toFixed(2)}
-                      onChange={(e) => handleEdit(row.id, e.target.value)}
-                      className="h-8 w-24 text-right"
+                    {/* Raw string input — allows digit-by-digit typing */}
+                    <Input
+                      type="text"
+                      inputMode="decimal"
+                      value={getRawString(row)}
+                      onChange={(e) =>
+                        setEdits(prev => ({ ...prev, [row.id]: e.target.value }))
+                      }
+                      onBlur={(e) => {
+                        const parsed = parseFloat(e.target.value);
+                        if (!isNaN(parsed))
+                          setEdits(prev => ({ ...prev, [row.id]: parsed.toFixed(2) }));
+                      }}
+                      className="h-8 w-28 text-right font-mono"
                     />
                   </TableCell>
                   <TableCell className={varActual > 0 ? "text-emerald-600" : "text-destructive"}>
@@ -172,9 +173,7 @@ export default function AlertasPrecio() {
                   <TableCell className={varComp > 0 ? "text-destructive" : "text-emerald-600"}>
                     {formatPercentage(varComp)}
                   </TableCell>
-                  <TableCell className="text-xs font-medium text-primary">
-                    {row.recomendacion}
-                  </TableCell>
+                  <TableCell className="text-xs font-medium text-primary">{row.recomendacion}</TableCell>
                 </TableRow>
               );
             })}

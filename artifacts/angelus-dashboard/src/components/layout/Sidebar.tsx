@@ -1,14 +1,13 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, BarChart2, TrendingDown, BellRing, Package, Upload } from "lucide-react";
+import { LayoutDashboard, BarChart2, TrendingDown, BellRing, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { name: "Resumen Ejecutivo", href: "/", icon: LayoutDashboard },
-  { name: "Angelus vs Angelus", href: "/angelus-vs-angelus", icon: BarChart2 },
-  { name: "Angelus vs Competencia", href: "/angelus-vs-competencia", icon: TrendingDown },
-  { name: "Alertas y Precio Sugerido", href: "/alertas", icon: BellRing },
-  { name: "Stock por Droguería", href: "/stock", icon: Package },
-  { name: "Importar Datos", href: "/importar", icon: Upload },
+  { name: "Resumen Ejecutivo",       href: "/",                      icon: LayoutDashboard },
+  { name: "Angelus vs Angelus",      href: "/angelus-vs-angelus",    icon: BarChart2 },
+  { name: "Angelus vs Competencia",  href: "/angelus-vs-competencia",icon: TrendingDown },
+  { name: "Alertas y Precio Sugerido", href: "/alertas",             icon: BellRing },
+  { name: "Stock por Droguería",     href: "/stock",                 icon: Package },
 ];
 
 export function Sidebar() {

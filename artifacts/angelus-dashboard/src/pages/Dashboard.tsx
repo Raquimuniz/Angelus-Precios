@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { useLocation } from "wouter";
 import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
@@ -12,66 +13,86 @@ import { generateProductVsCompetitors, PRODUCTS, COMPETITORS } from "@/lib/data"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MultiSelect } from "@/components/MultiSelect";
 import { Separator } from "@/components/ui/separator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { ChevronsUpDown, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ALL_PRODUCT_NAMES = PRODUCTS.map(p => p.name);
-
-// Angelus = corporate blue; competitors = warm palette, dashed
 const COMP_COLORS = ["#E11D48", "#F97316", "#F59E0B", "#8B5CF6", "#EC4899", "#64748B"];
-
 const ALERT_COLORS: Record<string, string> = {
-  "Crítico": "#E11D48",
-  "Alto":    "#F97316",
-  "Medio":   "#FBBF24",
-  "Normal":  "#10B981",
+  "Crítico": "#E11D48", "Alto": "#F97316", "Medio": "#FBBF24", "Normal": "#10B981",
 };
+
+function ProductCombobox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const filtered = ALL_PRODUCT_NAMES.filter(p => p.toLowerCase().includes(search.toLowerCase()));
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" className="h-8 w-56 justify-between text-xs font-normal truncate">
+          <span className="truncate">{value || "Seleccionar producto..."}</span>
+          <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Buscar producto..." value={search} onValueChange={setSearch} />
+          <CommandList>
+            <CommandEmpty>Sin resultados</CommandEmpty>
+            <CommandGroup>
+              {filtered.map(p => (
+                <CommandItem key={p} value={p} onSelect={() => { onChange(p); setOpen(false); setSearch(""); }}>
+                  <Check className={cn("mr-2 h-3 w-3", value === p ? "opacity-100" : "opacity-0")} />
+                  {p}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export default function Dashboard() {
   const { angelusPrices, competitionPrices, stockRecords } = useData();
+  const [, setLocation] = useLocation();
 
-  // ── Shared filters ────────────────────────────────────────────────────────
-  const [canal,           setCanal]           = useState<"Droguería" | "Farmacia">("Droguería");
-  const [chartProduct,    setChartProduct]    = useState<string>(ALL_PRODUCT_NAMES[0]);
+  const [canal,            setCanal]            = useState<"Droguería" | "Farmacia">("Droguería");
+  const [chartProduct,     setChartProduct]     = useState<string>(ALL_PRODUCT_NAMES[0]);
   const [chartCompetitors, setChartCompetitors] = useState<string[]>(COMPETITORS.slice(0, 3));
 
-  // ── KPI calculations ──────────────────────────────────────────────────────
   const drogueriaPrices = angelusPrices.filter(p => p.canal === "Droguería");
   const farmaciaPrices  = angelusPrices.filter(p => p.canal === "Farmacia");
   const canalPrices     = canal === "Droguería" ? drogueriaPrices : farmaciaPrices;
 
   const totalProductos = new Set(angelusPrices.map(p => p.productoAngelus)).size;
   const totalPuntos    = angelusPrices.length;
-  const avgCanal       = canalPrices.length
-    ? canalPrices.reduce((a, b) => a + b.precio, 0) / canalPrices.length : 0;
-  const avgDrogueria   = drogueriaPrices.length
-    ? drogueriaPrices.reduce((a, b) => a + b.precio, 0) / drogueriaPrices.length : 0;
-  const avgFarmacia    = farmaciaPrices.length
-    ? farmaciaPrices.reduce((a, b) => a + b.precio, 0) / farmaciaPrices.length : 0;
+  const avgCanal       = canalPrices.length ? canalPrices.reduce((a, b) => a + b.precio, 0) / canalPrices.length : 0;
+  const avgDrogueria   = drogueriaPrices.length ? drogueriaPrices.reduce((a, b) => a + b.precio, 0) / drogueriaPrices.length : 0;
+  const avgFarmacia    = farmaciaPrices.length ? farmaciaPrices.reduce((a, b) => a + b.precio, 0) / farmaciaPrices.length : 0;
 
-  let alertasCriticas         = 0;
-  let masBaratoQueCompetencia = 0;
-  const brechasRiesgosas      = new Set<string>();
-  const productos             = Array.from(new Set(angelusPrices.map(p => p.productoAngelus)));
+  let alertasCriticas = 0, masBaratoQueCompetencia = 0;
+  const brechasRiesgosas = new Set<string>();
+  const productos = Array.from(new Set(angelusPrices.map(p => p.productoAngelus)));
 
   productos.forEach(prod => {
     const prices   = angelusPrices.filter(p => p.productoAngelus === prod).map(p => p.precio);
-    const min      = Math.min(...prices);
-    const max      = Math.max(...prices);
-    const variation = prices.length > 1 ? ((max - min) / min) * 100 : 0;
-    if (variation > 35) alertasCriticas++;
-
-    const prodDrog = drogueriaPrices.filter(p => p.productoAngelus === prod).map(p => p.precio);
-    const prodFarm = farmaciaPrices.filter(p => p.productoAngelus === prod).map(p => p.precio);
-    if (prodDrog.length && prodFarm.length) {
-      if (Math.min(...prodFarm) < Math.max(...prodDrog)) brechasRiesgosas.add(prod);
-    }
-    const compPrices = competitionPrices
-      .filter(p => p.productoAngelusReferencia === prod).map(p => p.precioCompetidor);
-    if (compPrices.length && min < Math.min(...compPrices)) masBaratoQueCompetencia++;
+    if (!prices.length) return;
+    const min = Math.min(...prices), max = Math.max(...prices);
+    if (prices.length > 1 && ((max - min) / min) * 100 > 35) alertasCriticas++;
+    const df = drogueriaPrices.filter(p => p.productoAngelus === prod).map(p => p.precio);
+    const ff = farmaciaPrices.filter(p => p.productoAngelus === prod).map(p => p.precio);
+    if (df.length && ff.length && Math.min(...ff) < Math.max(...df)) brechasRiesgosas.add(prod);
+    const cp = competitionPrices.filter(p => p.productoAngelusReferencia === prod).map(p => p.precioCompetidor);
+    if (cp.length && min < Math.min(...cp)) masBaratoQueCompetencia++;
   });
 
-  const quiebresStock = stockRecords.filter(
-    s => s.estadoStock === "Quiebre" || s.estadoStock === "Crítico"
-  ).length;
+  const quiebresStock = stockRecords.filter(s => s.estadoStock === "Quiebre" || s.estadoStock === "Crítico").length;
   alertasCriticas += quiebresStock;
 
   const alertDistribution = [
@@ -81,27 +102,39 @@ export default function Dashboard() {
     { name: "Normal",  value: Math.max(1, Math.floor(totalProductos * 0.8)) },
   ];
 
-  // ── Line chart: Angelus vs competitors for selected product ───────────────
   const lineHistory = useMemo(
     () => generateProductVsCompetitors(chartProduct, chartCompetitors, canal),
     [chartProduct, chartCompetitors, canal]
   );
-
   const allLineKeys = ["Angelus", ...chartCompetitors];
   const yDomain = useMemo(() => {
-    const allVals = lineHistory
-      .flatMap(row => allLineKeys.map(k => (row[k] as number) ?? 0))
-      .filter(v => v > 0);
-    if (!allVals.length) return [0, 50];
-    const lo = Math.min(...allVals);
-    const hi = Math.max(...allVals);
-    const pad = Math.max((hi - lo) * 0.2, 1);
+    const vals = lineHistory.flatMap(r => allLineKeys.map(k => (r[k] as number) ?? 0)).filter(v => v > 0);
+    if (!vals.length) return [0, 50];
+    const lo = Math.min(...vals), hi = Math.max(...vals), pad = Math.max((hi - lo) * 0.2, 1);
     return [Math.max(0, lo - pad), hi + pad];
   }, [lineHistory, allLineKeys]);
 
+  const kpiCard = (
+    title: string, value: ReactNode, sub: string,
+    icon: ReactNode, route: string, colorClass = ""
+  ) => (
+    <Card
+      className={`shadow-sm cursor-pointer hover:shadow-md hover:border-primary/40 transition-all ${colorClass}`}
+      onClick={() => setLocation(route)}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="space-y-6">
-      {/* Header + shared filters */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-primary">Resumen Ejecutivo</h2>
@@ -110,9 +143,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">Canal:</span>
           <Select value={canal} onValueChange={(v) => setCanal(v as "Droguería" | "Farmacia")}>
-            <SelectTrigger className="h-9 w-40">
-              <SelectValue />
-            </SelectTrigger>
+            <SelectTrigger className="h-9 w-40"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="Droguería">Droguería</SelectItem>
               <SelectItem value="Farmacia">Farmacia</SelectItem>
@@ -121,106 +152,43 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── KPI Cards ── */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Productos Analizados</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{totalProductos}</div>
-            <p className="text-xs text-muted-foreground">En {totalPuntos} puntos de venta</p>
-          </CardContent>
-        </Card>
+      {/* KPI Cards — all clickable */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {kpiCard("Productos Analizados", <span className="text-primary">{totalProductos}</span>,
+          `En ${totalPuntos} puntos de venta`, <Package className="h-4 w-4 text-muted-foreground" />, "/angelus-vs-angelus")}
 
-        <Card className="shadow-sm border-destructive/20 bg-destructive/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-destructive">Alertas Críticas</CardTitle>
-            <AlertCircle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">{alertasCriticas}</div>
-            <p className="text-xs text-destructive/80">Requieren atención inmediata</p>
-          </CardContent>
-        </Card>
+        {kpiCard("Alertas Críticas", <span className="text-destructive">{alertasCriticas}</span>,
+          "Requieren atención inmediata", <AlertCircle className="h-4 w-4 text-destructive" />, "/alertas",
+          "border-destructive/20 bg-destructive/5")}
 
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Precio Promedio — {canal}</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(avgCanal)}</div>
-            <p className="text-xs text-muted-foreground">
-              Drog: {formatCurrency(avgDrogueria)} · Farm: {formatCurrency(avgFarmacia)}
-            </p>
-          </CardContent>
-        </Card>
+        {kpiCard(`Precio Promedio — ${canal}`, <span>{formatCurrency(avgCanal)}</span>,
+          `Drog: ${formatCurrency(avgDrogueria)} · Farm: ${formatCurrency(avgFarmacia)}`,
+          <DollarSign className="h-4 w-4 text-muted-foreground" />, "/angelus-vs-angelus")}
 
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Líder en Precio vs Comp.</CardTitle>
-            <TrendingDown className="h-4 w-4 text-emerald-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-emerald-600">{masBaratoQueCompetencia}</div>
-            <p className="text-xs text-muted-foreground">Productos más baratos que competencia</p>
-          </CardContent>
-        </Card>
+        {kpiCard("Líder en Precio vs Comp.", <span className="text-emerald-600">{masBaratoQueCompetencia}</span>,
+          "Productos más baratos que competencia", <TrendingDown className="h-4 w-4 text-emerald-500" />, "/angelus-vs-competencia")}
 
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Brechas Riesgosas</CardTitle>
-            <TrendingUp className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{brechasRiesgosas.size}</div>
-            <p className="text-xs text-muted-foreground">Farmacia más barata que Droguería</p>
-          </CardContent>
-        </Card>
+        {kpiCard("Brechas Riesgosas", <span className="text-orange-600">{brechasRiesgosas.size}</span>,
+          "Farmacia más barata que Droguería", <TrendingUp className="h-4 w-4 text-orange-500" />, "/angelus-vs-angelus")}
 
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Riesgo Quiebre Stock</CardTitle>
-            <Package className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">{quiebresStock}</div>
-            <p className="text-xs text-muted-foreground">Droguerías en quiebre o crítico</p>
-          </CardContent>
-        </Card>
+        {kpiCard("Riesgo Quiebre Stock", <span className="text-destructive">{quiebresStock}</span>,
+          "Droguerías en quiebre o crítico", <Package className="h-4 w-4 text-destructive" />, "/stock")}
       </div>
 
       <Separator />
 
-      {/* ── Charts ── */}
+      {/* Charts */}
       <div className="grid gap-4 md:grid-cols-2">
-
-        {/* LINE CHART — mi producto vs competidores */}
-        <Card className="col-span-1 shadow-sm">
+        {/* Line chart */}
+        <Card className="shadow-sm">
           <CardHeader>
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <CardTitle className="text-base">Mi Producto vs Competencia</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Canal: <strong>{canal}</strong> · Eje X: mes · Eje Y: precio USD ·
-                  <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus</span>
-                </p>
-              </div>
-            </div>
-            {/* Selectors below title */}
+            <CardTitle className="text-base">Mi Producto vs Competencia</CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Canal: <strong>{canal}</strong> · Eje X: mes · Eje Y: precio USD ·
+              <span className="text-[#1B4F8A] font-semibold"> Azul = Angelus</span>
+            </p>
             <div className="flex flex-wrap gap-2 mt-2">
-              <Select value={chartProduct} onValueChange={setChartProduct}>
-                <SelectTrigger className="h-8 w-52 text-xs">
-                  <SelectValue placeholder="Producto..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {ALL_PRODUCT_NAMES.map(p => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ProductCombobox value={chartProduct} onChange={setChartProduct} />
               <MultiSelect
                 options={COMPETITORS}
                 selected={chartCompetitors}
@@ -230,71 +198,46 @@ export default function Dashboard() {
               />
             </div>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[290px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lineHistory} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={{ stroke: "#d1d5db" }} />
-                <YAxis
-                  domain={yDomain}
-                  tickFormatter={(v) => `$${Number(v).toFixed(0)}`}
-                  tick={{ fontSize: 11, fill: "#6b7280" }}
-                  axisLine={{ stroke: "#d1d5db" }}
-                  width={54}
-                />
-                <RechartsTooltip
-                  formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name]}
-                  contentStyle={{ fontSize: 12, borderRadius: 8 }}
-                />
+                <XAxis dataKey="mes" tick={{ fontSize: 12, fill: "#6b7280" }} />
+                <YAxis domain={yDomain} tickFormatter={(v) => `$${Number(v).toFixed(0)}`} tick={{ fontSize: 11, fill: "#6b7280" }} width={54} />
+                <RechartsTooltip formatter={(v: number, n: string) => [`$${v.toFixed(2)}`, n]} contentStyle={{ fontSize: 12, borderRadius: 8 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                {/* Angelus — solid blue, thicker */}
-                <Line
-                  type="monotone"
-                  dataKey="Angelus"
-                  stroke="#1B4F8A"
-                  strokeWidth={3}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-                {/* Competitors — dashed, warm palette */}
+                <Line type="monotone" dataKey="Angelus" stroke="#1B4F8A" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                 {chartCompetitors.map((comp, i) => (
-                  <Line
-                    key={comp}
-                    type="monotone"
-                    dataKey={comp}
-                    stroke={COMP_COLORS[i % COMP_COLORS.length]}
-                    strokeWidth={2}
-                    strokeDasharray="5 3"
-                    dot={{ r: 3 }}
-                    activeDot={{ r: 5 }}
-                  />
+                  <Line key={comp} type="monotone" dataKey={comp}
+                    stroke={COMP_COLORS[i % COMP_COLORS.length]} strokeWidth={2}
+                    strokeDasharray="5 3" dot={{ r: 3 }} activeDot={{ r: 5 }} />
                 ))}
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* PIE CHART */}
-        <Card className="col-span-1 shadow-sm">
+        {/* Pie chart — clickable → /alertas */}
+        <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">Distribución de Alertas por Nivel</CardTitle>
+            <p className="text-xs text-muted-foreground">Haz clic en un nivel para ver los productos</p>
           </CardHeader>
-          <CardContent className="h-[360px] flex items-center justify-center">
+          <CardContent className="h-[330px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={alertDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={70}
-                  outerRadius={115}
-                  paddingAngle={4}
+                  cx="50%" cy="50%"
+                  innerRadius={70} outerRadius={115} paddingAngle={4}
                   dataKey="value"
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
+                  onClick={() => setLocation("/alertas")}
+                  style={{ cursor: "pointer" }}
                 >
-                  {alertDistribution.map((entry, index) => (
-                    <Cell key={index} fill={ALERT_COLORS[entry.name] ?? "#94a3b8"} />
+                  {alertDistribution.map((entry, i) => (
+                    <Cell key={i} fill={ALERT_COLORS[entry.name] ?? "#94a3b8"} />
                   ))}
                 </Pie>
                 <RechartsTooltip />

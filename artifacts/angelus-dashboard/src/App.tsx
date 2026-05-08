@@ -11,8 +11,6 @@ import AngelusVsAngelus from "@/pages/AngelusVsAngelus";
 import AngelusVsCompetencia from "@/pages/AngelusVsCompetencia";
 import AlertasPrecio from "@/pages/AlertasPrecio";
 import StockDrogueria from "@/pages/StockDrogueria";
-import ImportarDatos from "@/pages/ImportarDatos";
-
 const queryClient = new QueryClient();
 
 function Router() {
@@ -24,7 +22,6 @@ function Router() {
         <Route path="/angelus-vs-competencia" component={AngelusVsCompetencia} />
         <Route path="/alertas" component={AlertasPrecio} />
         <Route path="/stock" component={StockDrogueria} />
-        <Route path="/importar" component={ImportarDatos} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>
