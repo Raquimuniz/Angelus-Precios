@@ -4,22 +4,59 @@ import { AngelusPriceRecord, CompetitionPriceRecord, StockRecord, generateSample
 interface DataContextType {
   angelusPrices: AngelusPriceRecord[];
   setAngelusPrices: (data: AngelusPriceRecord[]) => void;
+  /** Competition prices with productoAngelusReferencia mapped to real Angelus product names */
   competitionPrices: CompetitionPriceRecord[];
   setCompetitionPrices: (data: CompetitionPriceRecord[]) => void;
   stockRecords: StockRecord[];
   setStockRecords: (data: StockRecord[]) => void;
   resetToSampleData: () => void;
-  /** True once at least one Excel file has been loaded */
   isDataLoaded: boolean;
-  /** Unique product names derived from loaded angelusPrices */
   productNames: string[];
-  /** Unique competitor/lab names derived from loaded competitionPrices */
   competitors: string[];
-  /** Dates present in loaded records */
   dataDate: string;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
+
+// ── Molecule → Angelus product fuzzy matcher ───────────────────────────────────
+
+function normalizeWords(s: string): string[] {
+  return s
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length >= 3);
+}
+
+/**
+ * Given a molecule/search string from competitor data and a list of Angelus
+ * product names, returns the best-matching Angelus product name (or "" if none).
+ */
+function mapMoleculeToProduct(molecule: string, angelusProducts: string[]): string {
+  if (!molecule || !angelusProducts.length) return '';
+  const molWords = normalizeWords(molecule);
+  if (!molWords.length) return '';
+
+  let bestScore = 0;
+  let bestProduct = '';
+
+  for (const prod of angelusProducts) {
+    const prodWords = normalizeWords(prod);
+    const overlap = molWords.filter(mw =>
+      prodWords.some(pw => pw === mw || pw.startsWith(mw) || mw.startsWith(pw))
+    ).length;
+    // Normalise by molecule word count so longer matches rank higher
+    const score = overlap / molWords.length;
+    if (overlap > 0 && score > bestScore) {
+      bestScore = score;
+      bestProduct = prod;
+    }
+  }
+  return bestScore > 0 ? bestProduct : '';
+}
+
+// ── Provider ───────────────────────────────────────────────────────────────────
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState(() => generateSampleData());
@@ -33,26 +70,48 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [data.angelusPrices]
   );
 
+  /**
+   * Competition prices where productoAngelusReferencia has been remapped to the
+   * closest real Angelus product name (fuzzy word matching).
+   * When no Angelus products are loaded yet, the raw reference is kept.
+   */
+  const mappedCompetitionPrices = useMemo(() => {
+    if (!data.competitionPrices.length || !data.angelusPrices.length) {
+      return data.competitionPrices;
+    }
+    const angelusProducts = Array.from(new Set(data.angelusPrices.map(p => p.productoAngelus)));
+    // Cache mapping to avoid recomputing for the same molecule
+    const cache = new Map<string, string>();
+
+    return data.competitionPrices.map(cp => {
+      const ref = cp.productoAngelusReferencia;
+      if (!cache.has(ref)) {
+        cache.set(ref, mapMoleculeToProduct(ref, angelusProducts));
+      }
+      const mapped = cache.get(ref)!;
+      return mapped ? { ...cp, productoAngelusReferencia: mapped } : cp;
+    });
+  }, [data.competitionPrices, data.angelusPrices]);
+
   const competitors = useMemo(
-    () => Array.from(new Set(data.competitionPrices.map(p => p.laboratorioCompetidor).filter(Boolean))).sort(),
-    [data.competitionPrices]
+    () => Array.from(new Set(mappedCompetitionPrices.map(p => p.laboratorioCompetidor).filter(Boolean))).sort(),
+    [mappedCompetitionPrices]
   );
 
   const dataDate = useMemo(() => {
     const dates = [
       ...data.angelusPrices.map(p => p.fechaActualizacion),
       ...data.competitionPrices.map(p => p.fechaActualizacion),
-    ].filter(Boolean).filter(d => !d.startsWith("2025") && !d.startsWith("2024"));
-    if (!dates.length) return "";
-    const unique = Array.from(new Set(dates)).sort();
-    return unique[unique.length - 1];
+    ].filter(d => d && /\d{2}\/\d{2}\/\d{4}/.test(d));
+    if (!dates.length) return '';
+    return Array.from(new Set(dates)).sort().pop() ?? '';
   }, [data.angelusPrices, data.competitionPrices]);
 
   return (
     <DataContext.Provider value={{
       angelusPrices:        data.angelusPrices,
       setAngelusPrices:     (prices)  => setData(prev => ({ ...prev, angelusPrices: prices })),
-      competitionPrices:    data.competitionPrices,
+      competitionPrices:    mappedCompetitionPrices,
       setCompetitionPrices: (prices)  => setData(prev => ({ ...prev, competitionPrices: prices })),
       stockRecords:         data.stockRecords,
       setStockRecords:      (records) => setData(prev => ({ ...prev, stockRecords: records })),
