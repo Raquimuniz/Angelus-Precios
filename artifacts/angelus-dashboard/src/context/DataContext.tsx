@@ -71,27 +71,43 @@ export function DataProvider({ children }: { children: ReactNode }) {
   );
 
   /**
+   * Shared molecule→product cache builder.
+   * Returns mapped array for any list of records that have a string key to remap.
+   */
+  const angelusProducts = useMemo(
+    () => Array.from(new Set(data.angelusPrices.map(p => p.productoAngelus))),
+    [data.angelusPrices]
+  );
+
+  /**
    * Competition prices where productoAngelusReferencia has been remapped to the
    * closest real Angelus product name (fuzzy word matching).
-   * When no Angelus products are loaded yet, the raw reference is kept.
    */
   const mappedCompetitionPrices = useMemo(() => {
-    if (!data.competitionPrices.length || !data.angelusPrices.length) {
-      return data.competitionPrices;
-    }
-    const angelusProducts = Array.from(new Set(data.angelusPrices.map(p => p.productoAngelus)));
-    // Cache mapping to avoid recomputing for the same molecule
+    if (!data.competitionPrices.length || !angelusProducts.length) return data.competitionPrices;
     const cache = new Map<string, string>();
-
     return data.competitionPrices.map(cp => {
       const ref = cp.productoAngelusReferencia;
-      if (!cache.has(ref)) {
-        cache.set(ref, mapMoleculeToProduct(ref, angelusProducts));
-      }
+      if (!cache.has(ref)) cache.set(ref, mapMoleculeToProduct(ref, angelusProducts));
       const mapped = cache.get(ref)!;
       return mapped ? { ...cp, productoAngelusReferencia: mapped } : cp;
     });
-  }, [data.competitionPrices, data.angelusPrices]);
+  }, [data.competitionPrices, angelusProducts]);
+
+  /**
+   * Stock records where productoAngelus (initially the molecule name from Format B)
+   * has been fuzzy-mapped to the closest real Angelus product name.
+   */
+  const mappedStockRecords = useMemo(() => {
+    if (!data.stockRecords.length || !angelusProducts.length) return data.stockRecords;
+    const cache = new Map<string, string>();
+    return data.stockRecords.map(sr => {
+      const ref = sr.productoAngelus;
+      if (!cache.has(ref)) cache.set(ref, mapMoleculeToProduct(ref, angelusProducts));
+      const mapped = cache.get(ref)!;
+      return mapped ? { ...sr, productoAngelus: mapped } : sr;
+    });
+  }, [data.stockRecords, angelusProducts]);
 
   const competitors = useMemo(
     () => Array.from(new Set(mappedCompetitionPrices.map(p => p.laboratorioCompetidor).filter(Boolean))).sort(),
@@ -113,7 +129,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setAngelusPrices:     (prices)  => setData(prev => ({ ...prev, angelusPrices: prices })),
       competitionPrices:    mappedCompetitionPrices,
       setCompetitionPrices: (prices)  => setData(prev => ({ ...prev, competitionPrices: prices })),
-      stockRecords:         data.stockRecords,
+      stockRecords:         mappedStockRecords,
       setStockRecords:      (records) => setData(prev => ({ ...prev, stockRecords: records })),
       resetToSampleData,
       isDataLoaded,

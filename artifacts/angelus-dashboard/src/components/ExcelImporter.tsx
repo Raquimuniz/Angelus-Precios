@@ -87,34 +87,59 @@ function parseFormatA(rows: RawRow[]): AngelusPriceRecord[] {
 /**
  * FORMAT B — "Mis Productos X Otros Laboratorios"
  * Cols: BARRA | MARCA / PROVEEDOR | PRODUCTO | UM | INV | MOLÉCULA | PG | PU | PE | VARIACIÓN
- * → CompetitionPriceRecord[] (droguería channel)
+ * → CompetitionPriceRecord[] (droguería channel) + StockRecord[] from INV column
  */
-function parseFormatB(rows: RawRow[]): CompetitionPriceRecord[] {
-  return rows
-    .map(r => {
-      const precioCompetidor = parsePrice(r["PU"]);
-      if (precioCompetidor <= 0) return null;
+function parseFormatB(rows: RawRow[]): { competencia: CompetitionPriceRecord[]; stock: StockRecord[] } {
+  const competencia: CompetitionPriceRecord[] = [];
+  const stock: StockRecord[] = [];
 
-      const laboratorio = cleanLabel(r["MARCA / PROVEEDOR"]);
-      const productoCompetidor = toStr(r["PRODUCTO"]);
-      const molecula = toStr(r["MOLÉCULA"]);
+  for (const r of rows) {
+    const molecula           = toStr(r["MOLÉCULA"]);
+    const laboratorio        = cleanLabel(r["MARCA / PROVEEDOR"]);
+    const productoCompetidor = toStr(r["PRODUCTO"]);
+    const um                 = toStr(r["UM"]);
+    const variacion          = toStr(r["VARIACIÓN"]);
 
-      return {
+    // ── Stock from INV column (col E) ────────────────────────────────────
+    const rawInv  = String(r["INV"] ?? "0").replace(/,/g, "").trim();
+    const inv     = parseFloat(rawInv) || 0;
+    stock.push({
+      id:                   generateId(),
+      productoAngelus:      molecula,        // fuzzy-mapped to Angelus product in DataContext
+      drogueria:            laboratorio,     // competitor lab
+      productoCompetidor,
+      stockActual:          inv,
+      stockMinimoEsperado:  0,
+      stockIdeal:           0,
+      ventasPromedio:       0,
+      diasInventario:       0,
+      fechaActualizacion:   new Date().toISOString().slice(0, 10),
+      estado:               inv > 0 ? "Con Stock" : "Sin Stock",
+      estadoStock:          inv === 0 ? "Quiebre" : "Saludable",
+      nivelAlerta:          inv === 0 ? "Normal" : "Normal",
+    });
+
+    // ── Competition price from PU column ─────────────────────────────────
+    const precioCompetidor = parsePrice(r["PU"]);
+    if (precioCompetidor > 0) {
+      competencia.push({
         id:                        generateId(),
-        productoAngelusReferencia: molecula, // molecule as reference link
+        productoAngelusReferencia: molecula,
         productoCompetidor,
         laboratorioCompetidor:     laboratorio,
-        presentacionCompetidor:    toStr(r["UM"]),
+        presentacionCompetidor:    um,
         categoria:                 "",
         canal:                     "Droguería" as const,
         cliente:                   "Droguería General",
         precioCompetidor,
         fechaActualizacion:        new Date().toISOString().slice(0, 10),
         ciudad:                    "",
-        observaciones:             `INV: ${toStr(r["INV"])} | VAR: ${toStr(r["VARIACIÓN"])}`,
-      } satisfies CompetitionPriceRecord;
-    })
-    .filter(Boolean) as CompetitionPriceRecord[];
+        observaciones:             `INV: ${inv} | VAR: ${variacion}`,
+      });
+    }
+  }
+
+  return { competencia, stock };
 }
 
 /**
@@ -164,9 +189,10 @@ function detectAndParse(rows: RawRow[]): {
     return { angelus: parseFormatA(rows), competencia: [], stock: [] };
   }
 
-  // Format B — Competitor catalog (droguería)
+  // Format B — Competitor catalog (droguería) — also extracts INV as stock
   if (keys.includes("MOLÉCULA") && (keys.includes("PU") || keys.includes("PG"))) {
-    return { angelus: [], competencia: parseFormatB(rows), stock: [] };
+    const { competencia, stock } = parseFormatB(rows);
+    return { angelus: [], competencia, stock };
   }
 
   // Format C — Unified competitor (farmacia retail)

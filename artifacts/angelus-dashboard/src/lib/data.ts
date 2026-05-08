@@ -29,8 +29,12 @@ export interface CompetitionPriceRecord {
 
 export interface StockRecord {
   id: string;
+  /** Molecule/Angelus product name (fuzzy-mapped in DataContext) */
   productoAngelus: string;
+  /** Competitor lab name (MARCA / PROVEEDOR) */
   drogueria: string;
+  /** Competitor product name (PRODUCTO column) */
+  productoCompetidor?: string;
   stockActual: number;
   stockMinimoEsperado: number;
   stockIdeal: number;
