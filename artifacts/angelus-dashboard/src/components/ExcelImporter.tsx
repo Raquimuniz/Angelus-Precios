@@ -1,10 +1,17 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useData } from "@/context/DataContext";
 import { AngelusPriceRecord, CompetitionPriceRecord, StockRecord } from "@/lib/data";
-import { FileSpreadsheet, Download, RotateCcw } from "lucide-react";
+import { FileSpreadsheet, RotateCcw } from "lucide-react";
+
+interface LastLoad {
+  angelus: AngelusPriceRecord[];
+  competencia: CompetitionPriceRecord[];
+  stock: StockRecord[];
+  label: string;
+}
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
@@ -227,9 +234,16 @@ function downloadTemplate() {
 // ── component ──────────────────────────────────────────────────────────────────
 
 export function ExcelImporter() {
-  const { setAngelusPrices, setCompetitionPrices, setStockRecords, resetToSampleData } = useData();
+  const { setAngelusPrices, setCompetitionPrices, setStockRecords } = useData();
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [lastLoad, setLastLoad] = useState<LastLoad | null>(null);
+
+  const applyLoad = (load: LastLoad) => {
+    if (load.angelus.length)    setAngelusPrices(load.angelus);
+    if (load.competencia.length) setCompetitionPrices(load.competencia);
+    if (load.stock.length)      setStockRecords(load.stock);
+  };
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -268,10 +282,6 @@ export function ExcelImporter() {
       });
 
     Promise.all(files.map(processFile)).then(() => {
-      if (allAngelus.length)  setAngelusPrices(allAngelus);
-      if (allComp.length)     setCompetitionPrices(allComp);
-      if (allStock.length)    setStockRecords(allStock);
-
       const total = totalAngelus + totalComp + totalStock;
       if (total === 0) {
         toast({
@@ -281,16 +291,42 @@ export function ExcelImporter() {
             : "Verifica que los archivos tengan el formato correcto.",
           variant: "destructive",
         });
-      } else {
-        const parts: string[] = [];
-        if (totalAngelus) parts.push(`${totalAngelus} precios Angelus`);
-        if (totalComp)    parts.push(`${totalComp} competencia`);
-        if (totalStock)   parts.push(`${totalStock} stock`);
-        toast({
-          title: `${files.length} archivo${files.length > 1 ? "s" : ""} cargado${files.length > 1 ? "s" : ""}`,
-          description: parts.join(" · "),
-        });
+        return;
       }
+
+      const load: LastLoad = {
+        angelus:     allAngelus,
+        competencia: allComp,
+        stock:       allStock,
+        label:       files.map(f => f.name).join(", "),
+      };
+      setLastLoad(load);
+      applyLoad(load);
+
+      const parts: string[] = [];
+      if (totalAngelus) parts.push(`${totalAngelus} precios Angelus`);
+      if (totalComp)    parts.push(`${totalComp} competencia`);
+      if (totalStock)   parts.push(`${totalStock} stock`);
+      toast({
+        title: `${files.length} archivo${files.length > 1 ? "s" : ""} cargado${files.length > 1 ? "s" : ""}`,
+        description: parts.join(" · "),
+      });
+    });
+  };
+
+  const handleReload = () => {
+    if (!lastLoad) {
+      toast({
+        title: "Sin carga previa",
+        description: "Primero carga un archivo Excel.",
+        variant: "destructive",
+      });
+      return;
+    }
+    applyLoad(lastLoad);
+    toast({
+      title: "Dashboard actualizado",
+      description: `Recargado desde: ${lastLoad.label}`,
     });
   };
 
@@ -305,30 +341,21 @@ export function ExcelImporter() {
         onChange={handleFiles}
       />
       <Button
-        variant="outline"
-        size="sm"
-        className="h-8 gap-1.5 text-xs"
-        onClick={downloadTemplate}
-        title="Descargar plantilla Excel con el formato correcto"
-      >
-        <Download className="h-3.5 w-3.5" />
-        Plantilla
-      </Button>
-      <Button
         size="sm"
         className="h-8 gap-1.5 text-xs bg-primary hover:bg-primary/90"
         onClick={() => inputRef.current?.click()}
         title="Cargar 1, 2 o los 3 archivos Excel a la vez"
       >
         <FileSpreadsheet className="h-3.5 w-3.5" />
-        Cargar Excel (hasta 3)
+        Cargar Excel
       </Button>
       <Button
-        variant="ghost"
+        variant="outline"
         size="sm"
         className="h-8 w-8 p-0 text-muted-foreground"
-        onClick={() => { resetToSampleData(); toast({ title: "Datos de ejemplo restaurados" }); }}
-        title="Restaurar datos de ejemplo"
+        onClick={handleReload}
+        title={lastLoad ? `Recargar última carga: ${lastLoad.label}` : "Sin carga previa"}
+        disabled={!lastLoad}
       >
         <RotateCcw className="h-3.5 w-3.5" />
       </Button>
