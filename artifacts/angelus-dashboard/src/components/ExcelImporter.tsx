@@ -318,9 +318,7 @@ export function ExcelImporter() {
         description: parts.join(" · "),
       });
 
-      // Reset button to idle after 4 s
-      if (doneTimerRef.current) clearTimeout(doneTimerRef.current);
-      doneTimerRef.current = setTimeout(() => setStatus("idle"), 4000);
+      // Green stays permanently until next file load
     });
   };
 
