@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angelus Corp · Dashboard PMV Venezuela 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #1a2e5a;
+    --accent: #e63946;
+    --gold: #f4a261;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1a2e5a;
+    --muted: #6b7a99;
+    --border: #dde3ef;
+    --positive: #2a9d5c;
+    --negative: #e63946;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2d4a8a 100%);
+    color: white;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(26,46,90,0.3);
+  }
+  .logo-area { display: flex; align-items: center; gap: 16px; }
+  .logo-box {
+    width: 52px; height: 52px;
+    background: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 20px;
+    color: var(--primary); letter-spacing: -1px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { font-size: 13px; opacity: 0.75; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 13px; opacity: 0.8; }
+
+  /* CONTROLS */
+  .controls {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .control-group { display: flex; align-items: center; gap: 10px; }
+  .control-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn-group { display: flex; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--border); }
+  .btn-toggle {
+    padding: 7px 18px;
+    border: none;
+    background: white;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    border-right: 1px solid var(--border);
+  }
+  .btn-toggle:last-child { border-right: none; }
+  .btn-toggle.active {
+    background: var(--primary);
+    color: white;
+  }
+  .btn-toggle:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+  /* MAIN */
+  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    margin-top: 8px;
+  }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--primary);
+  }
+  .kpi-card.accent::before { background: var(--accent); }
+  .kpi-card.gold::before { background: var(--gold); }
+  .kpi-card.green::before { background: var(--positive); }
+  .kpi-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--primary); line-height: 1; }
+  .kpi-value.small { font-size: 20px; }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .kpi-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .badge-pos { background: #d4f5e3; color: var(--positive); }
+  .badge-neg { background: #fde8e8; color: var(--negative); }
+  .badge-neu { background: #e8eef8; color: var(--primary); }
+
+  /* CHARTS GRID */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .charts-grid-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .chart-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .chart-wrap { position: relative; height: 240px; }
+  .chart-wrap.tall { height: 300px; }
+
+  /* RANKING TABLE */
+  .table-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .table-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .table-header h3 { font-size: 14px; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--bg);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th:not(:first-child) { text-align: right; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f7f9fc; }
+  tbody tr.highlight { background: #fffbf0; }
+  tbody tr.highlight td:first-child { border-left: 3px solid var(--gold); }
+  tbody td {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  tbody td:not(:first-child) { text-align: right; }
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .rank-1 { background: #ffd700; color: #7a5c00; }
+  .rank-2 { background: #e8e8e8; color: #555; }
+  .rank-3 { background: #f4a261; color: #7a3a00; }
+  .rank-n { background: #e8eef8; color: var(--primary); }
+  .rank-angel { background: var(--accent); color: white; }
+  .ms-bar-wrap { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .ms-bar { height: 6px; border-radius: 3px; background: var(--primary); min-width: 3px; }
+  .ms-bar.angelus { background: var(--accent); }
+  .growth-pos { color: var(--positive); font-weight: 600; }
+  .growth-neg { color: var(--negative); font-weight: 600; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 14px;
+    font-size: 12px;
+    margin-top: 32px;
+  }
+
+  @media (max-width: 900px) {
+    .charts-grid, .charts-grid-3 { grid-template-columns: 1fr; }
+    .main { padding: 16px; }
+    .controls { padding: 12px 16px; }
+    .header { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-box">AC</div>
+    <div>
+      <h1>Angelus Corp · Market Intelligence</h1>
+      <p>Mercado Farmacéutico Venezolano · PMV Pre-Info 2026</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div style="font-weight:700;font-size:15px;">Ene – May 2026</div>
+    <div>Fuente: IMS Health / PMV</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="control-group">
+    <span class="control-label">Período</span>
+    <div class="btn-group">
+      <button class="btn-toggle active" onclick="setPeriod('MAT')">MAT</button>
+      <button class="btn-toggle" onclick="setPeriod('YTD')">YTD</button>
+      <button class="btn-toggle" onclick="setPeriod('MES')">MES</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <span class="control-label">Métrica</span>
+    <div class="btn-group">
+      <button class="btn-toggle active" onclick="setMetric('USD')">$ Valores</button>
+      <button class="btn-toggle" onclick="setMetric('UNITS')">Unidades</button>
+    </div>
+  </div>
+  <div style="margin-left:auto; font-size:12px; color:var(--muted);">
+    <span id="period-label">MAT · Últimos 12 meses a fecha</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- KPI SECTION -->
+  <div class="section-title">Indicadores Clave — Angelus Corp.</div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <!-- TRENDS -->
+  <div class="section-title">Evolución Mensual · Angelus Corp. vs Mercado</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Ventas Angelus Corp.</div>
+      <div class="chart-sub" id="sales-sub">USD — MAT · Marzo / Abril / Mayo 2026</div>
+      <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Market Share</div>
+      <div class="chart-sub" id="ms-sub">% share vs mercado total · 3 meses</div>
+      <div class="chart-wrap"><canvas id="msChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Crecimiento vs Año Anterior</div>
+      <div class="chart-sub" id="growth-sub">Angelus Corp. vs Mercado Total (%)</div>
+      <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Posición en Ranking</div>
+      <div class="chart-sub">Ranking en Corporaciones por período</div>
+      <div class="chart-wrap"><canvas id="rankChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- MARKET COMPARISON -->
+  <div class="section-title">Mercado vs Angelus · Mayo 2026 (último mes)</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Top 10 Corporaciones — Market Share</div>
+      <div class="chart-sub" id="top10-sub">% del mercado total</div>
+      <div class="chart-wrap tall"><canvas id="top10Chart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Evolución PY — Angelus vs Mercado</div>
+      <div class="chart-sub">Índice base 100 = año anterior</div>
+      <div class="chart-wrap tall"><canvas id="evolChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- RANKING TABLE -->
+  <div class="section-title">Ranking de Corporaciones — Top 20</div>
+  <div class="table-card">
+    <div class="table-header">
+      <h3 id="table-title">Corporaciones · Mercado Farmacéutico Venezuela · Mayo 2026</h3>
+      <span style="font-size:12px;color:var(--muted);" id="table-metric-label">En USD · MAT</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table id="ranking-table">
+        <thead>
+          <tr>
+            <th>Corporación</th>
+            <th>Rank</th>
+            <th>Ventas</th>
+            <th>Market Share</th>
+            <th>Crec. vs PA</th>
+            <th>Evolución PY</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Angelus Corp. · Dashboard PMV Venezuela 2026 · Datos: IMS Health Pre-Info · Uso interno y confidencial
+</div>
+
+<script>
+// ===================== DATA =====================
+const DATA = {
+  Marzo: {
+    mes: 'Mar',
+    fecha: 'Marzo 2026',
+    angelus: {
+      usd: { MAT: 13617641.30, YTD: 3641297.47, MES: 1312661.30 },
+      units: { MAT: 2147400, YTD: 603390, MES: 220403 },
+      rankUsd: { MAT: 27, YTD: 26, MES: 28 },
+      rankUnits: { MAT: 31, YTD: 27, MES: 29 },
+      msUsd: { MAT: 0.70315, YTD: 0.68689, MES: 0.65345 },
+      msUnits: { MAT: 0.52981, YTD: 0.61003, MES: 0.56156 },
+      growthUsd: { MAT: 19.68, YTD: 21.02, MES: 25.92 },
+      growthUnits: { MAT: -11.89, YTD: 4.93, MES: 26.38 },
+      evolUsd: { MAT: 88.44, YTD: 79.99, MES: 78.07 },
+      evolUnits: { MAT: 74.49, YTD: 89.11, MES: 93.17 },
+    },
+    market: {
+      usd: { MAT: 1936651076.93, YTD: 530110102.50, MES: 200882500.57 },
+      units: { MAT: 405313830, YTD: 98910720, MES: 39248432 },
+      growthUsd: { MAT: 35.33, YTD: 51.28, MES: 61.30 },
+      growthUnits: { MAT: 18.27, YTD: 17.75, MES: 35.64 },
+    },
+    top20Corps: [
+      { name:'GRUPO LETI', msUsd:12.51, msUnits:6.27, rankUsd:1, rankUnits:1, usd:242358728.97, units:25435284, growthUsd:5.80, growthUnits:-13.69 },
+      { name:'CALOX CORP', msUsd:8.54, msUnits:5.57, rankUsd:2, rankUnits:3, usd:165445245.33, units:22578028, growthUsd:17.93, growthUnits:8.33 },
+      { name:'PHARMETIQUE CORP.', msUsd:7.49, msUnits:7.69, rankUsd:3, rankUnits:2, usd:145073769.70, units:31146490, growthUsd:25.46, growthUnits:24.56 },
+      { name:'FARMA CORP.', msUsd:6.68, msUnits:5.49, rankUsd:4, rankUnits:5, usd:129350982.06, units:22239116, growthUsd:39.94, growthUnits:32.10 },
+      { name:'L.O. OFTALMI', msUsd:6.51, msUnits:4.99, rankUsd:5, rankUnits:4, usd:126132962.08, units:20213590, growthUsd:42.71, growthUnits:29.59 },
+      { name:'MEGALABS CORP.', msUsd:5.72, msUnits:5.47, rankUsd:6, rankUnits:6, usd:110789913.55, units:22152220, growthUsd:40.70, growthUnits:23.51 },
+      { name:'COFASA CORP', msUsd:3.19, msUnits:4.77, rankUsd:7, rankUnits:7, usd:61728435.66, units:19322900, growthUsd:31.20, growthUnits:27.42 },
+      { name:'VALMORCA CORP.', msUsd:2.87, msUnits:2.17, rankUsd:8, rankUnits:10, usd:55510495.92, units:8778400, growthUsd:69.96, growthUnits:2.93 },
+      { name:'SIEGFRIED CORP.', msUsd:2.83, msUnits:3.19, rankUsd:9, rankUnits:8, usd:54748994.80, units:12921476, growthUsd:22.10, growthUnits:18.28 },
+      { name:'BIOTECH CORP.', msUsd:1.82, msUnits:2.07, rankUsd:10, rankUnits:11, usd:35271582.82, units:8390800, growthUsd:12.56, growthUnits:26.06 },
+      { name:'ANGELUS CORP.', msUsd:0.70, msUnits:0.53, rankUsd:27, rankUnits:31, usd:13617641.30, units:2147400, growthUsd:19.68, growthUnits:-11.89 },
+    ]
+  },
+  Abril: {
+    mes: 'Abr',
+    fecha: 'Abril 2026',
+    angelus: {
+      usd: { MAT: 13866501.55, YTD: 4956716.74, MES: 1249417.23 },
+      units: { MAT: 2218116, YTD: 829085, MES: 214689 },
+      rankUsd: { MAT: 27, YTD: 26, MES: 26 },
+      rankUnits: { MAT: 29, YTD: 26, MES: 26 },
+      msUsd: { MAT: 0.70215, YTD: 0.69984, MES: 0.70541 },
+      msUnits: { MAT: 0.54832, YTD: 0.63563, MES: 0.66864 },
+      growthUsd: { MAT: 18.52, YTD: 21.53, MES: 16.84 },
+      growthUnits: { MAT: -7.89, YTD: 13.50, MES: 38.14 },
+      evolUsd: { MAT: 87.98, YTD: 84.15, MES: 92.39 },
+      evolUnits: { MAT: 79.31, YTD: 100.01, MES: 133.59 },
+    },
+    market: {
+      usd: { MAT: 1974858660.72, YTD: 708263614.53, MES: 177119208.46 },
+      units: { MAT: 404528301, YTD: 130435788, MES: 32108219 },
+      growthUsd: { MAT: 34.72, YTD: 44.43, MES: 26.46 },
+      growthUnits: { MAT: 16.14, YTD: 13.49, MES: 3.40 },
+    },
+    top20Corps: [
+      { name:'GRUPO LETI', msUsd:12.45, msUnits:6.09, rankUsd:1, rankUnits:1, usd:245828672.99, units:24618340, growthUsd:7.12, growthUnits:-10.71 },
+      { name:'CALOX CORP', msUsd:8.54, msUnits:5.55, rankUsd:2, rankUnits:3, usd:168743595.89, units:22453600, growthUsd:18.22, growthUnits:8.51 },
+      { name:'PHARMETIQUE CORP.', msUsd:7.44, msUnits:7.54, rankUsd:3, rankUnits:2, usd:147006252.73, units:30509700, growthUsd:22.99, growthUnits:22.03 },
+      { name:'L.O. OFTALMI', msUsd:6.59, msUnits:5.07, rankUsd:5, rankUnits:4, usd:130180529.96, units:20522300, growthUsd:44.42, growthUnits:31.49 },
+      { name:'FARMA CORP.', msUsd:6.62, msUnits:5.39, rankUsd:4, rankUnits:5, usd:130825525.60, units:21824100, growthUsd:37.73, growthUnits:29.61 },
+      { name:'MEGALABS CORP.', msUsd:5.74, msUnits:5.49, rankUsd:6, rankUnits:6, usd:113430766.42, units:22213600, growthUsd:40.95, growthUnits:24.78 },
+      { name:'COFASA CORP', msUsd:3.24, msUnits:4.84, rankUsd:7, rankUnits:7, usd:64007218.70, units:19588300, growthUsd:35.06, growthUnits:28.08 },
+      { name:'VALMORCA CORP.', msUsd:2.86, msUnits:2.25, rankUsd:8, rankUnits:10, usd:56568142.44, units:9109900, growthUsd:68.32, growthUnits:5.92 },
+      { name:'SIEGFRIED CORP.', msUsd:2.78, msUnits:3.13, rankUsd:9, rankUnits:8, usd:54806750.66, units:12672800, growthUsd:19.04, growthUnits:15.54 },
+      { name:'BIOTECH CORP.', msUsd:1.81, msUnits:2.05, rankUsd:10, rankUnits:11, usd:35763985.35, units:8297000, growthUsd:13.41, growthUnits:23.53 },
+      { name:'ANGELUS CORP.', msUsd:0.70, msUnits:0.55, rankUsd:27, rankUnits:29, usd:13866501.55, units:2218116, growthUsd:18.52, growthUnits:-7.89 },
+    ]
+  },
+  Mayo: {
+    mes: 'May',
+    fecha: 'Mayo 2026',
+    angelus: {
+      usd: { MAT: 14022652.44, YTD: 6334316.37, MES: 1371453.42 },
+      units: { MAT: 2264191, YTD: 1076116, MES: 245992 },
+      rankUsd: { MAT: 27, YTD: 26, MES: 27 },
+      rankUnits: { MAT: 30, YTD: 25, MES: 25 },
+      msUsd: { MAT: 0.69606, YTD: 0.70604, MES: 0.72774 },
+      msUnits: { MAT: 0.56092, YTD: 0.65061, MES: 0.69611 },
+      growthUsd: { MAT: 16.33, YTD: 19.20, MES: 11.27 },
+      growthUnits: { MAT: -5.38, YTD: 15.32, MES: 21.61 },
+      evolUsd: { MAT: 86.54, YTD: 84.55, MES: 87.68 },
+      evolUnits: { MAT: 83.06, YTD: 104.02, MES: 119.46 },
+    },
+    market: {
+      usd: { MAT: 2014585035.61, YTD: 897166491.62, MES: 188453958.90 },
+      units: { MAT: 403658581, YTD: 165400204, MES: 35338014 },
+      growthUsd: { MAT: 34.42, YTD: 40.98, MES: 26.91 },
+      growthUnits: { MAT: 13.92, YTD: 10.86, MES: 1.80 },
+    },
+    top20Corps: [
+      { name:'GRUPO LETI', msUsd:12.28, msUnits:6.04, rankUsd:1, rankUnits:1, usd:247462350.41, units:24367600, growthUsd:6.96, growthUnits:-10.83 },
+      { name:'CALOX CORP', msUsd:8.54, msUnits:5.70, rankUsd:2, rankUnits:3, usd:172093698.31, units:23010800, growthUsd:18.57, growthUnits:9.61 },
+      { name:'PHARMETIQUE CORP.', msUsd:7.44, msUnits:7.55, rankUsd:3, rankUnits:2, usd:149856725.73, units:30491300, growthUsd:22.14, growthUnits:21.26 },
+      { name:'L.O. OFTALMI', msUsd:6.68, msUnits:5.10, rankUsd:4, rankUnits:4, usd:134608005.51, units:20609800, growthUsd:44.22, growthUnits:30.87 },
+      { name:'FARMA CORP.', msUsd:6.58, msUnits:5.38, rankUsd:5, rankUnits:5, usd:132526691.98, units:21730300, growthUsd:34.14, growthUnits:27.44 },
+      { name:'MEGALABS CORP.', msUsd:5.81, msUnits:5.60, rankUsd:6, rankUnits:6, usd:116995626.55, units:22619400, growthUsd:41.63, growthUnits:25.75 },
+      { name:'COFASA CORP', msUsd:3.18, msUnits:4.80, rankUsd:7, rankUnits:7, usd:64156561.20, units:19377200, growthUsd:33.86, growthUnits:25.13 },
+      { name:'VALMORCA CORP.', msUsd:2.88, msUnits:2.33, rankUsd:8, rankUnits:10, usd:58020168.31, units:9400600, growthUsd:67.78, growthUnits:8.76 },
+      { name:'SIEGFRIED CORP.', msUsd:2.73, msUnits:3.07, rankUsd:9, rankUnits:8, usd:55091243.66, units:12397600, growthUsd:18.15, growthUnits:12.19 },
+      { name:'BIOTECH CORP.', msUsd:1.80, msUnits:2.04, rankUsd:10, rankUnits:11, usd:36244431.32, units:8225400, growthUsd:14.45, growthUnits:22.39 },
+      { name:'ANGELUS CORP.', msUsd:0.70, msUnits:0.56, rankUsd:27, rankUnits:30, usd:14022652.44, units:2264191, growthUsd:16.33, growthUnits:-5.38 },
+    ]
+  }
+};
+
+const MONTHS = ['Marzo', 'Abril', 'Mayo'];
+const MONTH_LABELS = ['Mar 2026', 'Abr 2026', 'May 2026'];
+
+let currentPeriod = 'MAT';
+let currentMetric = 'USD';
+let charts = {};
+
+// ===================== FORMAT HELPERS =====================
+function fmtUSD(v) {
+  if (v >= 1e9) return '$' + (v/1e9).toFixed(2) + 'B';
+  if (v >= 1e6) return '$' + (v/1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return '$' + (v/1e3).toFixed(1) + 'K';
+  return '$' + v.toFixed(0);
+}
+function fmtUnits(v) {
+  if (v >= 1e9) return (v/1e9).toFixed(2) + 'B uds';
+  if (v >= 1e6) return (v/1e6).toFixed(2) + 'M uds';
+  if (v >= 1e3) return (v/1e3).toFixed(1) + 'K uds';
+  return v.toFixed(0) + ' uds';
+}
+function fmtVal(v, metric) { return metric === 'USD' ? fmtUSD(v) : fmtUnits(v); }
+function fmtPct(v) { return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
+function fmtMS(v) { return v.toFixed(2) + '%'; }
+function badgeGrowth(v) {
+  const cls = v >= 0 ? 'badge-pos' : 'badge-neg';
+  return `<span class="kpi-badge ${cls}">${fmtPct(v)}</span>`;
+}
+
+// ===================== KPI =====================
+function renderKPIs() {
+  const p = currentPeriod;
+  const m = currentMetric;
+  const latest = DATA.Mayo;
+  const a = latest.angelus;
+  const mkt = latest.market;
+
+  const angelVal = m === 'USD' ? a.usd[p] : a.units[p];
+  const mktVal = m === 'USD' ? mkt.usd[p] : mkt.units[p];
+  const ms = m === 'USD' ? a.msUsd[p] : a.msUnits[p];
+  const growthA = m === 'USD' ? a.growthUsd[p] : a.growthUnits[p];
+  const growthM = m === 'USD' ? mkt.growthUsd[p] : mkt.growthUnits[p];
+  const evol = m === 'USD' ? a.evolUsd[p] : a.evolUnits[p];
+  const rank = m === 'USD' ? a.rankUsd[p] : a.rankUnits[p];
+
+  const periodName = p === 'MAT' ? 'Últimos 12 meses' : p === 'YTD' ? 'Año corriente' : 'Mes actual';
+
+  document.getElementById('kpi-grid').innerHTML = `
+    <div class="kpi-card accent">
+      <div class="kpi-label">Mercado Total — ${periodName}</div>
+      <div class="kpi-value small">${fmtVal(mktVal, m)}</div>
+      <div class="kpi-sub">Venezuela · Mayo 2026</div>
+      ${badgeGrowth(growthM)}
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Angelus Corp. — ${periodName}</div>
+      <div class="kpi-value">${fmtVal(angelVal, m)}</div>
+      <div class="kpi-sub">${m === 'USD' ? 'Dólares' : 'Unidades'} · Mayo 2026</div>
+      ${badgeGrowth(growthA)}
+    </div>
+    <div class="kpi-card gold">
+      <div class="kpi-label">Market Share</div>
+      <div class="kpi-value">${fmtMS(ms)}</div>
+      <div class="kpi-sub">Del mercado total · ${m === 'USD' ? 'en $' : 'en uds'}</div>
+      <span class="kpi-badge badge-neu">Ranking #${rank}</span>
+    </div>
+    <div class="kpi-card ${growthA >= 0 ? 'green' : 'accent'}">
+      <div class="kpi-label">Crec. Angelus vs PA</div>
+      <div class="kpi-value ${growthA >= 0 ? '' : 'small'}">${fmtPct(growthA)}</div>
+      <div class="kpi-sub">Año anterior · ${periodName}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Mercado: ${fmtPct(growthM)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Evolución PY (Índice)</div>
+      <div class="kpi-value small">${evol.toFixed(1)}</div>
+      <div class="kpi-sub">Base 100 = año anterior</div>
+      <span class="kpi-badge ${evol >= 100 ? 'badge-pos' : 'badge-neg'}">
+        ${evol >= 100 ? 'Supera mercado' : 'Por debajo del mercado'}
+      </span>
+    </div>
+  `;
+}
+
+// ===================== CHARTS =====================
+function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+function renderSalesChart() {
+  destroyChart('sales');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const vals = MONTHS.map(mn => m === 'USD' ? DATA[mn].angelus.usd[p] : DATA[mn].angelus.units[p]);
+  const mktVals = MONTHS.map(mn => m === 'USD' ? DATA[mn].market.usd[p] : DATA[mn].market.units[p]);
+
+  document.getElementById('sales-sub').textContent =
+    `${m === 'USD' ? 'USD' : 'Unidades'} — ${p} · Marzo / Abril / Mayo 2026`;
+
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  charts['sales'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MONTH_LABELS,
+      datasets: [{
+        label: 'Angelus Corp.',
+        data: vals,
+        backgroundColor: 'rgba(230,57,70,0.85)',
+        borderRadius: 6,
+        yAxisID: 'y',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtVal(ctx.raw, m) } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmtVal(v, m) }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderMSChart() {
+  destroyChart('ms');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const msA = MONTHS.map(mn => m === 'USD' ? DATA[mn].angelus.msUsd[p] : DATA[mn].angelus.msUnits[p]);
+
+  const ctx = document.getElementById('msChart').getContext('2d');
+  charts['ms'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTH_LABELS,
+      datasets: [{
+        label: 'Market Share Angelus',
+        data: msA,
+        borderColor: '#e63946',
+        backgroundColor: 'rgba(230,57,70,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#e63946',
+        pointRadius: 6,
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtMS(ctx.raw) } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmtMS(v) }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderGrowthChart() {
+  destroyChart('growth');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const growthA = MONTHS.map(mn => m === 'USD' ? DATA[mn].angelus.growthUsd[p] : DATA[mn].angelus.growthUnits[p]);
+  const growthM = MONTHS.map(mn => m === 'USD' ? DATA[mn].market.growthUsd[p] : DATA[mn].market.growthUnits[p]);
+
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  charts['growth'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTH_LABELS,
+      datasets: [
+        {
+          label: 'Angelus Corp.',
+          data: growthA,
+          borderColor: '#e63946',
+          backgroundColor: 'rgba(230,57,70,0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 6,
+          borderWidth: 2.5,
+        },
+        {
+          label: 'Mercado Total',
+          data: growthM,
+          borderColor: '#1a2e5a',
+          backgroundColor: 'rgba(26,46,90,0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 6,
+          borderWidth: 2.5,
+          borderDash: [5,3],
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtPct(ctx.raw)}` } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmtPct(v) }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderRankChart() {
+  destroyChart('rank');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const ranks = MONTHS.map(mn => m === 'USD' ? DATA[mn].angelus.rankUsd[p] : DATA[mn].angelus.rankUnits[p]);
+
+  const ctx = document.getElementById('rankChart').getContext('2d');
+  charts['rank'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTH_LABELS,
+      datasets: [{
+        label: `Ranking Angelus (${m === 'USD' ? '$' : 'uds'}) · ${p}`,
+        data: ranks,
+        borderColor: '#f4a261',
+        backgroundColor: 'rgba(244,162,97,0.15)',
+        fill: true,
+        tension: 0.3,
+        pointBackgroundColor: '#f4a261',
+        pointRadius: 8,
+        borderWidth: 2.5,
+        pointHoverRadius: 10,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `Posición #${ctx.raw}` } }
+      },
+      scales: {
+        y: {
+          reverse: true,
+          min: 20, max: 35,
+          ticks: { callback: v => '#' + v, stepSize: 1 },
+          grid: { color: '#f0f4f8' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderTop10Chart() {
+  destroyChart('top10');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const corps = DATA.Mayo.top20Corps;
+  const top10 = corps.filter(c => c.name !== 'ANGELUS CORP.').slice(0, 10);
+  const angelus = corps.find(c => c.name === 'ANGELUS CORP.');
+  const all = [...top10, angelus];
+  const names = all.map(c => c.name.replace('CORP.','').replace('CORP','').trim());
+  const vals = all.map(c => m === 'USD' ? c.msUsd : c.msUnits);
+  const colors = all.map(c => c.name === 'ANGELUS CORP.' ? 'rgba(230,57,70,0.9)' : 'rgba(26,46,90,0.75)');
+
+  document.getElementById('top10-sub').textContent =
+    `Market Share en ${m === 'USD' ? 'Valores USD' : 'Unidades'} · ${p} · Mayo 2026`;
+
+  const ctx = document.getElementById('top10Chart').getContext('2d');
+  charts['top10'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        data: vals,
+        backgroundColor: colors,
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtMS(ctx.raw) } }
+      },
+      scales: {
+        x: { ticks: { callback: v => fmtMS(v) }, grid: { color: '#f0f4f8' } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+function renderEvolChart() {
+  destroyChart('evol');
+  const p = currentPeriod;
+  const m = currentMetric;
+  const evolA = MONTHS.map(mn => m === 'USD' ? DATA[mn].angelus.evolUsd[p] : DATA[mn].angelus.evolUnits[p]);
+  const evolM = [100, 100, 100];
+
+  const ctx = document.getElementById('evolChart').getContext('2d');
+  charts['evol'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTH_LABELS,
+      datasets: [
+        {
+          label: 'Angelus Corp.',
+          data: evolA,
+          borderColor: '#e63946',
+          backgroundColor: 'rgba(230,57,70,0.1)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+          borderWidth: 2.5,
+        },
+        {
+          label: 'Mercado (base 100)',
+          data: evolM,
+          borderColor: '#1a2e5a',
+          borderDash: [6, 4],
+          fill: false,
+          pointRadius: 0,
+          borderWidth: 1.5,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}` } }
+      },
+      scales: {
+        y: { min: 65, max: 115, ticks: { stepSize: 10 }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ===================== RANKING TABLE =====================
+function renderTable() {
+  const p = currentPeriod;
+  const m = currentMetric;
+  const corps = [...DATA.Mayo.top20Corps];
+  corps.sort((a, b) => (m === 'USD' ? a.rankUsd - b.rankUsd : a.rankUnits - b.rankUnits));
+  const top = corps.slice(0, 10);
+  const angelus = corps.find(c => c.name === 'ANGELUS CORP.');
+  const showAngelus = !top.find(c => c.name === 'ANGELUS CORP.');
+
+  document.getElementById('table-metric-label').textContent =
+    `En ${m === 'USD' ? 'USD' : 'Unidades'} · ${p} · Mayo 2026`;
+
+  const msKey = m === 'USD' ? 'msUsd' : 'msUnits';
+  const valKey = m === 'USD' ? 'usd' : 'units';
+  const rankKey = m === 'USD' ? 'rankUsd' : 'rankUnits';
+  const growthKey = m === 'USD' ? 'growthUsd' : 'growthUnits';
+  const maxMS = Math.max(...top.map(c => c[msKey]));
+
+  function row(c, idx) {
+    const isAngelus = c.name === 'ANGELUS CORP.';
+    const rank = c[rankKey];
+    let badge = `<span class="rank-badge ${isAngelus ? 'rank-angel' : rank <= 3 ? 'rank-' + rank : 'rank-n'}">${rank}</span>`;
+    const ms = c[msKey];
+    const growth = c[growthKey];
+    const barW = Math.max(4, (ms / maxMS) * 80);
+    return `<tr class="${isAngelus ? 'highlight' : ''}">
+      <td>${badge} ${c.name}</td>
+      <td>${rank}</td>
+      <td>${m === 'USD' ? fmtUSD(c[valKey]) : fmtUnits(c[valKey])}</td>
+      <td><div class="ms-bar-wrap">
+        <span>${fmtMS(ms)}</span>
+        <div class="ms-bar ${isAngelus ? 'angelus' : ''}" style="width:${barW}px"></div>
+      </div></td>
+      <td class="${growth >= 0 ? 'growth-pos' : 'growth-neg'}">${fmtPct(growth)}</td>
+      <td>—</td>
+    </tr>`;
+  }
+
+  let html = top.map(row).join('');
+  if (showAngelus && angelus) {
+    html += `<tr><td colspan="6" style="text-align:center;padding:6px;background:#f7f9fc;font-size:11px;color:var(--muted);">··· Posiciones intermedias ···</td></tr>`;
+    html += row(angelus);
+  }
+  document.getElementById('table-body').innerHTML = html;
+}
+
+// ===================== MAIN UPDATE =====================
+function updateAll() {
+  renderKPIs();
+  renderSalesChart();
+  renderMSChart();
+  renderGrowthChart();
+  renderRankChart();
+  renderTop10Chart();
+  renderEvolChart();
+  renderTable();
+
+  const pLabel = { MAT: 'MAT · Últimos 12 meses a fecha', YTD: 'YTD · Año corriente acumulado', MES: 'MES · Período mensual' };
+  document.getElementById('period-label').textContent = pLabel[currentPeriod];
+}
+
+function setPeriod(p) {
+  currentPeriod = p;
+  document.querySelectorAll('.btn-group').forEach((g, i) => {
+    if (i === 0) g.querySelectorAll('.btn-toggle').forEach(b => {
+      b.classList.toggle('active', b.textContent === p);
+    });
+  });
+  updateAll();
+}
+
+function setMetric(m) {
+  currentMetric = m;
+  document.querySelectorAll('.btn-group').forEach((g, i) => {
+    if (i === 1) g.querySelectorAll('.btn-toggle').forEach(b => {
+      b.classList.toggle('active', (m === 'USD' && b.textContent.includes('Valores')) || (m === 'UNITS' && b.textContent.includes('Unidades')));
+    });
+  });
+  updateAll();
+}
+
+// Init
+updateAll();
+</script>
+</body>
+</html>
