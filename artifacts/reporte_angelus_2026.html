@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Estratégico — Angelus Corp 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap');
+
+  :root {
+    --navy: #0d1b3e;
+    --navy-mid: #1a2f5e;
+    --red: #c0392b;
+    --gold: #d4a843;
+    --light: #f4f6fa;
+    --white: #ffffff;
+    --text: #1c2637;
+    --muted: #5a6882;
+    --border: #dde3ef;
+    --green: #1a6b4a;
+    --green-light: #e8f5ef;
+    --red-light: #fdf0ee;
+    --gold-light: #fef9ec;
+    --blue-light: #eef2fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: #e8ecf4;
+    color: var(--text);
+    font-size: 9.5pt;
+    line-height: 1.5;
+  }
+
+  /* ───── PAGE SHELL ───── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--white);
+    margin: 0 auto 12mm;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,.18);
+    page-break-after: always;
+  }
+
+  /* ───── COVER PAGE ───── */
+  .cover {
+    background: linear-gradient(160deg, #0d1b3e 0%, #1a2f5e 45%, #0d1b3e 100%);
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .cover-noise {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%230d1b3e'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23ffffff08'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff06'/%3E%3C/svg%3E");
+  }
+  .cover-accent-bar {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--red) 0%, var(--gold) 60%, var(--red) 100%);
+    position: relative; z-index: 2;
+  }
+  .cover-body {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 18mm 18mm 14mm;
+    position: relative; z-index: 2;
+  }
+  .cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .cover-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cover-logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--red), #8b0000);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 18pt;
+    color: #fff; letter-spacing: -1px;
+  }
+  .cover-logo-text { color: #fff; }
+  .cover-logo-text .corp-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 13pt; letter-spacing: 1px;
+  }
+  .cover-logo-text .corp-sub {
+    font-size: 8pt; color: rgba(255,255,255,.6);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px;
+    padding: 6px 14px;
+    color: rgba(255,255,255,.75);
+    font-size: 8pt;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .cover-hero { text-align: center; padding: 10mm 0 8mm; }
+  .cover-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8.5pt; letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8mm;
+  }
+  .cover-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 28pt;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 5mm;
+    letter-spacing: -0.5px;
+  }
+  .cover-title span { color: var(--gold); }
+  .cover-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300; font-size: 13pt;
+    color: rgba(255,255,255,.7);
+    margin-bottom: 10mm;
+  }
+  .cover-divider {
+    width: 80px; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 8mm;
+  }
+  .cover-source {
+    font-size: 8.5pt; color: rgba(255,255,255,.5);
+    letter-spacing: 1px;
+  }
+
+  .cover-kpis {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 4mm; margin: 8mm 0;
+  }
+  .cover-kpi {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px;
+    padding: 5mm;
+    text-align: center;
+  }
+  .cover-kpi .kval {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 18pt;
+    color: var(--gold);
+    display: block; line-height: 1;
+    margin-bottom: 2mm;
+  }
+  .cover-kpi .klabel {
+    font-size: 7.5pt; color: rgba(255,255,255,.6);
+    text-transform: uppercase; letter-spacing: 1px;
+    display: block; line-height: 1.3;
+  }
+
+  .cover-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-top: 1px solid rgba(255,255,255,.12);
+    padding-top: 5mm;
+  }
+  .cover-date { color: rgba(255,255,255,.5); font-size: 8pt; }
+  .cover-confidential {
+    color: var(--red); font-size: 8pt;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--red);
+    padding: 3px 10px; border-radius: 4px;
+  }
+
+  /* ───── INNER PAGES ───── */
+  .page-header {
+    background: var(--navy);
+    padding: 6mm 12mm;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .page-header .ph-left {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ph-dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  .ph-section {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600; font-size: 8pt;
+    color: rgba(255,255,255,.6);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .ph-right {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,.35);
+  }
+
+  .page-accent {
+    height: 3px;
+    background: linear-gradient(90deg, var(--red) 0%, var(--gold) 40%, transparent 100%);
+  }
+
+  .page-content {
+    padding: 8mm 12mm 6mm;
+  }
+
+  .section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 17pt;
+    color: var(--navy);
+    margin-bottom: 1mm;
+    line-height: 1.2;
+  }
+  .section-title span { color: var(--red); }
+  .section-sub {
+    font-size: 8.5pt; color: var(--muted);
+    margin-bottom: 5mm;
+    letter-spacing: 0.5px;
+  }
+
+  /* ───── KPI CARDS ───── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3mm;
+    margin-bottom: 5mm;
+  }
+  .kpi-card {
+    background: var(--light);
+    border-radius: 8px;
+    padding: 4mm;
+    border-left: 4px solid var(--navy);
+    position: relative;
+  }
+  .kpi-card.red { border-left-color: var(--red); }
+  .kpi-card.gold { border-left-color: var(--gold); }
+  .kpi-card.green { border-left-color: var(--green); }
+  .kpi-card .kv {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 15pt;
+    color: var(--navy); display: block;
+    line-height: 1.1; margin-bottom: 1mm;
+  }
+  .kpi-card .kl {
+    font-size: 7pt; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    display: block;
+  }
+  .kpi-card .kt {
+    font-size: 8pt; color: var(--green);
+    font-weight: 600; margin-top: 1mm;
+    display: block;
+  }
+  .kpi-card .kt.neg { color: var(--red); }
+
+  /* ───── TABLES ───── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 4mm;
+  }
+  thead th {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 7.5pt;
+    padding: 3mm 2.5mm;
+    text-align: center;
+    letter-spacing: 0.5px;
+    border: none;
+  }
+  thead th:first-child { text-align: left; border-radius: 0; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:nth-child(even) { background: var(--light); }
+  tbody tr:hover { background: var(--blue-light); }
+  tbody td {
+    padding: 2.5mm 2.5mm;
+    text-align: center;
+    color: var(--text);
+  }
+  tbody td:first-child { text-align: left; font-weight: 600; }
+  .angelus-row td {
+    background: #fff0f0 !important;
+    font-weight: 700 !important;
+    color: var(--red) !important;
+  }
+  .market-row td {
+    background: var(--navy) !important;
+    color: rgba(255,255,255,.9) !important;
+    font-weight: 700 !important;
+    font-size: 8pt !important;
+  }
+
+  .up { color: var(--green); font-weight: 700; }
+  .dn { color: var(--red); font-weight: 700; }
+  .neutral { color: var(--muted); }
+
+  .evol-chip {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 12px;
+    font-weight: 700; font-size: 7.5pt;
+  }
+  .evol-high { background: var(--green-light); color: var(--green); }
+  .evol-mid  { background: #e8f0fe; color: #1a56b0; }
+  .evol-low  { background: var(--red-light); color: var(--red); }
+
+  /* ───── TWO COLUMN ───── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 4mm;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 4mm;
+  }
+
+  /* ───── BOXES ───── */
+  .info-box {
+    background: var(--light);
+    border-radius: 8px;
+    padding: 4mm 5mm;
+    border-left: 4px solid var(--navy);
+    margin-bottom: 3mm;
+  }
+  .info-box.red { border-left-color: var(--red); background: var(--red-light); }
+  .info-box.gold { border-left-color: var(--gold); background: var(--gold-light); }
+  .info-box.green { border-left-color: var(--green); background: var(--green-light); }
+  .info-box .ib-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 9pt;
+    margin-bottom: 2mm;
+    color: var(--navy);
+  }
+  .info-box.red .ib-title { color: var(--red); }
+  .info-box.gold .ib-title { color: #8a6800; }
+  .info-box.green .ib-title { color: var(--green); }
+  .info-box p { font-size: 8.5pt; color: var(--text); line-height: 1.55; }
+  .info-box ul { padding-left: 4mm; margin-top: 1mm; }
+  .info-box ul li { margin-bottom: 1mm; font-size: 8.5pt; line-height: 1.5; }
+
+  /* ───── HIGHLIGHT ───── */
+  .big-stat {
+    text-align: center;
+    padding: 5mm 3mm;
+    background: var(--navy);
+    border-radius: 10px;
+    color: #fff;
+  }
+  .big-stat .bs-val {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 28pt;
+    color: var(--gold); display: block;
+    line-height: 1;
+  }
+  .big-stat .bs-sub {
+    font-size: 8pt; color: rgba(255,255,255,.6);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    display: block; margin-top: 1.5mm;
+  }
+
+  /* ───── PROGRESS BARS ───── */
+  .progress-wrap { margin-bottom: 2.5mm; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 8pt; margin-bottom: 1mm;
+  }
+  .progress-bar-bg {
+    height: 7px; background: var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--navy);
+  }
+  .progress-fill.red { background: var(--red); }
+  .progress-fill.gold { background: var(--gold); }
+  .progress-fill.green { background: var(--green); }
+
+  /* ───── PAGE FOOTER ───── */
+  .page-footer {
+    position: absolute; bottom: 4mm; left: 12mm; right: 12mm;
+    display: flex; justify-content: space-between;
+    font-size: 7pt; color: var(--border);
+    border-top: 1px solid var(--border);
+    padding-top: 2mm;
+  }
+
+  /* ───── PATTERN CARDS ───── */
+  .pattern-card {
+    border-radius: 10px;
+    padding: 4mm 5mm;
+    margin-bottom: 3mm;
+    position: relative;
+    overflow: hidden;
+  }
+  .pattern-card::before {
+    content: attr(data-num);
+    position: absolute; right: 3mm; top: 2mm;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 36pt;
+    color: rgba(0,0,0,.06); line-height: 1;
+  }
+  .pattern-card.p1 { background: linear-gradient(135deg, #eef8ff, #ddeffa); border-left: 4px solid #1a56b0; }
+  .pattern-card.p2 { background: linear-gradient(135deg, #fef9ec, #fef0cc); border-left: 4px solid var(--gold); }
+  .pattern-card.p3 { background: linear-gradient(135deg, #e8f5ef, #d0ecdf); border-left: 4px solid var(--green); }
+  .pattern-card.p4 { background: linear-gradient(135deg, #fdf0ee, #fde0dc); border-left: 4px solid var(--red); }
+  .pattern-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 10pt;
+    margin-bottom: 1.5mm;
+  }
+  .pattern-card.p1 .pattern-title { color: #1a56b0; }
+  .pattern-card.p2 .pattern-title { color: #8a6800; }
+  .pattern-card.p3 .pattern-title { color: var(--green); }
+  .pattern-card.p4 .pattern-title { color: var(--red); }
+  .pattern-corps {
+    font-size: 8pt; font-weight: 600;
+    color: var(--navy); margin-bottom: 1.5mm;
+  }
+  .pattern-desc { font-size: 8pt; color: var(--text); line-height: 1.5; }
+
+  /* ───── RECOMMENDATION CARD ───── */
+  .rec-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4mm 5mm;
+    margin-bottom: 3mm;
+    display: flex; gap: 3mm;
+    align-items: flex-start;
+  }
+  .rec-num {
+    width: 26px; height: 26px;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 11pt;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .rec-body {}
+  .rec-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 9.5pt;
+    color: var(--navy); margin-bottom: 1.5mm;
+  }
+  .rec-desc { font-size: 8.5pt; color: var(--text); line-height: 1.5; }
+  .rec-kpis {
+    display: flex; gap: 3mm; margin-top: 2mm;
+  }
+  .rec-kpi-tag {
+    background: var(--blue-light);
+    color: #1a56b0;
+    font-size: 7.5pt; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+  }
+
+  /* ───── SVG MINI CHART ───── */
+  .mini-chart { margin: 2mm 0; }
+
+  /* ───── PRINT ───── */
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; page-break-after: always; }
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1.5px 7px;
+    border-radius: 12px;
+    font-size: 7pt; font-weight: 700;
+    margin-left: 3px;
+  }
+  .tag-red { background: var(--red-light); color: var(--red); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-gold { background: var(--gold-light); color: #8a6800; }
+  .tag-blue { background: #eef2fa; color: #1a56b0; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 3mm 0;
+  }
+
+  .footnote {
+    font-size: 7pt;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 2mm;
+  }
+
+  .highlight-num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: var(--red);
+  }
+
+  .rank-badge {
+    display: inline-block;
+    width: 22px; height: 22px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    text-align: center; line-height: 22px;
+    font-size: 7.5pt; font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .rank-badge.gold { background: var(--gold); color: var(--navy); }
+  .rank-badge.red { background: var(--red); }
+
+  h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 10pt;
+    color: var(--navy);
+    margin-bottom: 2mm; margin-top: 3mm;
+    letter-spacing: 0.3px;
+  }
+  h3 .h3-line {
+    display: inline-block;
+    width: 20px; height: 2px;
+    background: var(--red);
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 1 — PORTADA
+══════════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="cover-noise"></div>
+  <div class="cover-accent-bar"></div>
+  <div class="cover-body">
+    <div class="cover-top">
+      <div class="cover-logo">
+        <div class="cover-logo-icon">A</div>
+        <div class="cover-logo-text">
+          <div class="corp-name">ANGELUS CORP.</div>
+          <div class="corp-sub">Pharmaceutical · Venezuela</div>
+        </div>
+      </div>
+      <div class="cover-badge">Documento Confidencial</div>
+    </div>
+
+    <div class="cover-hero">
+      <div class="cover-eyebrow">Inteligencia Competitiva · IMS Health PMV Pre-Info</div>
+      <div class="cover-title">
+        ANÁLISIS ESTRATÉGICO<br>DEL <span>MERCADO FARMACÉUTICO</span><br>VENEZOLANO
+      </div>
+      <div class="cover-subtitle">Período: Marzo — Mayo 2026 · MAT Rolling</div>
+      <div class="cover-divider"></div>
+      <div class="cover-source">Fuente: IMS Health Panel de Muestra Venezuela (PMV) · Pre-Info</div>
+    </div>
+
+    <div class="cover-kpis">
+      <div class="cover-kpi">
+        <span class="kval">$2.01B</span>
+        <span class="klabel">Mercado Total<br>MAT Mayo 2026</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">+34.4%</span>
+        <span class="klabel">Crecimiento<br>vs Año Anterior</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">$4.99</span>
+        <span class="klabel">Precio Promedio<br>por Unidad MAT</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">86.5</span>
+        <span class="klabel">Índice Evolución<br>Angelus Corp</span>
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="cover-date">Elaborado: Junio 2026 · Uso interno exclusivo</div>
+      <div class="cover-confidential">⚠ Confidencial</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 2 — RESUMEN EJECUTIVO
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Resumen Ejecutivo</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Resumen <span>Ejecutivo</span></div>
+    <div class="section-sub">CEO Briefing — Mercado Farmacéutico Venezuela · MAT Marzo-Mayo 2026</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kv">$2.01B</span>
+        <span class="kl">Mercado MAT Mayo</span>
+        <span class="kt">▲ +$519M vs PY</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">+34.4%</span>
+        <span class="kl">Crecimiento USD MAT</span>
+        <span class="kt">Impulsado por precio</span>
+      </div>
+      <div class="kpi-card gold">
+        <span class="kv">24</span>
+        <span class="kl">Empresas ganando share</span>
+        <span class="kt">Evol PY &gt; 100</span>
+      </div>
+      <div class="kpi-card green">
+        <span class="kv">#27</span>
+        <span class="kl">Ranking Angelus MAT</span>
+        <span class="kt neg">▼ Evol 86.5 — perdiendo</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Dinámica del Mercado</h3>
+        <div class="info-box">
+          <div class="ib-title">El crecimiento es de precio, no de volumen</div>
+          <p>El mercado farmacéutico venezolano creció <strong>+34.4%</strong> en valores USD (MAT Mayo 2026), alcanzando <strong>$2.015 billones</strong>. Sin embargo, el volumen en unidades <em>decreció</em> de 405.3M a 403.7M unidades en el trimestre analizado. El precio promedio por unidad subió de <strong>$4.78 → $4.88 → $4.99</strong>, acumulando un alza de <strong>+4.4%</strong> en solo 3 meses.</p>
+        </div>
+        <div class="info-box gold">
+          <div class="ib-title">Las grandes generan volumen, los medianos generan margen</div>
+          <p>Las <strong>6 corporaciones líderes</strong> (con &gt;5% de market share cada una) crecen por <em>debajo</em> del mercado (+25% a +33%) pero aportan el <strong>49% del crecimiento absoluto</strong> en dólares. Su participación combinada cayó de 47.0% a 46.7%.</p>
+        </div>
+        <div class="info-box green">
+          <div class="ib-title">24 empresas están ganando participación de mercado</div>
+          <p>Con índice de Evolución PY &gt;100 en Mayo, estas empresas crecen más rápido que el mercado y están desplazando a los grandes. Dos estrategias dominantes: <strong>(1) escalada de precios premium</strong> y <strong>(2) volumen ultra-bajo precio</strong>.</p>
+        </div>
+      </div>
+      <div>
+        <h3><span class="h3-line"></span>Situación Angelus Corp</h3>
+        <div class="info-box red">
+          <div class="ib-title">⚠ Señal de alerta: pérdida sistemática de participación</div>
+          <ul>
+            <li><strong>Evolución PY: 88.4 → 88.0 → 86.5</strong> — tendencia de deterioro continuo. Por cada $100 que retenía el año pasado (ajustado al mercado), hoy retiene solo $86.50.</li>
+            <li><strong>Crecimiento: 19.7% → 18.5% → 16.3%</strong> — desacelerándose mientras el mercado crece +34.4%.</li>
+            <li><strong>Precio/unidad: $6.34 → $6.25 → $6.19</strong> — cayendo contra la tendencia del mercado.</li>
+            <li><strong>Market Share: 0.703% → 0.702% → 0.696%</strong> — erosión constante.</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="ib-title">Veredicto CEO</div>
+          <p>Angelus Corp se encuentra en la "trampa del medio": no es suficientemente económica para competir por volumen masivo (KMPlus a $1.94/u, Plusandex a $2.08/u), ni suficientemente premium para comandar precio alto. Mientras el mercado sube su precio promedio, Angelus lo reduce — señal de presión competitiva y falta de poder de fijación de precio.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="info-box">
+      <div class="ib-title">Los 5 hallazgos críticos de este análisis</div>
+      <ul>
+        <li><strong>1. Mercado inflacionario sin expansión real:</strong> El crecimiento en USD es puramente de precio; el volumen de unidades se contrae.</li>
+        <li><strong>2. Democracia competitiva:</strong> El crecimiento se fragmenta entre 24+ empresas medianas y pequeñas, a expensas de las grandes.</li>
+        <li><strong>3. Los aceleradores lideran:</strong> KMPlus (+94.4%, Evol 144.6), Herbaplant (+158.9%, Evol 192.6), Tiares (+116%, Evol 160.7) son los casos de éxito del período.</li>
+        <li><strong>4. Premium vs volumen son los dos únicos caminos rentables:</strong> No hay espacio en el medio donde opera Angelus actualmente.</li>
+        <li><strong>5. Angelus tiene la peor Evolución PY del Top 30:</strong> 86.5 — la más baja de las 30 primeras corporaciones. Requiere intervención estratégica urgente.</li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 2</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 3 — MERCADO GLOBAL
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Mercado Global</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Mercado <span>Global</span></div>
+    <div class="section-sub">Indicadores macroeconómicos del sector farmacéutico · MAT Marzo-Mayo 2026</div>
+
+    <div class="three-col" style="margin-bottom:4mm;">
+      <div class="big-stat">
+        <span class="bs-val">$1.937B</span>
+        <span class="bs-sub">MAT Marzo 2026</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">$1.975B</span>
+        <span class="bs-sub">MAT Abril 2026</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">$2.015B</span>
+        <span class="bs-sub">MAT Mayo 2026</span>
+      </div>
+    </div>
+
+    <h3><span class="h3-line"></span>Evolución de Indicadores Clave del Mercado</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Indicador</th>
+          <th>MAT Marzo 2026</th>
+          <th>MAT Abril 2026</th>
+          <th>MAT Mayo 2026</th>
+          <th>Variación Marzo→Mayo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mercado Total (USD)</strong></td>
+          <td>$1,936.7M</td>
+          <td>$1,974.9M</td>
+          <td>$2,014.6M</td>
+          <td class="up">▲ +$77.9M (+4.0%)</td>
+        </tr>
+        <tr>
+          <td><strong>Crecimiento vs PY</strong></td>
+          <td>+35.3%</td>
+          <td>+34.7%</td>
+          <td>+34.4%</td>
+          <td class="neutral">Estable ~34-35%</td>
+        </tr>
+        <tr>
+          <td><strong>Unidades Totales</strong></td>
+          <td>405.3M</td>
+          <td>404.5M</td>
+          <td>403.7M</td>
+          <td class="dn">▼ -1.6M (-0.4%)</td>
+        </tr>
+        <tr>
+          <td><strong>Precio/Unidad Promedio</strong></td>
+          <td>$4.78</td>
+          <td>$4.88</td>
+          <td>$4.99</td>
+          <td class="up">▲ +$0.21 (+4.4%)</td>
+        </tr>
+        <tr>
+          <td><strong>Índice Evolución Mercado</strong></td>
+          <td>100</td>
+          <td>100</td>
+          <td>100</td>
+          <td class="neutral">Base de referencia</td>
+        </tr>
+        <tr>
+          <td><strong>Número de Corporaciones Activas</strong></td>
+          <td>&gt;50</td>
+          <td>&gt;50</td>
+          <td>&gt;50</td>
+          <td class="neutral">Mercado fragmentado</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Análisis Valor vs Volumen</h3>
+        <div class="info-box gold">
+          <div class="ib-title">Crecimiento inflacionario, no expansivo</div>
+          <p>El mercado crece +34.4% en dólares pero pierde -0.4% en unidades. Esto confirma que el crecimiento es <strong>100% inflacionario</strong> — las empresas venden menos unidades pero cobran más por ellas. El precio por unidad subió un <strong>+4.4% en solo 3 meses</strong>, equivalente a un ritmo anualizado de +17.6%.</p>
+          <p style="margin-top:2mm;"><strong>Implicación:</strong> En este entorno, quien no sube precios pierde rentabilidad en términos reales.</p>
+        </div>
+
+        <h3><span class="h3-line"></span>Inflación de Precio Unitario</h3>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>MAT Marzo 2026</span><span>$4.78</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:55%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>MAT Abril 2026</span><span>$4.88</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:59%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>MAT Mayo 2026</span><span>$4.99</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:63%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap" style="margin-top:2mm;">
+          <div class="progress-label" style="color:var(--red);font-weight:700;"><span>Angelus Corp (MAT Mayo)</span><span>$6.19 ▼</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill red" style="width:72%;"></div></div>
+        </div>
+        <p class="footnote">Angelus está por encima del promedio de mercado pero su precio <em>cae</em> mientras el mercado <em>sube</em>.</p>
+      </div>
+
+      <div>
+        <h3><span class="h3-line"></span>Top 6 Corporaciones — Contribución al Crecimiento</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Corporación</th>
+              <th>USD MAT Mayo</th>
+              <th>MS%</th>
+              <th>Gr%</th>
+              <th>Evol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GRUPO LETI <span class="tag tag-red">-MS</span></td>
+              <td>$247.5M</td>
+              <td>12.28%</td>
+              <td class="neutral">+25.6%</td>
+              <td><span class="evol-chip evol-low">93.4</span></td>
+            </tr>
+            <tr>
+              <td>CALOX CORP <span class="tag tag-red">-MS</span></td>
+              <td>$172.1M</td>
+              <td>8.54%</td>
+              <td class="neutral">+28.0%</td>
+              <td><span class="evol-chip evol-low">95.2</span></td>
+            </tr>
+            <tr>
+              <td>PHARMETIQUE <span class="tag tag-red">-MS</span></td>
+              <td>$149.9M</td>
+              <td>7.44%</td>
+              <td class="neutral">+29.2%</td>
+              <td><span class="evol-chip evol-low">96.1</span></td>
+            </tr>
+            <tr>
+              <td>L.O. OFTALMI <span class="tag tag-blue">≈MS</span></td>
+              <td>$134.6M</td>
+              <td>6.68%</td>
+              <td class="neutral">+32.7%</td>
+              <td><span class="evol-chip evol-low">98.7</span></td>
+            </tr>
+            <tr>
+              <td>FARMA CORP <span class="tag tag-red">-MS</span></td>
+              <td>$132.5M</td>
+              <td>6.58%</td>
+              <td class="neutral">+28.0%</td>
+              <td><span class="evol-chip evol-low">95.2</span></td>
+            </tr>
+            <tr>
+              <td>MEGALABS <span class="tag tag-blue">≈MS</span></td>
+              <td>$117.0M</td>
+              <td>5.81%</td>
+              <td class="neutral">+32.9%</td>
+              <td><span class="evol-chip evol-low">98.9</span></td>
+            </tr>
+            <tr class="market-row">
+              <td>TOTAL MERCADO</td>
+              <td>$2,014.6M</td>
+              <td>100%</td>
+              <td>+34.4%</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="info-box">
+          <div class="ib-title">Paradoja del gigante</div>
+          <p>Las 6 corporaciones top aportan <strong>$254M en crecimiento absoluto</strong> (49% del total), pero todas tienen Evolución PY &lt;100 — pierden participación de mercado. El mercado se <strong>democratiza</strong>: los grandes crecen en dólares pero achican su porción de la torta.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 3</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 4 — EMPRESAS QUE ABSORBEN EL CRECIMIENTO (parte 1)
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Empresas que Absorben el Crecimiento</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Empresas que <span>Absorben</span> el Crecimiento</div>
+    <div class="section-sub">24 corporaciones con Índice de Evolución PY &gt;100 en MAT Mayo 2026 · Ganando participación de mercado</div>
+
+    <div class="info-box gold" style="margin-bottom:3mm;">
+      <div class="ib-title">¿Qué significa Evolución PY &gt;100?</div>
+      <p>Si el mercado total creció +34.4%, una empresa con Evol=110 significa que por cada $100 que habría generado si solo siguiera el mercado, generó $110 — es decir, creció <em>más rápido</em> que el mercado y absorbió participación de sus competidores. Evol=86.5 (Angelus) significa que solo capturó $86.50 de esos $100 potenciales.</p>
+    </div>
+
+    <h3><span class="h3-line"></span>Tabla Completa: Evolución Mes a Mes (MAT) — Empresas con Evol &gt;100 en Mayo</h3>
+    <table style="font-size:7.5pt;">
+      <thead>
+        <tr>
+          <th rowspan="2" style="text-align:left;">Corporación</th>
+          <th colspan="3">Precio Promedio/Unidad (USD)</th>
+          <th colspan="3">Índice Evolución PY</th>
+          <th colspan="3">Market Share (%)</th>
+          <th colspan="3">Crecimiento vs PY (%)</th>
+        </tr>
+        <tr>
+          <th>Mar</th><th>Abr</th><th>May</th>
+          <th>Mar</th><th>Abr</th><th>May</th>
+          <th>Mar</th><th>Abr</th><th>May</th>
+          <th>Mar</th><th>Abr</th><th>May</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-badge">7</span> COFASA CORP <span class="tag tag-green">+MS</span></td>
+          <td>$4.88</td><td>$5.05</td><td>$5.08</td>
+          <td>123.0</td><td>125.8</td><td><span class="evol-chip evol-high">120.6</span></td>
+          <td>3.19%</td><td>3.24%</td><td>3.19%</td>
+          <td class="up">+66.5%</td><td class="up">+69.4%</td><td class="up">+62.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">11</span> NATURLIFES <span class="tag tag-green">+MS</span></td>
+          <td>$7.05</td><td>$7.32</td><td>$7.59</td>
+          <td>144.3</td><td>142.5</td><td><span class="evol-chip evol-high">135.5</span></td>
+          <td>1.48%</td><td>1.53%</td><td>1.55%</td>
+          <td class="up">+95.3%</td><td class="up">+91.9%</td><td class="up">+82.2%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">13</span> DISTRILAB <span class="tag tag-green">+MS</span></td>
+          <td>$5.62</td><td>$5.70</td><td>$5.78</td>
+          <td>105.4</td><td>105.1</td><td><span class="evol-chip evol-mid">103.5</span></td>
+          <td>1.46%</td><td>1.45%</td><td>1.44%</td>
+          <td class="up">+42.7%</td><td class="up">+41.6%</td><td class="up">+39.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">15</span> DOLLDER <span class="tag tag-green">+MS</span></td>
+          <td>$5.45</td><td>$5.57</td><td>$5.67</td>
+          <td>102.7</td><td>104.5</td><td><span class="evol-chip evol-mid">106.1</span></td>
+          <td>1.25%</td><td>1.25%</td><td>1.27%</td>
+          <td class="up">+39.0%</td><td class="up">+40.8%</td><td class="up">+42.6%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">17</span> NESTLE CORP <span class="tag tag-green">+MS</span></td>
+          <td>$16.53</td><td>$16.97</td><td>$17.37</td>
+          <td>145.1</td><td>133.8</td><td><span class="evol-chip evol-high">130.3</span></td>
+          <td>1.01%</td><td>1.02%</td><td>1.04%</td>
+          <td class="up">+96.4%</td><td class="up">+80.3%</td><td class="up">+75.2%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">18</span> PLUSANDEX CORP <span class="tag tag-green">+MS</span></td>
+          <td>$1.93</td><td>$2.01</td><td>$2.08</td>
+          <td>107.4</td><td>111.2</td><td><span class="evol-chip evol-mid">116.4</span></td>
+          <td>0.91%</td><td>0.94%</td><td>0.96%</td>
+          <td class="up">+45.4%</td><td class="up">+49.9%</td><td class="up">+56.5%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">23</span> ARCO IRIS <span class="tag tag-green">+MS</span></td>
+          <td>$10.47</td><td>$10.67</td><td>$10.88</td>
+          <td>122.5</td><td>121.2</td><td><span class="evol-chip evol-high">119.7</span></td>
+          <td>0.79%</td><td>0.79%</td><td>0.81%</td>
+          <td class="up">+65.8%</td><td class="up">+63.3%</td><td class="up">+60.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">24</span> TIARES <span class="tag tag-green">+MS</span></td>
+          <td>$7.00</td><td>$7.20</td><td>$7.30</td>
+          <td>165.3</td><td>162.7</td><td><span class="evol-chip evol-high">160.7</span></td>
+          <td>0.72%</td><td>0.74%</td><td>0.77%</td>
+          <td class="up">+123.6%</td><td class="up">+119.2%</td><td class="up">+116.0%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">25</span> ALESS <span class="tag tag-green">+MS</span></td>
+          <td>$3.35</td><td>$3.34</td><td>$3.34</td>
+          <td>107.9</td><td>111.1</td><td><span class="evol-chip evol-mid">110.9</span></td>
+          <td>0.78%</td><td>0.77%</td><td>0.76%</td>
+          <td class="up">+46.0%</td><td class="up">+49.7%</td><td class="up">+49.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">26</span> LABORATORIOS NOW <span class="tag tag-green">+MS</span></td>
+          <td>$15.98</td><td>$16.30</td><td>$16.64</td>
+          <td>113.1</td><td>110.4</td><td><span class="evol-chip evol-mid">107.7</span></td>
+          <td>0.72%</td><td>0.73%</td><td>0.73%</td>
+          <td class="up">+53.0%</td><td class="up">+48.7%</td><td class="up">+44.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">28</span> BEHRENS CORP <span class="tag tag-green">+MS</span></td>
+          <td>$5.65</td><td>$5.76</td><td>$5.80</td>
+          <td>108.1</td><td>107.1</td><td><span class="evol-chip evol-mid">104.7</span></td>
+          <td>0.69%</td><td>0.69%</td><td>0.69%</td>
+          <td class="up">+46.3%</td><td class="up">+44.3%</td><td class="up">+40.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">29</span> KMPLUS CORP <span class="tag tag-green">+MS</span></td>
+          <td>$1.97</td><td>$1.94</td><td>$1.94</td>
+          <td>134.2</td><td>139.6</td><td><span class="evol-chip evol-high">144.6</span></td>
+          <td>0.65%</td><td>0.66%</td><td>0.67%</td>
+          <td class="up">+81.7%</td><td class="up">+88.1%</td><td class="up">+94.4%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">33</span> ADIUM PHARMA <span class="tag tag-green">+MS</span></td>
+          <td>$14.40</td><td>$14.27</td><td>$14.11</td>
+          <td>117.8</td><td>110.9</td><td><span class="evol-chip evol-mid">106.2</span></td>
+          <td>0.53%</td><td>0.52%</td><td>0.52%</td>
+          <td class="up">+59.4%</td><td class="up">+49.4%</td><td class="up">+42.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">34</span> HERBAPLANT <span class="tag tag-green">+MS</span></td>
+          <td>$10.05</td><td>$10.20</td><td>$10.22</td>
+          <td>210.3</td><td>209.3</td><td><span class="evol-chip evol-high">192.6</span></td>
+          <td>0.47%</td><td>0.49%</td><td>0.50%</td>
+          <td class="up">+184.6%</td><td class="up">+181.9%</td><td class="up">+158.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">35</span> ZORIAK <span class="tag tag-green">+MS</span></td>
+          <td>$13.85</td><td>$13.99</td><td>$14.32</td>
+          <td>118.9</td><td>116.6</td><td><span class="evol-chip evol-mid">116.4</span></td>
+          <td>0.48%</td><td>0.48%</td><td>0.49%</td>
+          <td class="up">+60.9%</td><td class="up">+57.1%</td><td class="up">+56.5%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">36</span> CORP.KIMICEG <span class="tag tag-green">+MS</span></td>
+          <td>$2.61</td><td>$2.69</td><td>$2.82</td>
+          <td>111.4</td><td>110.0</td><td><span class="evol-chip evol-mid">107.1</span></td>
+          <td>0.48%</td><td>0.47%</td><td>0.48%</td>
+          <td class="up">+50.8%</td><td class="up">+48.2%</td><td class="up">+43.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">37</span> MERCK CORP <span class="tag tag-green">+MS</span></td>
+          <td>$17.83</td><td>$17.83</td><td>$17.69</td>
+          <td>116.6</td><td>110.2</td><td><span class="evol-chip evol-mid">105.4</span></td>
+          <td>0.47%</td><td>0.46%</td><td>0.45%</td>
+          <td class="up">+57.8%</td><td class="up">+48.5%</td><td class="up">+41.7%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">38</span> NEOQUIMICA <span class="tag tag-green">+MS</span></td>
+          <td>$4.63</td><td>$4.69</td><td>$5.12</td>
+          <td>145.5</td><td>145.7</td><td><span class="evol-chip evol-high">161.0</span></td>
+          <td>0.38%</td><td>0.39%</td><td>0.44%</td>
+          <td class="up">+96.9%</td><td class="up">+96.3%</td><td class="up">+116.4%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">40</span> LAPROFF CORP <span class="tag tag-blue">*</span></td>
+          <td>$3.59</td><td>$3.41</td><td>$3.41</td>
+          <td>60.4</td><td>57.3</td><td><span class="evol-chip evol-mid">112.4</span></td>
+          <td>0.42%</td><td>0.40%</td><td>0.39%</td>
+          <td class="dn">-18.3%</td><td class="dn">-22.8%</td><td class="up">+51.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">41</span> PONCE BENZO <span class="tag tag-green">+MS</span></td>
+          <td>$3.49</td><td>$3.57</td><td>$3.67</td>
+          <td>121.4</td><td>123.8</td><td><span class="evol-chip evol-high">121.5</span></td>
+          <td>0.37%</td><td>0.38%</td><td>0.38%</td>
+          <td class="up">+64.3%</td><td class="up">+66.8%</td><td class="up">+63.4%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">43</span> MEDIFARM CORP <span class="tag tag-green">+MS</span></td>
+          <td>$17.30</td><td>$17.79</td><td>$18.48</td>
+          <td>118.8</td><td>123.3</td><td><span class="evol-chip evol-high">123.4</span></td>
+          <td>0.35%</td><td>0.36%</td><td>0.37%</td>
+          <td class="up">+60.8%</td><td class="up">+66.1%</td><td class="up">+65.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">45</span> BLUE MEDICAL <span class="tag tag-green">+MS</span></td>
+          <td>$3.23</td><td>$3.27</td><td>$2.95</td>
+          <td>106.7</td><td>108.6</td><td><span class="evol-chip evol-mid">106.6</span></td>
+          <td>0.35%</td><td>0.35%</td><td>0.35%</td>
+          <td class="up">+44.4%</td><td class="up">+46.4%</td><td class="up">+43.3%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">47</span> ADN MEDICAL CR <span class="tag tag-green">+MS</span></td>
+          <td>$4.12</td><td>$4.16</td><td>$4.28</td>
+          <td>126.1</td><td>125.7</td><td><span class="evol-chip evol-high">124.2</span></td>
+          <td>0.32%</td><td>0.32%</td><td>0.33%</td>
+          <td class="up">+70.7%</td><td class="up">+69.4%</td><td class="up">+66.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">49</span> BEIERSDORF CORP <span class="tag tag-blue">↓Evol</span></td>
+          <td>$10.24</td><td>$10.03</td><td>$10.08</td>
+          <td>174.2</td><td>144.4</td><td><span class="evol-chip evol-high">141.2</span></td>
+          <td>0.35%</td><td>0.33%</td><td>0.30%</td>
+          <td class="up">+135.8%</td><td class="up">+94.5%</td><td class="up">+89.9%</td>
+        </tr>
+        <tr class="angelus-row">
+          <td>⚠ ANGELUS CORP <span class="tag tag-red">-MS</span></td>
+          <td>$6.34</td><td>$6.25</td><td>$6.19</td>
+          <td>88.4</td><td>88.0</td><td>86.5</td>
+          <td>0.703%</td><td>0.702%</td><td>0.696%</td>
+          <td>+19.7%</td><td>+18.5%</td><td>+16.3%</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">* Laproff: recuperación notable en Mayo tras caída en Mar-Abr. Rango Evol &gt;100 solo en Mayo. | ↓Evol: Evolución alta pero descendente. | Ranking basado en USD MAT Mayo 2026.</p>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 4</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 5 — PATRONES ESTRATÉGICOS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Patrones Estratégicos del Mercado</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Patrones <span>Estratégicos</span></div>
+    <div class="section-sub">Cuatro arquetipos de crecimiento identificados en el mercado farmacéutico venezolano 2026</div>
+
+    <div class="two-col">
+      <div>
+        <div class="pattern-card p1" data-num="I">
+          <div class="pattern-title">PATRÓN I — ACELERADORES</div>
+          <div class="pattern-corps">KMPlus Corp · Plusandex Corp · Neoquímica · Dollder</div>
+          <div class="pattern-desc">
+            Empresas que <strong>aceleran</strong> su crecimiento mes a mes. Su evolución PY aumenta de Marzo a Mayo, indicando que capturan share de forma progresiva. Estrategia basada en <strong>precio bajo + volumen alto</strong> (KMPlus $1.94/u, Plusandex $2.08/u) o en expansión de distribución (Neoquímica +116.4% Mayo).
+            <br><br>
+            <strong>KMPlus:</strong> Evol 134.2→139.6→144.6 con precio estable a $1.94. Máxima aceleración del mercado.<br>
+            <strong>Neoquímica:</strong> Evol 145.5→145.7→161.0 con precio subiendo $4.63→$5.12. Rara combinación de aceleración + pricing power.
+          </div>
+        </div>
+
+        <div class="pattern-card p2" data-num="II">
+          <div class="pattern-title">PATRÓN II — ESCALADORES PREMIUM</div>
+          <div class="pattern-corps">Naturlifes · Nestle · Laboratorios Now · Medifarm · Zoriak · Arco Iris · Merck · Adium</div>
+          <div class="pattern-desc">
+            Empresas que suben precios con éxito mientras ganan participación de mercado. Demuestran <strong>pricing power real</strong> en el mercado venezolano — un activo escaso. Sus consumidores están dispuestos a pagar más.
+            <br><br>
+            <strong>Nestle:</strong> $16.53→$17.37 (+5.1% en precio) con Evol 145.1→130.3 — alto aunque desacelerando.<br>
+            <strong>Medifarm:</strong> $17.30→$18.48 (+6.8% en precio) con Evol 118.8→123.4 — acelerando a pesar del alza.<br>
+            <strong>Naturlifes:</strong> $7.05→$7.59 (+7.7% en precio) con Evol 144.3→135.5 — liderando salud natural.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="pattern-card p3" data-num="III">
+          <div class="pattern-title">PATRÓN III — ALTO CRECIMIENTO SOSTENIBLE</div>
+          <div class="pattern-corps">Tiares · Herbaplant · Cofasa · Ponce Benzo · ADN Medical</div>
+          <div class="pattern-desc">
+            Empresas con crecimiento superior al +60% mantenido durante los tres meses. Sus bases de comparación son todavía bajas pero están construyendo presencia de mercado a ritmo acelerado.
+            <br><br>
+            <strong>Tiares:</strong> +123.6%→+119.2%→+116.0% con Evol 165.3→160.7. Consistencia notable.<br>
+            <strong>Herbaplant:</strong> +184.6%→+181.9%→+158.9% con Evol 210.3→192.6. El crecimiento más alto del mercado.<br>
+            <strong>Cofasa:</strong> +66.5%→+69.4%→+62.1% — empresa consolidada (Rank #7) con crecimiento sostenido.
+          </div>
+        </div>
+
+        <div class="pattern-card p4" data-num="IV">
+          <div class="pattern-title">PATRÓN IV — DESACELERADORES CON SHARE</div>
+          <div class="pattern-corps">Naturlifes · Nestle · Beiersdorf · Adium · Laboratorios Now</div>
+          <div class="pattern-desc">
+            Empresas que siguen ganando share (Evol &gt;100) pero con evolución <em>descendente</em>. La ventaja competitiva que obtuvieron en períodos anteriores se está erosionando gradualmente.
+            <br><br>
+            <strong>Nestle:</strong> Evol 145.1→133.8→130.3 — alto pero bajando -14.8 puntos.<br>
+            <strong>Beiersdorf:</strong> Evol 174.2→144.4→141.2 — caída de -33 puntos. A vigilar.<br>
+            <strong>Conclusión:</strong> Mantener market share requiere innovación continua, no solo precio.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <h3><span class="h3-line"></span>Mapa de Posicionamiento: Precio vs Crecimiento (MAT Mayo 2026)</h3>
+
+    <!-- Simple ASCII-style positioning chart rendered as divs -->
+    <div style="background:var(--light); border-radius:8px; padding:4mm; position:relative; height:65mm; overflow:hidden; border:1px solid var(--border);">
+      <div style="position:absolute; top:2mm; left:50%; transform:translateX(-50%); font-size:7pt; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Mayor precio/unidad →</div>
+
+      <!-- Y axis label -->
+      <div style="position:absolute; left:2mm; top:50%; transform:translateY(-50%) rotate(-90deg); font-size:7pt; color:var(--muted); letter-spacing:1px; text-transform:uppercase; white-space:nowrap;">Mayor crecimiento →</div>
+
+      <!-- Quadrant lines -->
+      <div style="position:absolute; left:22mm; right:3mm; top:50%; height:1px; background:var(--border);"></div>
+      <div style="position:absolute; left:50%; top:6mm; bottom:4mm; width:1px; background:var(--border);"></div>
+
+      <!-- Quadrant labels -->
+      <div style="position:absolute; top:8mm; left:53%; font-size:7pt; color:var(--green); font-weight:700;">PREMIUM ESCALADORES</div>
+      <div style="position:absolute; top:8mm; left:24mm; font-size:7pt; color:#1a56b0; font-weight:700;">VOLUMEN MASIVO</div>
+      <div style="position:absolute; bottom:6mm; left:53%; font-size:7pt; color:var(--muted); font-weight:700;">PREMIUM ESTANCADO</div>
+      <div style="position:absolute; bottom:6mm; left:24mm; font-size:7pt; color:var(--red); font-weight:700;">BAJO PRECIO / BAJO CRECIMIENTO</div>
+
+      <!-- Companies as dots -->
+      <!-- KMPLUS: low price ($1.94), very high growth (+94.4%) → top-left -->
+      <div style="position:absolute; left:27mm; top:10mm; width:14px; height:14px; background:#1a56b0; border-radius:50%; display:flex; align-items:center; justify-content:center;" title="KMPlus">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">K</span>
+      </div>
+      <div style="position:absolute; left:26mm; top:7mm; font-size:6pt; color:#1a56b0; font-weight:700;">KMPlus</div>
+
+      <!-- PLUSANDEX: low price ($2.08), high growth (+56.5%) → top-left -->
+      <div style="position:absolute; left:35mm; top:17mm; width:12px; height:12px; background:#1a56b0; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">P</span>
+      </div>
+      <div style="position:absolute; left:34mm; top:14mm; font-size:6pt; color:#1a56b0; font-weight:700;">Plusandex</div>
+
+      <!-- HERBAPLANT: mid price ($10.22), ultra high growth (+158.9%) → top-right -->
+      <div style="position:absolute; left:63mm; top:8mm; width:16px; height:16px; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">H</span>
+      </div>
+      <div style="position:absolute; left:61mm; top:5mm; font-size:6pt; color:var(--green); font-weight:700;">Herbaplant</div>
+
+      <!-- NESTLE: high price ($17.37), high growth (+75.2%) → top-right -->
+      <div style="position:absolute; left:80mm; top:13mm; width:14px; height:14px; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">N</span>
+      </div>
+      <div style="position:absolute; left:78mm; top:10mm; font-size:6pt; color:var(--green); font-weight:700;">Nestlé</div>
+
+      <!-- TIARES: mid price ($7.30), ultra high growth (+116%) → top-right -->
+      <div style="position:absolute; left:58mm; top:11mm; width:14px; height:14px; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">T</span>
+      </div>
+      <div style="position:absolute; left:56mm; top:8mm; font-size:6pt; color:var(--green); font-weight:700;">Tiares</div>
+
+      <!-- NATURLIFES: mid-high price ($7.59), high growth (+82.2%) → top-right -->
+      <div style="position:absolute; left:60mm; top:16mm; width:14px; height:14px; background:var(--green); border-radius:50; display:flex; align-items:center; justify-content:center; border-radius:50%;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">NL</span>
+      </div>
+
+      <!-- COFASA: low-mid price ($5.08), good growth (+62.1%) → top-left -->
+      <div style="position:absolute; left:44mm; top:18mm; width:14px; height:14px; background:#1a56b0; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">C</span>
+      </div>
+      <div style="position:absolute; left:43mm; top:15mm; font-size:6pt; color:#1a56b0; font-weight:700;">Cofasa</div>
+
+      <!-- ANGELUS: price $6.19, low growth +16.3% → bottom-left/mid -->
+      <div style="position:absolute; left:48mm; top:46mm; width:18px; height:18px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #8b0000;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">A</span>
+      </div>
+      <div style="position:absolute; left:46mm; top:43mm; font-size:6.5pt; color:var(--red); font-weight:700;">⚠ Angelus</div>
+
+      <!-- GRUPO LETI: low price but large -->
+      <div style="position:absolute; left:32mm; top:36mm; width:22px; height:22px; background:var(--muted); border-radius:50%; display:flex; align-items:center; justify-content:center; opacity:.6;">
+        <span style="color:#fff; font-size:6pt; font-weight:700;">GL</span>
+      </div>
+      <div style="position:absolute; left:30mm; top:33mm; font-size:6pt; color:var(--muted); font-weight:700;">G.Leti</div>
+
+      <!-- Market avg ref line -->
+      <div style="position:absolute; bottom:12mm; left:24mm; right:4mm; height:1.5px; background:rgba(212,168,67,.5); border-top:1px dashed var(--gold);"></div>
+      <div style="position:absolute; bottom:9mm; right:4mm; font-size:6.5pt; color:#8a6800; font-weight:700;">— Mkt Avg +34.4%</div>
+    </div>
+    <p class="footnote" style="margin-top:1mm;">Nota: Tamaño del círculo proporcional al USD MAT. Ejes representan tendencias relativas, no valores exactos a escala.</p>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 5</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 6 — DIAGNÓSTICO ANGELUS CORP
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot" style="background:var(--red);"></div><span class="ph-section">Diagnóstico Estratégico · Angelus Corp</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Diagnóstico <span>Angelus Corp</span></div>
+    <div class="section-sub">Análisis de posición competitiva y evolución de indicadores clave · MAT Marzo-Mayo 2026</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <span class="kv">86.5</span>
+        <span class="kl">Evol PY Mayo MAT</span>
+        <span class="kt neg">▼ 88.4 → 88.0 → 86.5</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">+16.3%</span>
+        <span class="kl">Crecimiento MAT Mayo</span>
+        <span class="kt neg">▼ vs +34.4% mercado</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">$6.19</span>
+        <span class="kl">Precio/Unidad Mayo</span>
+        <span class="kt neg">▼ $6.34 → $6.25 → $6.19</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">0.696%</span>
+        <span class="kl">Market Share Mayo</span>
+        <span class="kt neg">▼ 0.703% → 0.702% → 0.696%</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Evolución de Indicadores Angelus vs Mercado</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>MAT Mar</th>
+              <th>MAT Abr</th>
+              <th>MAT May</th>
+              <th>Tendencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ranking USD</td>
+              <td>#27</td>
+              <td>#27</td>
+              <td>#27</td>
+              <td class="neutral">Estancado</td>
+            </tr>
+            <tr>
+              <td>USD MAT</td>
+              <td>$13.62M</td>
+              <td>$13.87M</td>
+              <td>$14.02M</td>
+              <td class="up">▲ +$0.4M</td>
+            </tr>
+            <tr>
+              <td>Market Share (USD)</td>
+              <td>0.703%</td>
+              <td>0.702%</td>
+              <td>0.696%</td>
+              <td class="dn">▼ -0.007pp</td>
+            </tr>
+            <tr>
+              <td>Crecimiento vs PY</td>
+              <td>+19.7%</td>
+              <td>+18.5%</td>
+              <td>+16.3%</td>
+              <td class="dn">▼ -3.4pp</td>
+            </tr>
+            <tr>
+              <td>Índice Evolución PY</td>
+              <td>88.4</td>
+              <td>88.0</td>
+              <td>86.5</td>
+              <td class="dn">▼ -1.9 pts</td>
+            </tr>
+            <tr>
+              <td>Precio/Unidad MAT</td>
+              <td>$6.34</td>
+              <td>$6.25</td>
+              <td>$6.19</td>
+              <td class="dn">▼ -$0.15 (-2.4%)</td>
+            </tr>
+            <tr class="market-row">
+              <td>Precio/u MERCADO</td>
+              <td>$4.78</td>
+              <td>$4.88</td>
+              <td>$4.99</td>
+              <td class="up">▲ +$0.21 (+4.4%)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box red">
+          <div class="ib-title">La Anomalía de Precio: Contra la Corriente del Mercado</div>
+          <p>Mientras el mercado eleva su precio promedio <strong>+4.4%</strong> en el trimestre (de $4.78 a $4.99/u), el precio de Angelus <strong>cae -2.4%</strong> (de $6.34 a $6.19/u). Esta dinámica inversa indica presión competitiva intensa: Angelus necesita bajar precios para sostener su volumen de ventas, señal de que su propuesta de valor no está siendo validada por el mercado.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3><span class="h3-line"></span>Comparativo con Top 5 Competidores Analizados</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th>Rank</th>
+              <th>Evol May</th>
+              <th>Precio May</th>
+              <th>Gr% May</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DISTRILAB</td>
+              <td>#13</td>
+              <td><span class="evol-chip evol-mid">103.5</span></td>
+              <td>$5.78</td>
+              <td class="up">+39.1%</td>
+            </tr>
+            <tr class="angelus-row">
+              <td>⚠ ANGELUS CORP</td>
+              <td>#27</td>
+              <td>86.5</td>
+              <td>$6.19 ▼</td>
+              <td>+16.3%</td>
+            </tr>
+            <tr>
+              <td>DAC55</td>
+              <td>#19</td>
+              <td><span class="evol-chip evol-low">93.2</span></td>
+              <td>$4.08</td>
+              <td class="neutral">+25.2%</td>
+            </tr>
+            <tr>
+              <td>ALESS</td>
+              <td>#25</td>
+              <td><span class="evol-chip evol-mid">110.9</span></td>
+              <td>$3.34</td>
+              <td class="up">+49.1%</td>
+            </tr>
+            <tr>
+              <td>KMPLUS CORP</td>
+              <td>#29</td>
+              <td><span class="evol-chip evol-high">144.6</span></td>
+              <td>$1.94</td>
+              <td class="up">+94.4%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <div class="ib-title">Posición relativa en el grupo de 5 competidores</div>
+          <ul>
+            <li><strong>Distrilab:</strong> Misma franja de precio (~$5-6/u) pero con Evol 103.5 vs 86.5 de Angelus. Son directamente comparables y Distrilab gana terreno.</li>
+            <li><strong>ALESS:</strong> Precio $3.34 — 46% más barato que Angelus. Evol 110.9, creciendo +49%. Compite por volumen y gana.</li>
+            <li><strong>KMPlus:</strong> El caso más extremo — $1.94/u, +94.4%, Evol 144.6. Dominio por precio ultrabajo.</li>
+            <li><strong>DAC55:</strong> También pierde share (Evol 93.2) pero a menor velocidad que Angelus.</li>
+          </ul>
+        </div>
+
+        <div class="info-box gold">
+          <div class="ib-title">La "Trampa del Medio"</div>
+          <p>Angelus a $6.19/u no es lo suficientemente barata para competir con KMPlus ($1.94) o ALESS ($3.34) en volumen, pero tampoco tiene el posicionamiento premium de Nestle ($17.37), Medifarm ($18.48) o Laboratorios Now ($16.64). Esta posición intermedia ofrece lo peor de ambos mundos: márgenes menores a los premium sin el volumen de los económicos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="three-col" style="margin-top:2mm;">
+      <div class="info-box red">
+        <div class="ib-title">🚨 Riesgo Inmediato</div>
+        <p>Con Evolución PY de <strong>86.5 y cayendo</strong>, si la tendencia continúa (-1.9 puntos/mes), en 6 meses el índice podría llegar a ~75. Eso representaría perder 1 de cada 4 dólares de participación relativa respecto al año anterior.</p>
+      </div>
+      <div class="info-box gold">
+        <div class="ib-title">⚠ Señal de Alerta</div>
+        <p>El ranking <strong>#27 lleva 3 meses estático</strong>, pero la posición interna se deteriora. Las empresas debajo (Behrens #28, KMPlus #29) aceleran y podrían desplazar a Angelus a posiciones más bajas pronto.</p>
+      </div>
+      <div class="info-box green">
+        <div class="ib-title">✓ Fortaleza a Preservar</div>
+        <p>Angelus <strong>sigue creciendo (+16.3%)</strong> — no está en declive absoluto. Sus ventas pasan de $13.62M a $14.02M MAT. El problema es de posición relativa, no de destrucción de valor. Hay base sobre la cual construir.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 6</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 7 — RECOMENDACIONES CEO
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot" style="background:var(--gold);"></div><span class="ph-section">Recomendaciones Estratégicas · CEO Level</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Recomendaciones <span>Estratégicas</span></div>
+    <div class="section-sub">Plan de acción CEO — Basado en análisis IMS Health PMV Pre-Info Marzo-Mayo 2026</div>
+
+    <div class="info-box" style="margin-bottom:4mm; background: linear-gradient(135deg, #0d1b3e, #1a2f5e); border:none;">
+      <div class="ib-title" style="color:var(--gold); font-size:10pt;">Premisa Estratégica</div>
+      <p style="color:rgba(255,255,255,.85);">El mercado farmacéutico venezolano está en un proceso de bifurcación: los ganadores serán quienes dominen los extremos (precio ultra-bajo con volumen masivo O precio premium con diferenciación). El centro de mercado donde opera Angelus se comprime sistemáticamente. La acción correctiva requiere <strong style="color:var(--gold);">elegir un lado</strong> con convicción y ejecutar con consistencia.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">1</div>
+      <div class="rec-body">
+        <div class="rec-title">AUDITORÍA DE PORTAFOLIO URGENTE — Identificar candidatos para reposicionamiento de precio</div>
+        <div class="rec-desc">
+          Con un precio promedio de $6.19/u cayendo mientras el mercado sube a $4.99/u (y seguirá subiendo), Angelus necesita revisar producto por producto: ¿cuáles tienen potencial premium (subir a $12-18/u) y cuáles deben competir en precio (~$3-4/u)? Mantener todo al mismo precio intermedio garantiza el estancamiento actual.
+          <br><br>
+          <strong>Acción inmediata:</strong> Clasificar el portafolio en tres categorías: (A) Premium con inversión de marca, (B) Estándar con optimización de costo, (C) Salida del portafolio. Ejecutar en los próximos 90 días.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Meta: Evol PY ≥ 100 en 6 meses</span>
+          <span class="rec-kpi-tag">KPI: Precio/u > $6.50 en Premium</span>
+          <span class="rec-kpi-tag">Área: Marketing + Comercial</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">2</div>
+      <div class="rec-body">
+        <div class="rec-title">ESTRATEGIA DE VOLUMEN — Crear línea de bajo precio para productos genéricos</div>
+        <div class="rec-desc">
+          KMPlus ($1.94/u, Evol 144.6) y Plusandex ($2.08/u, Evol 116.4) demuestran que el segmento ultra-económico crece al doble del mercado. Angelus debe evaluar si puede lanzar una sub-marca o línea económica con precios entre $2-3/u para capturar este segmento sin canibalizar su marca principal.
+          <br><br>
+          <strong>Referencia de mercado:</strong> ALESS a $3.34/u logra Evol 110.9. Hay espacio entre $2 y $4 sin entrar al territorio de KMPlus. Este podría ser el primer paso para recuperar posición.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Segmento objetivo: $2.50-$3.50/u</span>
+          <span class="rec-kpi-tag">Meta volumen: +40% unidades/año</span>
+          <span class="rec-kpi-tag">Área: Desarrollo de Producto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">3</div>
+      <div class="rec-body">
+        <div class="rec-title">INVERSIÓN EN CATEGORÍAS DE ALTO CRECIMIENTO — Salud natural, vitaminas y OTC</div>
+        <div class="rec-desc">
+          Naturlifes (+82.2%, Evol 135.5), Herbaplant (+158.9%, Evol 192.6) y Nestle/salud (+75.2%, Evol 130.3) señalan claramente que el consumidor venezolano invierte en salud preventiva y natural a precios premium. Esta categoría crece 2-4x más rápido que el mercado total.
+          <br><br>
+          <strong>Oportunidad concreta:</strong> Si Angelus tiene o puede desarrollar productos OTC/vitaminas/salud natural, debería invertir agresivamente en esta categoría en los próximos 12 meses. El price point viable es $7-12/u con márgenes superiores.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Categoría: Natural/OTC/Vitaminas</span>
+          <span class="rec-kpi-tag">Price point: $7-12/u</span>
+          <span class="rec-kpi-tag">Meta Evol: >120 en 12 meses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">4</div>
+      <div class="rec-body">
+        <div class="rec-title">MONITOREO MENSUAL DE EVOLUCIÓN PY — Detener la caída por debajo de 85</div>
+        <div class="rec-desc">
+          El Índice de Evolución PY es el indicador más honesto de la salud competitiva. Actualmente en 86.5 y cayendo -1.9 puntos/mes. El primer objetivo táctico es <strong>estabilizar la caída</strong> — detener el deterioro antes de poder revertirlo.
+          <br><br>
+          <strong>Palancas inmediatas para estabilizar:</strong> (1) Revisar territorios con mayor pérdida de share, (2) Auditar políticas de descuento que estén erosionando precios, (3) Reforzar la fuerza de ventas en puntos de venta donde Distrilab gana terreno (mismo segmento de precio).
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">KPI crítico: Evol PY ≥ 87 en 60 días</span>
+          <span class="rec-kpi-tag">Barrera: No caer de 85</span>
+          <span class="rec-kpi-tag">Área: Ventas + Inteligencia Comercial</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:1mm;">
+      <div class="info-box green">
+        <div class="ib-title">Empresas a estudiar como referencia</div>
+        <ul>
+          <li><strong>Distrilab:</strong> Mismo rango de precio, mejor evolución. ¿Qué hacen diferente en canales/productos?</li>
+          <li><strong>Cofasa:</strong> Rank #7, precio similar, crecimiento 62%. Modelo de distribución masiva eficiente.</li>
+          <li><strong>Naturlifes:</strong> Ruta al premium con salud natural. Evol 135.5 sostenido.</li>
+          <li><strong>KMPlus:</strong> Si Angelus quiere volumen, debe estudiar este modelo de costo-precio.</li>
+        </ul>
+      </div>
+      <div class="info-box red">
+        <div class="ib-title">Riesgos a mitigar en los próximos 90 días</div>
+        <ul>
+          <li><strong>Caída de ranking:</strong> Behrens (#28) y KMPlus (#29) aceleran. Un trimestre más y Angelus podría ser #29 o #30.</li>
+          <li><strong>Erosión de precio:</strong> Dejar que el precio siga cayendo implica recortar márgenes sin recuperar market share.</li>
+          <li><strong>Pérdida de relevancia:</strong> Con MS cayendo a 0.696%, en 6 meses podría quedar fuera del Top 30 de análisis IMS.</li>
+          <li><strong>Inercia organizacional:</strong> El mayor riesgo es no actuar.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 7</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PÁGINA 8 — APÉNDICE
+══════════════════════════════════════════════ -->
+<div class="page" style="min-height:auto;">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Apéndice · Glosario y Metodología</span></div>
+    <div class="ph-right">Angelus Corp · Análisis Estratégico 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+
+    <div class="section-title">Apéndice &amp; <span>Glosario</span></div>
+    <div class="section-sub">Definiciones metodológicas y fuente de datos</div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Glosario de Indicadores IMS Health</h3>
+        <table style="font-size:8pt;">
+          <thead>
+            <tr><th style="text-align:left;">Término</th><th style="text-align:left;">Definición</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MAT</strong></td><td>Moving Annual Total — Acumulado móvil de los últimos 12 meses a la fecha del período</td></tr>
+            <tr><td><strong>YTD</strong></td><td>Year-to-Date — Acumulado desde enero del año en curso hasta el mes del período</td></tr>
+            <tr><td><strong>MES</strong></td><td>Período mensual puntual del mes indicado</td></tr>
+            <tr><td><strong>Evolución PY</strong></td><td>Índice donde 100 = crecimiento exactamente igual al mercado total. &gt;100 = gana participación. &lt;100 = pierde participación. Calculado por IMS Health.</td></tr>
+            <tr><td><strong>Market Share</strong></td><td>Porcentaje del volumen total del mercado (USD o Unidades) que corresponde a la empresa</td></tr>
+            <tr><td><strong>Growth % PY</strong></td><td>Crecimiento porcentual vs el mismo período del año anterior (Prior Year)</td></tr>
+            <tr><td><strong>Precio/Unidad</strong></td><td>Calculado como USD MAT ÷ Unidades MAT. Precio promedio implícito de venta</td></tr>
+            <tr><td><strong>PMV</strong></td><td>Panel de Muestra Venezuela — base de datos propietaria de IMS Health que captura ventas de canal farmacéutico venezolano</td></tr>
+            <tr><td><strong>Pre-Info</strong></td><td>Datos preliminares sujetos a ajuste. Los valores definitivos pueden variar levemente</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3><span class="h3-line"></span>Metodología y Fuentes</h3>
+        <div class="info-box">
+          <div class="ib-title">Fuente de Datos</div>
+          <p><strong>IMS Health PMV Pre-Info</strong> — archivos Excel mensuales correspondientes a:</p>
+          <ul>
+            <li>Pre_info_marzo_26_.xlsx — período MAT/YTD/MES Marzo 2026</li>
+            <li>Pre_info_Abril_.xlsx — período MAT/YTD/MES Abril 2026</li>
+            <li>Pre_info_mayo_.xlsx — período MAT/YTD/MES Mayo 2026</li>
+          </ul>
+          <p style="margin-top:2mm;">Hoja analizada: <strong>"RANKING DE CORPORACIONES"</strong> — Top 20+ corporaciones por ventas USD en Venezuela.</p>
+        </div>
+        <div class="info-box gold">
+          <div class="ib-title">Metodología del Análisis</div>
+          <ul>
+            <li>Todos los valores USD y Unidades extraídos de columna MAT (Moving Annual Total) salvo indicación contraria</li>
+            <li>Precio/Unidad calculado: USD_MAT ÷ Units_MAT para cada período</li>
+            <li>Empresas "absorbiendo crecimiento" definidas como: Evol PY &gt;100 en MAT Mayo 2026</li>
+            <li>Mercado de referencia = "Venezuela" (fila total del ranking IMS)</li>
+            <li>Análisis elaborado en Junio 2026 con datos Pre-Info, sujeto a revisión con datos definitivos</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="ib-title">Limitaciones</div>
+          <p>Los datos PMV Pre-Info representan una muestra del mercado farmacéutico venezolano. Canales informales, ventas directas y canal hospitalario pueden no estar totalmente representados. Las variaciones mensuales pequeñas (&lt;0.1pp) deben interpretarse con cautela.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="background:var(--navy); border-radius:10px; padding:5mm 8mm; text-align:center; margin-top:2mm;">
+      <div style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:12pt; color:var(--white); margin-bottom:2mm;">ANGELUS CORP.</div>
+      <div style="color:rgba(255,255,255,.6); font-size:8pt; line-height:1.6;">
+        Análisis Estratégico del Mercado Farmacéutico Venezolano · Junio 2026<br>
+        IMS Health PMV Pre-Info · Período Marzo — Mayo 2026<br>
+        <strong style="color:var(--gold);">DOCUMENTO CONFIDENCIAL — USO INTERNO EXCLUSIVO</strong>
+      </div>
+      <div style="margin-top:3mm; color:rgba(255,255,255,.35); font-size:7pt;">
+        Este documento contiene información competitiva sensible. Distribución restringida a la Alta Dirección de Angelus Corp.
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · Confidencial</span>
+    <span>Página 8</span>
+    <span>Junio 2026</span>
+  </div>
+</div>
+
+</body>
+</html>

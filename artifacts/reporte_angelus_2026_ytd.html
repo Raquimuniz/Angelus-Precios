@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte YTD — Angelus Corp 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap');
+  :root {
+    --navy:#0d1b3e; --navy-mid:#1a2f5e; --red:#c0392b; --gold:#d4a843;
+    --light:#f4f6fa; --white:#ffffff; --text:#1c2637; --muted:#5a6882;
+    --border:#dde3ef; --green:#1a6b4a; --green-light:#e8f5ef;
+    --red-light:#fdf0ee; --gold-light:#fef9ec; --blue-light:#eef2fa;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Open Sans',sans-serif;background:#e8ecf4;color:var(--text);font-size:9.5pt;line-height:1.5;}
+  .page{width:210mm;min-height:297mm;background:var(--white);margin:0 auto 12mm;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.18);page-break-after:always;}
+
+  /* COVER */
+  .cover{background:linear-gradient(160deg,#0d1b3e 0%,#1a2f5e 45%,#0d1b3e 100%);min-height:297mm;display:flex;flex-direction:column;position:relative;}
+  .cover-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%230d1b3e'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23ffffff08'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23ffffff06'/%3E%3C/svg%3E");}
+  .cover-accent-bar{width:100%;height:6px;background:linear-gradient(90deg,var(--red) 0%,var(--gold) 60%,var(--red) 100%);position:relative;z-index:2;}
+  .cover-body{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:18mm 18mm 14mm;position:relative;z-index:2;}
+  .cover-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .cover-logo{display:flex;align-items:center;gap:10px;}
+  .cover-logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--red),#8b0000);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:18pt;color:#fff;}
+  .cover-logo-text{color:#fff;}
+  .corp-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13pt;letter-spacing:1px;}
+  .corp-sub{font-size:8pt;color:rgba(255,255,255,.6);letter-spacing:2px;text-transform:uppercase;}
+  .cover-badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 14px;color:rgba(255,255,255,.75);font-size:8pt;letter-spacing:1.5px;text-transform:uppercase;}
+  .cover-hero{text-align:center;padding:10mm 0 8mm;}
+  .cover-eyebrow{font-family:'Montserrat',sans-serif;font-size:8.5pt;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:8mm;}
+  .cover-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:26pt;color:var(--white);line-height:1.15;margin-bottom:5mm;}
+  .cover-title span{color:var(--gold);}
+  .cover-pill{display:inline-block;background:rgba(212,168,67,.2);border:1px solid var(--gold);color:var(--gold);font-family:'Montserrat',sans-serif;font-weight:700;font-size:9pt;padding:4px 16px;border-radius:20px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6mm;}
+  .cover-subtitle{font-family:'Montserrat',sans-serif;font-weight:300;font-size:12pt;color:rgba(255,255,255,.7);margin-bottom:8mm;}
+  .cover-divider{width:80px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 8mm;}
+  .cover-source{font-size:8.5pt;color:rgba(255,255,255,.5);letter-spacing:1px;}
+  .cover-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:8mm 0;}
+  .cover-kpi{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:5mm;text-align:center;}
+  .cover-kpi .kval{font-family:'Montserrat',sans-serif;font-weight:800;font-size:17pt;color:var(--gold);display:block;line-height:1;margin-bottom:2mm;}
+  .cover-kpi .klabel{font-size:7.5pt;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;display:block;line-height:1.3;}
+  .cover-bottom{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.12);padding-top:5mm;}
+  .cover-date{color:rgba(255,255,255,.5);font-size:8pt;}
+  .cover-confidential{color:var(--red);font-size:8pt;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--red);padding:3px 10px;border-radius:4px;}
+
+  /* INNER */
+  .page-header{background:var(--navy);padding:6mm 12mm;display:flex;justify-content:space-between;align-items:center;}
+  .ph-left{display:flex;align-items:center;gap:8px;}
+  .ph-dot{width:8px;height:8px;background:var(--red);border-radius:50%;}
+  .ph-section{font-family:'Montserrat',sans-serif;font-weight:600;font-size:8pt;color:rgba(255,255,255,.6);letter-spacing:2px;text-transform:uppercase;}
+  .ph-right{font-size:7.5pt;color:rgba(255,255,255,.35);}
+  .page-accent{height:3px;background:linear-gradient(90deg,var(--red) 0%,var(--gold) 40%,transparent 100%);}
+  .page-content{padding:8mm 12mm 6mm;}
+  .section-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:17pt;color:var(--navy);margin-bottom:1mm;line-height:1.2;}
+  .section-title span{color:var(--red);}
+  .section-sub{font-size:8.5pt;color:var(--muted);margin-bottom:5mm;letter-spacing:0.5px;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm;}
+  .kpi-card{background:var(--light);border-radius:8px;padding:4mm;border-left:4px solid var(--navy);}
+  .kpi-card.red{border-left-color:var(--red);}
+  .kpi-card.gold{border-left-color:var(--gold);}
+  .kpi-card.green{border-left-color:var(--green);}
+  .kpi-card .kv{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15pt;color:var(--navy);display:block;line-height:1.1;margin-bottom:1mm;}
+  .kpi-card .kl{font-size:7pt;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;}
+  .kpi-card .kt{font-size:8pt;color:var(--green);font-weight:600;margin-top:1mm;display:block;}
+  .kpi-card .kt.neg{color:var(--red);}
+
+  table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:4mm;}
+  thead th{background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;font-weight:600;font-size:7.5pt;padding:3mm 2.5mm;text-align:center;letter-spacing:0.5px;border:none;}
+  thead th:first-child{text-align:left;}
+  tbody tr{border-bottom:1px solid var(--border);}
+  tbody tr:nth-child(even){background:var(--light);}
+  tbody td{padding:2.5mm 2.5mm;text-align:center;color:var(--text);}
+  tbody td:first-child{text-align:left;font-weight:600;}
+  .angelus-row td{background:#fff0f0!important;font-weight:700!important;color:var(--red)!important;}
+  .market-row td{background:var(--navy)!important;color:rgba(255,255,255,.9)!important;font-weight:700!important;}
+  .up{color:var(--green);font-weight:700;}
+  .dn{color:var(--red);font-weight:700;}
+  .neutral{color:var(--muted);}
+  .evol-chip{display:inline-block;padding:1px 6px;border-radius:12px;font-weight:700;font-size:7.5pt;}
+  .evol-high{background:var(--green-light);color:var(--green);}
+  .evol-mid{background:#e8f0fe;color:#1a56b0;}
+  .evol-low{background:var(--red-light);color:var(--red);}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-bottom:4mm;}
+  .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm;margin-bottom:4mm;}
+
+  .info-box{background:var(--light);border-radius:8px;padding:4mm 5mm;border-left:4px solid var(--navy);margin-bottom:3mm;}
+  .info-box.red{border-left-color:var(--red);background:var(--red-light);}
+  .info-box.gold{border-left-color:var(--gold);background:var(--gold-light);}
+  .info-box.green{border-left-color:var(--green);background:var(--green-light);}
+  .info-box .ib-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:9pt;margin-bottom:2mm;color:var(--navy);}
+  .info-box.red .ib-title{color:var(--red);}
+  .info-box.gold .ib-title{color:#8a6800;}
+  .info-box.green .ib-title{color:var(--green);}
+  .info-box p{font-size:8.5pt;color:var(--text);line-height:1.55;}
+  .info-box ul{padding-left:4mm;margin-top:1mm;}
+  .info-box ul li{margin-bottom:1mm;font-size:8.5pt;line-height:1.5;}
+
+  .big-stat{text-align:center;padding:5mm 3mm;background:var(--navy);border-radius:10px;color:#fff;}
+  .big-stat .bs-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:24pt;color:var(--gold);display:block;line-height:1;}
+  .big-stat .bs-sub{font-size:8pt;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.5px;display:block;margin-top:1.5mm;}
+  .big-stat .bs-gr{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11pt;display:block;margin-top:1mm;}
+
+  .progress-wrap{margin-bottom:2.5mm;}
+  .progress-label{display:flex;justify-content:space-between;font-size:8pt;margin-bottom:1mm;}
+  .progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:4px;background:var(--navy);}
+  .progress-fill.red{background:var(--red);}
+  .progress-fill.gold{background:var(--gold);}
+  .progress-fill.green{background:var(--green);}
+
+  .page-footer{position:absolute;bottom:4mm;left:12mm;right:12mm;display:flex;justify-content:space-between;font-size:7pt;color:var(--border);border-top:1px solid var(--border);padding-top:2mm;}
+
+  .pattern-card{border-radius:10px;padding:4mm 5mm;margin-bottom:3mm;position:relative;overflow:hidden;}
+  .pattern-card::before{content:attr(data-num);position:absolute;right:3mm;top:2mm;font-family:'Montserrat',sans-serif;font-weight:900;font-size:36pt;color:rgba(0,0,0,.06);line-height:1;}
+  .pattern-card.p1{background:linear-gradient(135deg,#eef8ff,#ddeffa);border-left:4px solid #1a56b0;}
+  .pattern-card.p2{background:linear-gradient(135deg,#fef9ec,#fef0cc);border-left:4px solid var(--gold);}
+  .pattern-card.p3{background:linear-gradient(135deg,#e8f5ef,#d0ecdf);border-left:4px solid var(--green);}
+  .pattern-card.p4{background:linear-gradient(135deg,#fdf0ee,#fde0dc);border-left:4px solid var(--red);}
+  .pattern-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:10pt;margin-bottom:1.5mm;}
+  .pattern-card.p1 .pattern-title{color:#1a56b0;}
+  .pattern-card.p2 .pattern-title{color:#8a6800;}
+  .pattern-card.p3 .pattern-title{color:var(--green);}
+  .pattern-card.p4 .pattern-title{color:var(--red);}
+  .pattern-corps{font-size:8pt;font-weight:600;color:var(--navy);margin-bottom:1.5mm;}
+  .pattern-desc{font-size:8pt;color:var(--text);line-height:1.5;}
+
+  .rec-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:4mm 5mm;margin-bottom:3mm;display:flex;gap:3mm;align-items:flex-start;}
+  .rec-num{width:26px;height:26px;background:var(--navy);color:var(--gold);font-family:'Montserrat',sans-serif;font-weight:800;font-size:11pt;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .rec-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:9.5pt;color:var(--navy);margin-bottom:1.5mm;}
+  .rec-desc{font-size:8.5pt;color:var(--text);line-height:1.5;}
+  .rec-kpis{display:flex;gap:3mm;margin-top:2mm;flex-wrap:wrap;}
+  .rec-kpi-tag{background:var(--blue-light);color:#1a56b0;font-size:7.5pt;font-weight:600;padding:2px 8px;border-radius:20px;}
+
+  h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:10pt;color:var(--navy);margin-bottom:2mm;margin-top:3mm;letter-spacing:0.3px;}
+  h3 .h3-line{display:inline-block;width:20px;height:2px;background:var(--red);vertical-align:middle;margin-right:5px;}
+  .divider{height:1px;background:var(--border);margin:3mm 0;}
+  .footnote{font-size:7pt;color:var(--muted);font-style:italic;margin-top:2mm;}
+  .tag{display:inline-block;padding:1.5px 7px;border-radius:12px;font-size:7pt;font-weight:700;margin-left:3px;}
+  .tag-red{background:var(--red-light);color:var(--red);}
+  .tag-green{background:var(--green-light);color:var(--green);}
+  .tag-gold{background:var(--gold-light);color:#8a6800;}
+  .tag-blue{background:#eef2fa;color:#1a56b0;}
+  .rank-badge{display:inline-block;width:22px;height:22px;background:var(--navy);color:var(--white);border-radius:50%;text-align:center;line-height:22px;font-size:7.5pt;font-weight:700;font-family:'Montserrat',sans-serif;}
+
+  @media print{body{background:white;}.page{margin:0;box-shadow:none;page-break-after:always;}}
+</style>
+</head>
+<body>
+
+<!-- PÁGINA 1 — PORTADA -->
+<div class="page cover">
+  <div class="cover-noise"></div>
+  <div class="cover-accent-bar"></div>
+  <div class="cover-body">
+    <div class="cover-top">
+      <div class="cover-logo">
+        <div class="cover-logo-icon">A</div>
+        <div class="cover-logo-text">
+          <div class="corp-name">ANGELUS CORP.</div>
+          <div class="corp-sub">Pharmaceutical · Venezuela</div>
+        </div>
+      </div>
+      <div class="cover-badge">Documento Confidencial</div>
+    </div>
+    <div class="cover-hero">
+      <div class="cover-eyebrow">Inteligencia Competitiva · IMS Health PMV Pre-Info</div>
+      <div class="cover-title">ANÁLISIS ACUMULADO<br>DEL <span>MERCADO FARMACÉUTICO</span><br>VENEZOLANO</div>
+      <div class="cover-pill">YTD — Year-To-Date · Acumulado Año en Curso</div>
+      <div class="cover-subtitle">Enero–Marzo · Enero–Abril · Enero–Mayo 2026</div>
+      <div class="cover-divider"></div>
+      <div class="cover-source">Fuente: IMS Health Panel de Muestra Venezuela (PMV) · Pre-Info</div>
+    </div>
+    <div class="cover-kpis">
+      <div class="cover-kpi">
+        <span class="kval">$897M</span>
+        <span class="klabel">Mercado YTD<br>Enero–Mayo 2026</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">+41.0%</span>
+        <span class="klabel">Crecimiento YTD<br>vs Año Anterior</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">$5.42</span>
+        <span class="klabel">Precio Prom/Unidad<br>YTD Mayo</span>
+      </div>
+      <div class="cover-kpi">
+        <span class="kval">84.5</span>
+        <span class="klabel">Índice Evolución<br>Angelus YTD Mayo</span>
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <div class="cover-date">Elaborado: Junio 2026 · Período: YTD Enero-Marzo / Enero-Abril / Enero-Mayo 2026 · Uso interno exclusivo</div>
+      <div class="cover-confidential">⚠ Confidencial</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- PÁGINA 2 — RESUMEN EJECUTIVO -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Resumen Ejecutivo · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Resumen <span>Ejecutivo</span></div>
+    <div class="section-sub">CEO Briefing — Year-To-Date (YTD) · Enero-Marzo, Enero-Abril, Enero-Mayo 2026 · IMS Health PMV</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kv">$530M</span>
+        <span class="kl">Mercado YTD Marzo</span>
+        <span class="kt">▲ +51.3% vs PY</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kv">$708M</span>
+        <span class="kl">Mercado YTD Abril</span>
+        <span class="kt">▲ +44.4% vs PY</span>
+      </div>
+      <div class="kpi-card gold">
+        <span class="kv">$897M</span>
+        <span class="kl">Mercado YTD Mayo</span>
+        <span class="kt">▲ +41.0% vs PY</span>
+      </div>
+      <div class="kpi-card green">
+        <span class="kv">21</span>
+        <span class="kl">Empresas ganando share</span>
+        <span class="kt">Evol YTD &gt;100 en Mayo</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Dinámica del Mercado YTD</h3>
+        <div class="info-box gold">
+          <div class="ib-title">YTD: el indicador que suaviza y acumula</div>
+          <p>El YTD mide el acumulado del año desde enero: a Mayo 2026 suma <strong>$897.2M</strong> con un crecimiento de <strong>+41.0%</strong> vs el mismo período de 2025. A diferencia del MAT (12 meses) o el MES (puntual), el YTD crece cada mes automáticamente al incorporar un mes adicional. El crecimiento <em>desacelera</em> de +51.3% a +41.0% porque la base de comparación del año anterior se vuelve más alta conforme avanza el año.</p>
+        </div>
+        <div class="info-box">
+          <div class="ib-title">Precio/unidad YTD: estabilidad relativa</div>
+          <p>A diferencia del MES (volátil: $5.12-$5.52) o el MAT (tendencia ascendente: $4.78→$4.99), el YTD muestra un precio <strong>estable en $5.36-$5.43</strong>. Esto refleja que el mix acumulado de enero a mayo 2026 se mantiene consistente. El mercado crece principalmente por precio y ese precio está fijo en torno a $5.40/u en el acumulado.</p>
+        </div>
+        <div class="info-box green">
+          <div class="ib-title">21 empresas ganan share YTD en Mayo</div>
+          <p>Con Evol YTD &gt;100 en Mayo, estas 21 corporaciones crecieron más que el +41.0% del mercado acumulado en el año. Los líderes YTD: <strong>TIARES (163.7), HERBAPLANT (161.2), KMPlus (154.6), NEOQUÍMICA (153.3)</strong>. El podio del crecimiento acumulado es consistente con las tendencias MAT y MES.</p>
+        </div>
+      </div>
+      <div>
+        <h3><span class="h3-line"></span>Situación Angelus Corp — YTD</h3>
+        <div class="info-box red">
+          <div class="ib-title">⚠ Evol YTD: 80.0 → 84.1 → 84.5 — mejora marginal, no suficiente</div>
+          <ul>
+            <li><strong>Evolución PY: 80.0 → 84.1 → 84.5</strong> — leve mejoría acumulada de Marzo a Mayo. Sin embargo, sigue profundamente bajo 100.</li>
+            <li><strong>Crecimiento YTD: +21.0% → +21.5% → +19.2%</strong> — relativamente estable pero muy lejos del +41% del mercado.</li>
+            <li><strong>Precio/unidad: $6.03 → $5.98 → $5.89</strong> — caída acumulada de -$0.14 (-2.3%) mientras el mercado se mantiene en $5.42.</li>
+            <li><strong>Market Share YTD: 0.687% → 0.700% → 0.706%</strong> — marginal mejora nominal (efecto acumulado).</li>
+            <li><strong>Ranking YTD estable en #26</strong> los 3 meses — pero con presión desde abajo.</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="ib-title">La lectura positiva del YTD</div>
+          <p>El YTD muestra que Angelus <em>mejoró ligeramente</em> su Evol de 80.0 a 84.5 en el año. Esto contrasta con el MAT (86.5→86.5→86.5 descendente) y sugiere que los meses más recientes de 2026 tienen un desempeño relativo algo mejor que los meses de 2025 incluidos en el MAT. Sin embargo, la brecha con el mercado (+41%) sigue siendo abismal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="info-box">
+      <div class="ib-title">Los 5 hallazgos críticos — Visión YTD 2026</div>
+      <ul>
+        <li><strong>1. El mercado desacelera conforme avanza el año:</strong> +51.3% (YTD Mar) → +41.0% (YTD May). La base de comparación 2025 se eleva; el crecimiento real se normaliza. Para el cierre de año se espera un YTD de ~+34-38%.</li>
+        <li><strong>2. L.O. Oftalmi y Megalabs son los únicos del Top 6 con Evol YTD &gt;100:</strong> Con 108.6 y 107.9 respectivamente, son los gigantes que también ganan share — anomalía positiva en el mercado de grandes.</li>
+        <li><strong>3. NEOQUÍMICA aceleró su YTD de 126.5 a 153.3</strong> — confirma que el fenómeno de Mayo MES no fue un flash: lleva meses construyendo momentum acumulado.</li>
+        <li><strong>4. Angelus tiene la segunda peor Evol YTD del Top 30</strong> — solo superada por SPEFAR (86.2). Con 84.5, Angelus está entre los 5 peores performers relativos del mercado en lo que va del año.</li>
+        <li><strong>5. El precio YTD de Angelus ($5.89) converge con el mercado ($5.42)</strong> — la brecha de solo $0.47 sugiere que Angelus perderá su diferenciación de precio si la tendencia continúa unos meses más.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 2</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 3 — MERCADO GLOBAL YTD -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Mercado Global · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Mercado <span>Global</span> Acumulado</div>
+    <div class="section-sub">Indicadores macroeconómicos · YTD Enero-Marzo, Enero-Abril y Enero-Mayo 2026</div>
+
+    <div class="three-col" style="margin-bottom:4mm;">
+      <div class="big-stat">
+        <span class="bs-val">$530M</span>
+        <span class="bs-sub">YTD Enero–Marzo 2026</span>
+        <span class="bs-gr" style="color:#4ade80;">+51.3% vs PY</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">$708M</span>
+        <span class="bs-sub">YTD Enero–Abril 2026</span>
+        <span class="bs-gr" style="color:#fbbf24;">+44.4% vs PY</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">$897M</span>
+        <span class="bs-sub">YTD Enero–Mayo 2026</span>
+        <span class="bs-gr" style="color:#fbbf24;">+41.0% vs PY</span>
+      </div>
+    </div>
+
+    <h3><span class="h3-line"></span>Evolución de Indicadores YTD</h3>
+    <table>
+      <thead>
+        <tr><th>Indicador</th><th>YTD Ene-Mar</th><th>YTD Ene-Abr</th><th>YTD Ene-May</th><th>Observación</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Mercado Total (USD)</strong></td><td>$530.1M</td><td>$708.3M</td><td>$897.2M</td><td class="up">▲ +$367M en 3 meses</td></tr>
+        <tr><td><strong>Crecimiento vs PY</strong></td><td class="up">+51.3%</td><td>+44.4%</td><td>+41.0%</td><td class="neutral">Desacelera por base alta</td></tr>
+        <tr><td><strong>Unidades Totales</strong></td><td>98.9M</td><td>130.4M</td><td>165.4M</td><td class="up">▲ Acumula normalmente</td></tr>
+        <tr><td><strong>Precio/Unidad Promedio</strong></td><td>$5.36</td><td>$5.43</td><td>$5.42</td><td class="neutral">Muy estable ~$5.40</td></tr>
+        <tr><td><strong>Var. Precio/u vs período anterior</strong></td><td>—</td><td>+$0.07 (+1.3%)</td><td>-$0.01 (-0.2%)</td><td class="neutral">Prácticamente sin cambio</td></tr>
+        <tr><td><strong>Índice Evolución Mercado</strong></td><td>100</td><td>100</td><td>100</td><td class="neutral">Base de referencia</td></tr>
+      </tbody>
+    </table>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>¿Por qué el YTD desacelera?</h3>
+        <div class="info-box gold">
+          <div class="ib-title">Efecto base: el crecimiento se normaliza naturalmente</div>
+          <p>El crecimiento YTD cae de +51.3% a +41.0% no porque el mercado esté perdiendo fuerza, sino porque <strong>la base de comparación del año anterior sube</strong>. En Marzo 2025 el mercado era débil (base baja → crecimiento alto). En Abril-Mayo 2025 el mercado ya había repuntado (base más alta → crecimiento YTD menor). Este efecto se amplificará: para YTD Diciembre 2026 se proyecta un crecimiento de ~+34-36%, convergiendo con el MAT.</p>
+          <p style="margin-top:2mm;"><strong>Implicación:</strong> Las empresas que muestren Evol YTD &gt;100 de forma sostenida durante este proceso de normalización tienen ventaja competitiva estructural genuina — no basada en comparar contra bases débiles.</p>
+        </div>
+
+        <h3><span class="h3-line"></span>Top 6 Corporaciones — YTD Mayo 2026</h3>
+        <table>
+          <thead>
+            <tr><th>Corporación</th><th>USD YTD May</th><th>MS%</th><th>Gr%</th><th>Evol</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GRUPO LETI <span class="tag tag-red">-MS</span></td><td>$106.8M</td><td>11.91%</td><td class="neutral">+24.5%</td><td><span class="evol-chip evol-low">88.3</span></td></tr>
+            <tr><td>CALOX CORP <span class="tag tag-blue">≈MS</span></td><td>$78.0M</td><td>8.70%</td><td class="neutral">+40.6%</td><td><span class="evol-chip evol-low">99.8</span></td></tr>
+            <tr><td>PHARMETIQUE <span class="tag tag-red">-MS</span></td><td>$66.8M</td><td>7.45%</td><td class="neutral">+35.1%</td><td><span class="evol-chip evol-low">95.8</span></td></tr>
+            <tr><td>L.O. OFTALMI <span class="tag tag-green">+MS</span></td><td>$61.9M</td><td>6.90%</td><td class="up">+53.1%</td><td><span class="evol-chip evol-mid">108.6</span></td></tr>
+            <tr><td>FARMA CORP <span class="tag tag-red">-MS</span></td><td>$56.1M</td><td>6.26%</td><td class="neutral">+36.5%</td><td><span class="evol-chip evol-low">96.8</span></td></tr>
+            <tr><td>MEGALABS <span class="tag tag-green">+MS</span></td><td>$54.1M</td><td>6.03%</td><td class="up">+52.1%</td><td><span class="evol-chip evol-mid">107.9</span></td></tr>
+            <tr class="market-row"><td>TOTAL MERCADO</td><td>$897.2M</td><td>100%</td><td>+41.0%</td><td>100</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box green">
+          <div class="ib-title">L.O. Oftalmi y Megalabs: gigantes que también ganan</div>
+          <p>A diferencia del MAT donde todos los Top 6 tienen Evol &lt;100, en YTD Mayo dos de los seis líderes ganan share: <strong>L.O. Oftalmi (108.6)</strong> y <strong>Megalabs (107.9)</strong>. Ambos crecen por encima del mercado (+53.1% y +52.1%) y mejoran su Evol mes a mes en el YTD.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3><span class="h3-line"></span>Precio/Unidad YTD — Comparativo</h3>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Mercado · YTD Ene-Mar</span><span>$5.36/u</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:48%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Mercado · YTD Ene-Abr</span><span>$5.43/u</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:50%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Mercado · YTD Ene-May</span><span>$5.42/u</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width:49%;background:#1a2f5e;"></div></div>
+        </div>
+        <div class="progress-wrap" style="margin-top:3mm;border-top:1px solid var(--border);padding-top:2mm;">
+          <div class="progress-label" style="color:var(--red);font-weight:700;"><span>Angelus · YTD Ene-Mar</span><span>$6.03/u</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill red" style="width:58%;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label" style="color:var(--red);font-weight:700;"><span>Angelus · YTD Ene-Abr</span><span>$5.98/u ▼</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill red" style="width:56%;"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label" style="color:var(--red);font-weight:700;"><span>Angelus · YTD Ene-May</span><span>$5.89/u ▼</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill red" style="width:54%;"></div></div>
+        </div>
+
+        <div class="info-box red" style="margin-top:3mm;">
+          <div class="ib-title">Convergencia de precios: alarma estratégica</div>
+          <p>La brecha precio Angelus vs mercado se estrecha rápidamente: <strong>$6.03-$5.36=$0.67</strong> en Marzo YTD → <strong>$5.89-$5.42=$0.47</strong> en Mayo YTD. Si la tendencia continúa a este ritmo (-$0.10/mes de brecha), en <strong>~5 meses</strong> el precio acumulado de Angelus igualará el promedio del mercado. Perder esa diferenciación de precio sin ganar volumen es el peor escenario posible.</p>
+        </div>
+
+        <div class="info-box">
+          <div class="ib-title">Comparativo MAT vs YTD vs MES — Mayo 2026</div>
+          <table style="font-size:7.5pt;">
+            <thead><tr><th>Período</th><th>Mercado</th><th>Crecimiento</th><th>Precio/u</th></tr></thead>
+            <tbody>
+              <tr><td><strong>MAT</strong></td><td>$2,014.6M</td><td>+34.4%</td><td>$4.99</td></tr>
+              <tr><td><strong>YTD</strong></td><td>$897.2M</td><td>+41.0%</td><td>$5.42</td></tr>
+              <tr><td><strong>MES</strong></td><td>$188.5M</td><td>+26.9%</td><td>$5.33</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 3</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 4 — TABLA GAINERS YTD -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Empresas Absorbiendo Crecimiento · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Empresas Absorbiendo el <span>Crecimiento</span> — YTD</div>
+    <div class="section-sub">21 corporaciones con Índice de Evolución PY &gt;100 en YTD Mayo 2026 · Acumulado Enero-Mayo</div>
+
+    <div class="info-box gold" style="margin-bottom:3mm;">
+      <div class="ib-title">Evol YTD &gt;100: crecimiento acumulado mayor al mercado en lo que va del año</div>
+      <p>En YTD Mayo 2026, el mercado total creció <strong>+41.0%</strong> acumulado vs el mismo período de 2025. Una empresa con Evol YTD &gt;100 superó ese ritmo en el acumulado enero-mayo. Este es el indicador más cercano al "estado real del año" — más estable que el MES y más reciente que el MAT completo.</p>
+    </div>
+
+    <h3><span class="h3-line"></span>Tabla Completa · Evol YTD &gt;100 en Mayo — Con evolución mensual del acumulado</h3>
+    <table style="font-size:7.5pt;">
+      <thead>
+        <tr>
+          <th rowspan="2" style="text-align:left;">Corporación</th>
+          <th colspan="3">Precio Prom/Unidad (USD)</th>
+          <th colspan="3">Índice Evolución PY</th>
+          <th colspan="3">Market Share (%)</th>
+          <th colspan="3">Crecimiento vs PY (%)</th>
+        </tr>
+        <tr>
+          <th>YTD Mar</th><th>YTD Abr</th><th>YTD May</th>
+          <th>YTD Mar</th><th>YTD Abr</th><th>YTD May</th>
+          <th>YTD Mar</th><th>YTD Abr</th><th>YTD May</th>
+          <th>YTD Mar</th><th>YTD Abr</th><th>YTD May</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-badge">4</span> L.O. OFTALMI <span class="tag tag-green">+MS</span></td>
+          <td>$4.50</td><td>$4.60</td><td>$4.72</td>
+          <td>103.9</td><td>106.7</td><td><span class="evol-chip evol-mid">108.6</span></td>
+          <td>6.78%</td><td>6.86%</td><td>6.90%</td>
+          <td class="up">+57.1%</td><td class="up">+54.1%</td><td class="up">+53.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">6</span> MEGALABS CORP <span class="tag tag-green">+MS</span></td>
+          <td>$9.51</td><td>$9.46</td><td>$9.28</td>
+          <td>107.6</td><td>107.1</td><td><span class="evol-chip evol-mid">107.9</span></td>
+          <td>6.07%</td><td>6.00%</td><td>6.03%</td>
+          <td class="up">+62.8%</td><td class="up">+54.7%</td><td class="up">+52.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">7</span> COFASA CORP <span class="tag tag-green">+MS</span></td>
+          <td>$5.25</td><td>$5.55</td><td>$5.50</td>
+          <td>140.3</td><td>137.2</td><td><span class="evol-chip evol-high">121.7</span></td>
+          <td>3.34%</td><td>3.34%</td><td>3.16%</td>
+          <td class="up">+112.3%</td><td class="up">+98.1%</td><td class="up">+71.6%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">10</span> NATURLIFES <span class="tag tag-green">+MS</span></td>
+          <td>$8.36</td><td>$8.51</td><td>$8.57</td>
+          <td>141.7</td><td>142.3</td><td><span class="evol-chip evol-high">132.3</span></td>
+          <td>1.68%</td><td>1.73%</td><td>1.74%</td>
+          <td class="up">+114.4%</td><td class="up">+105.5%</td><td class="up">+86.5%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">12</span> VARGAS CORP <span class="tag tag-green">+MS</span></td>
+          <td>$7.05</td><td>$7.15</td><td>$7.24</td>
+          <td>99.6</td><td>100.8</td><td><span class="evol-chip evol-mid">105.5</span></td>
+          <td>1.44%</td><td>1.44%</td><td>1.50%</td>
+          <td class="up">+50.7%</td><td class="up">+45.6%</td><td class="up">+48.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">15</span> DOLLDER <span class="tag tag-green">+MS</span></td>
+          <td>$7.17</td><td>$7.03</td><td>$6.86</td>
+          <td>108.8</td><td>108.5</td><td><span class="evol-chip evol-mid">109.2</span></td>
+          <td>1.27%</td><td>1.25%</td><td>1.24%</td>
+          <td class="up">+64.6%</td><td class="up">+56.8%</td><td class="up">+54.0%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">16</span> NESTLE CORP <span class="tag tag-green">+MS</span></td>
+          <td>$18.67</td><td>$19.00</td><td>$19.17</td>
+          <td>119.7</td><td>113.1</td><td><span class="evol-chip evol-mid">114.4</span></td>
+          <td>1.12%</td><td>1.13%</td><td>1.16%</td>
+          <td class="up">+81.0%</td><td class="up">+63.4%</td><td class="up">+61.3%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">18</span> PLUSANDEX CORP <span class="tag tag-green">+MS ★</span></td>
+          <td>$2.56</td><td>$2.58</td><td>$2.59</td>
+          <td>126.3</td><td>131.0</td><td><span class="evol-chip evol-high">132.8</span></td>
+          <td>1.04%</td><td>1.05%</td><td>1.03%</td>
+          <td class="up">+91.1%</td><td class="up">+89.2%</td><td class="up">+87.2%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">21</span> TIARES <span class="tag tag-green">+MS ★</span></td>
+          <td>$8.08</td><td>$8.12</td><td>$8.15</td>
+          <td>182.5</td><td>169.1</td><td><span class="evol-chip evol-high">163.7</span></td>
+          <td>0.89%</td><td>0.89%</td><td>0.90%</td>
+          <td class="up">+176.1%</td><td class="up">+144.3%</td><td class="up">+130.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">23</span> ARCO IRIS <span class="tag tag-green">+MS</span></td>
+          <td>$11.53</td><td>$11.63</td><td>$11.64</td>
+          <td>111.3</td><td>111.9</td><td><span class="evol-chip evol-mid">113.1</span></td>
+          <td>0.82%</td><td>0.82%</td><td>0.84%</td>
+          <td class="up">+68.4%</td><td class="up">+61.6%</td><td class="up">+59.4%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">25</span> LABORATORIOS NOW <span class="tag tag-blue">≈100</span></td>
+          <td>$17.70</td><td>$17.84</td><td>$17.81</td>
+          <td>97.6</td><td>100.3</td><td><span class="evol-chip evol-mid">100.7</span></td>
+          <td>0.68%</td><td>0.71%</td><td>0.73%</td>
+          <td class="up">+47.6%</td><td class="up">+44.9%</td><td class="up">+41.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">27</span> BEHRENS CORP <span class="tag tag-green">+MS</span></td>
+          <td>$5.90</td><td>$5.91</td><td>$5.91</td>
+          <td>109.7</td><td>107.2</td><td><span class="evol-chip evol-mid">104.1</span></td>
+          <td>0.69%</td><td>0.69%</td><td>0.68%</td>
+          <td class="up">+66.0%</td><td class="up">+54.8%</td><td class="up">+46.8%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">29</span> KMPLUS CORP <span class="tag tag-green">+MS ★</span></td>
+          <td>$2.08</td><td>$1.99</td><td>$2.00</td>
+          <td>162.5</td><td>164.0</td><td><span class="evol-chip evol-high">154.6</span></td>
+          <td>0.69%</td><td>0.67%</td><td>0.64%</td>
+          <td class="up">+145.8%</td><td class="up">+136.8%</td><td class="up">+118.0%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">32</span> NEOQUÍMICA <span class="tag tag-green">+MS ★</span></td>
+          <td>$6.06</td><td>$5.68</td><td>$6.36</td>
+          <td>126.5</td><td>128.0</td><td><span class="evol-chip evol-high">153.3</span></td>
+          <td>0.47%</td><td>0.47%</td><td>0.54%</td>
+          <td class="up">+91.3%</td><td class="up">+84.9%</td><td class="up">+116.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">34</span> ZORIAK <span class="tag tag-green">+MS</span></td>
+          <td>$14.53</td><td>$14.37</td><td>$14.50</td>
+          <td>120.3</td><td>113.3</td><td><span class="evol-chip evol-mid">115.0</span></td>
+          <td>0.53%</td><td>0.52%</td><td>0.53%</td>
+          <td class="up">+82.0%</td><td class="up">+63.7%</td><td class="up">+62.1%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">35</span> HERBAPLANT <span class="tag tag-green">+MS ★</span></td>
+          <td>$10.79</td><td>$10.90</td><td>$10.78</td>
+          <td>177.6</td><td>180.3</td><td><span class="evol-chip evol-high">161.2</span></td>
+          <td>0.52%</td><td>0.53%</td><td>0.53%</td>
+          <td class="up">+168.7%</td><td class="up">+160.4%</td><td class="up">+127.2%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">40</span> MEDIFARM CORP <span class="tag tag-green">+MS</span></td>
+          <td>$20.75</td><td>$20.68</td><td>$20.69</td>
+          <td>133.4</td><td>135.7</td><td><span class="evol-chip evol-high">132.3</span></td>
+          <td>0.38%</td><td>0.38%</td><td>0.40%</td>
+          <td class="up">+101.8%</td><td class="up">+96.0%</td><td class="up">+86.5%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">~</span> ADN MEDICAL <span class="tag tag-green">+MS</span></td>
+          <td>$4.66</td><td>$4.54</td><td>$4.49</td>
+          <td>118.4</td><td>118.2</td><td><span class="evol-chip evol-mid">117.7</span></td>
+          <td>—</td><td>—</td><td>—</td>
+          <td class="up">+79.1%</td><td class="up">+70.7%</td><td class="up">+65.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">~</span> BLUE MEDICAL <span class="tag tag-green">+MS</span></td>
+          <td>$3.50</td><td>$3.42</td><td>$2.68</td>
+          <td>125.6</td><td>124.5</td><td><span class="evol-chip evol-mid">117.0</span></td>
+          <td>—</td><td>—</td><td>—</td>
+          <td class="up">+90.1%</td><td class="up">+79.8%</td><td class="up">+64.9%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">~</span> PONCE BENZO <span class="tag tag-green">+MS</span></td>
+          <td>$4.11</td><td>$4.10</td><td>$4.12</td>
+          <td>134.6</td><td>130.8</td><td><span class="evol-chip evol-high">123.7</span></td>
+          <td>—</td><td>—</td><td>—</td>
+          <td class="up">+103.6%</td><td class="up">+88.9%</td><td class="up">+74.3%</td>
+        </tr>
+        <tr>
+          <td><span class="rank-badge">~</span> BEIERSDORF <span class="tag tag-blue">↓Evol</span></td>
+          <td>$10.61</td><td>$10.82</td><td>$10.87</td>
+          <td>135.1</td><td>103.1</td><td><span class="evol-chip evol-mid">100.1</span></td>
+          <td>—</td><td>—</td><td>—</td>
+          <td class="up">+104.4%</td><td class="up">+48.9%</td><td class="up">+41.1%</td>
+        </tr>
+        <tr class="angelus-row">
+          <td>⚠ ANGELUS CORP <span class="tag tag-red">-MS</span></td>
+          <td>$6.03</td><td>$5.98</td><td>$5.89</td>
+          <td>80.0</td><td>84.1</td><td>84.5</td>
+          <td>0.687%</td><td>0.700%</td><td>0.706%</td>
+          <td>+21.0%</td><td>+21.5%</td><td>+19.2%</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="footnote">★ Aceleran su Evol YTD mes a mes. | ↓Evol: Beiersdorf cayó de 135.1 a 100.1 — llegó al límite mínimo del umbral. | ≈100: Laboratorios Now cruzó 100 en Abril YTD y lo mantiene.</p>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 4</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 5 — PATRONES ESTRATÉGICOS YTD -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Patrones Estratégicos · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Patrones <span>Estratégicos</span> — Visión YTD</div>
+    <div class="section-sub">Arquetipos de comportamiento competitivo en el acumulado Enero-Mayo 2026</div>
+
+    <div class="two-col">
+      <div>
+        <div class="pattern-card p1" data-num="I">
+          <div class="pattern-title">PATRÓN I — ACELERADORES YTD</div>
+          <div class="pattern-corps">Plusandex · KMPlus · Neoquímica · L.O. Oftalmi · Megalabs · Dollder</div>
+          <div class="pattern-desc">
+            Empresas cuyo Evol YTD <strong>mejora o se mantiene alto</strong> conforme avanza el año — señal de que no dependen de bases bajas del año anterior, sino que tienen impulso real.
+            <br><br>
+            <strong>Plusandex:</strong> 126.3→131.0→132.8 — acelerando consistentemente. Precio estable $2.56-$2.59. Estrategia de volumen puro funcionando.<br>
+            <strong>KMPlus:</strong> 162.5→164.0→154.6 — leve desaceleración pero sigue líder. Precio ultra-bajo $2.00.<br>
+            <strong>Neoquímica:</strong> 126.5→128.0→153.3 — la mayor aceleración del grupo. Pasó de $6.06 a $6.36 acumulado mientras acelera. Señal de producto premium nuevo con tracción.<br>
+            <strong>L.O. Oftalmi:</strong> 103.9→106.7→108.6 — único del Top 6 acelerando en YTD. Precio sube $4.50→$4.72.
+          </div>
+        </div>
+
+        <div class="pattern-card p2" data-num="II">
+          <div class="pattern-title">PATRÓN II — PREMIUM SOSTENIDO</div>
+          <div class="pattern-corps">Tiares · Herbaplant · Naturlifes · Medifarm · Nestle · Arco Iris · Zoriak</div>
+          <div class="pattern-desc">
+            Empresas con precios altos que <strong>sostienen Evol YTD &gt;100</strong> a pesar de desacelerar la tasa de crecimiento (efecto base). Tienen pricing power real en el mercado acumulado.
+            <br><br>
+            <strong>Tiares</strong> ($8.15/u): Evol YTD cae de 182.5 a 163.7 — sigue siendo el más alto del ranking.<br>
+            <strong>Herbaplant</strong> ($10.78/u): 177.6→180.3→161.2 — máximo en Abril, desacelerando. El segundo mayor Evol YTD.<br>
+            <strong>Medifarm</strong> ($20.69/u): 133.4→135.7→132.3 — prácticamente constante. El más alto precio con Evol sostenida.<br>
+            <strong>Nestle</strong> ($19.17/u): 119.7→113.1→114.4 — estabilizó después de caer en Abril.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="pattern-card p3" data-num="III">
+          <div class="pattern-title">PATRÓN III — CONVERGENTES (cruzaron 100 en el año)</div>
+          <div class="pattern-corps">Vargas Corp · Laboratorios Now · L.O. Oftalmi (en Marzo) · Beiersdorf</div>
+          <div class="pattern-desc">
+            Empresas que comenzaron el año bajo 100 en YTD y lo cruzaron durante el período — señal de que el año está mejorando para ellas progresivamente.
+            <br><br>
+            <strong>Laboratorios Now:</strong> 97.6 (Mar)→100.3 (Abr)→100.7 (May). Cruzó el umbral en Abril y lo mantiene. Precio premium $17.81/u con disciplina.<br>
+            <strong>Vargas Corp:</strong> 99.6→100.8→105.5. Fue de casi 100 a ganador claro. Precio $7.24/u.<br>
+            <strong>Beiersdorf:</strong> 135.1→103.1→100.1. Cayó dramáticamente pero se estabilizó justo encima de 100.
+          </div>
+        </div>
+
+        <div class="pattern-card p4" data-num="IV">
+          <div class="pattern-title">PATRÓN IV — DESACELERADORES YTD</div>
+          <div class="pattern-corps">Cofasa · Herbaplant · Tiares · KMPlus · Cofasa · Grupo Leti · Angelus</div>
+          <div class="pattern-desc">
+            Empresas cuyo Evol YTD <strong>cae mes a mes</strong> en el acumulado — el efecto base del año anterior las perjudica porque en 2025 también eran fuertes.
+            <br><br>
+            <strong>Cofasa:</strong> 140.3→137.2→121.7. Cayó -18.6 pts en 3 meses. Base de comparación 2025 fue muy buena, difícil de superar.<br>
+            <strong>Herbaplant:</strong> 177.6→180.3→161.2. Pico en Abril, ahora desacelera.<br>
+            <strong>Angelus:</strong> 80.0→84.1→84.5. Técnicamente <em>mejora</em> levemente, pero parte de una base tan baja que no importa — sigue en el último cuartil.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <h3><span class="h3-line"></span>Los 5 Aceleradores YTD — Ranking por Evol YTD Mayo</h3>
+    <div class="three-col">
+      <div class="big-stat">
+        <span class="bs-val">163.7</span>
+        <span class="bs-sub">TIARES · Evol YTD May</span>
+        <span class="bs-gr" style="color:#fbbf24;">+130.8% · $8.15/u</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">161.2</span>
+        <span class="bs-sub">HERBAPLANT · Evol YTD May</span>
+        <span class="bs-gr" style="color:#fbbf24;">+127.2% · $10.78/u</span>
+      </div>
+      <div class="big-stat">
+        <span class="bs-val">154.6</span>
+        <span class="bs-sub">KMPLUS · Evol YTD May</span>
+        <span class="bs-gr" style="color:#4ade80;">+118.0% · $2.00/u</span>
+      </div>
+    </div>
+    <div style="margin-top:3mm;">
+    <div class="info-box gold">
+      <div class="ib-title">Lectura del YTD: el mercado farmacéutico venezolano tiene 2 velocidades</div>
+      <p>El YTD acumulado confirma lo que el MAT y el MES insinuaban: el mercado opera en <strong>dos velocidades</strong>. El primer grupo (Tiares, KMPlus, Plusandex, Herbaplant, Neoquímica) crece entre <strong>+87% y +131%</strong> acumulado — 3 a 4 veces el mercado. El segundo grupo (Grupo Leti, Farma, Siegfried, Spefar, DAC55) crece entre <strong>+20% y +37%</strong> — por debajo del mercado. Angelus (+19.2%) está en el peor extremo del segundo grupo, creciendo menos que los que pierden share. No hay una zona media saludable — o se está en el primer grupo o se está perdiendo terreno.</p>
+    </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 5</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 6 — DIAGNÓSTICO ANGELUS YTD -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot" style="background:var(--red);"></div><span class="ph-section">Diagnóstico Angelus Corp · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Diagnóstico <span>Angelus Corp</span> — YTD</div>
+    <div class="section-sub">Posición competitiva acumulada · YTD Enero-Marzo, Enero-Abril y Enero-Mayo 2026</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <span class="kv">84.5</span>
+        <span class="kl">Evol YTD Mayo</span>
+        <span class="kt neg">▼ 80.0 → 84.1 → 84.5 · bajo 100</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">+19.2%</span>
+        <span class="kl">Crecimiento YTD Mayo</span>
+        <span class="kt neg">▼ vs +41.0% mercado</span>
+      </div>
+      <div class="kpi-card red">
+        <span class="kv">$5.89</span>
+        <span class="kl">Precio/u YTD Mayo</span>
+        <span class="kt neg">▼ $6.03 → $5.98 → $5.89</span>
+      </div>
+      <div class="kpi-card gold">
+        <span class="kv">#26</span>
+        <span class="kl">Ranking YTD Mayo</span>
+        <span class="kt">Estable #26 los 3 meses</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Angelus YTD — Todos los Indicadores</h3>
+        <table>
+          <thead>
+            <tr><th>Indicador</th><th>YTD Mar</th><th>YTD Abr</th><th>YTD May</th><th>Tendencia</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ranking USD YTD</td><td>#26</td><td>#26</td><td>#26</td><td class="neutral">Estático — sin mejora</td></tr>
+            <tr><td>USD Ventas YTD</td><td>$3.64M</td><td>$4.96M</td><td>$6.33M</td><td class="up">▲ Acumula normalmente</td></tr>
+            <tr><td>Market Share YTD</td><td>0.687%</td><td>0.700%</td><td>0.706%</td><td class="neutral">Marginal sube (acumulación)</td></tr>
+            <tr><td>Crecimiento YTD vs PY</td><td>+21.0%</td><td>+21.5%</td><td>+19.2%</td><td class="dn">▼ Vuelve a caer en Mayo</td></tr>
+            <tr><td>Evol PY YTD</td><td>80.0</td><td>84.1</td><td>84.5</td><td class="neutral">Mejora mínima, lejos de 100</td></tr>
+            <tr><td>Precio/Unidad YTD</td><td>$6.03</td><td>$5.98</td><td>$5.89</td><td class="dn">▼ -$0.14 (-2.3%) acumulado</td></tr>
+            <tr class="market-row"><td>Precio/u MERCADO YTD</td><td>$5.36</td><td>$5.43</td><td>$5.42</td><td>Muy estable ~$5.40</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box red">
+          <div class="ib-title">La brecha de precio se cierra peligrosamente</div>
+          <p>En YTD Marzo, Angelus tenía un sobreprecio de <strong>$0.67</strong> vs el mercado ($6.03 vs $5.36). En YTD Mayo esa brecha cayó a <strong>$0.47</strong> ($5.89 vs $5.42). En 3 meses se perdió <strong>30% de la diferenciación de precio</strong>. A este ritmo, en unos meses más Angelus estará al mismo precio que el mercado promedio — sin el volumen de los económicos ni el posicionamiento de los premium.</p>
+        </div>
+
+        <div class="info-box">
+          <div class="ib-title">Una señal positiva en el YTD</div>
+          <p>La Evol YTD de Angelus <em>mejoró</em> ligeramente: 80.0→84.5. Aunque es una mejora marginal, indica que los meses recientes de 2026 son <em>relativamente mejores</em> que los mismos meses del año pasado. El deterioro no es libre caída — hay cierta estabilización. La clave es si puede cruzar 90, luego 95, y finalmente 100 en el resto del año.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3><span class="h3-line"></span>Angelus YTD vs los 5 Competidores</h3>
+        <table>
+          <thead>
+            <tr><th>Empresa</th><th>Rank YTD</th><th>Evol Mar</th><th>Evol Abr</th><th>Evol May</th><th>P/u May</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>DISTRILAB <span class="tag tag-red">-MS</span></td><td>#14</td><td>103.0</td><td>100.8</td><td><span class="evol-chip evol-low">98.4</span></td><td>$6.72</td></tr>
+            <tr class="angelus-row"><td>⚠ ANGELUS CORP</td><td>#26</td><td>80.0</td><td>84.1</td><td>84.5</td><td>$5.89 ▼</td></tr>
+            <tr><td>DAC55 <span class="tag tag-red">-MS</span></td><td>#20</td><td>92.5</td><td>87.5</td><td><span class="evol-chip evol-low">87.7</span></td><td>$4.40</td></tr>
+            <tr><td>ALESS <span class="tag tag-red">-MS</span></td><td>#28</td><td>100.5</td><td>98.0</td><td><span class="evol-chip evol-low">93.7</span></td><td>$3.46</td></tr>
+            <tr><td>KMPLUS <span class="tag tag-green">+MS ★</span></td><td>#29</td><td>162.5</td><td>164.0</td><td><span class="evol-chip evol-high">154.6</span></td><td>$2.00</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box gold">
+          <div class="ib-title">El grupo de 5 en YTD: todos pierden excepto KMPlus</div>
+          <ul>
+            <li><strong>Distrilab:</strong> Cruzó de 103.0 a 98.4 — pasó de ganador a perdedor en el acumulado YTD. Tendencia a vigilar: podría ser una oportunidad para Angelus si continúa.</li>
+            <li><strong>ALESS:</strong> 100.5 (Marzo) → 93.7 (Mayo) — empezó como ganador YTD y retrocedió. Pierde share acumulado a pesar del buen MES de Marzo.</li>
+            <li><strong>DAC55:</strong> 92.5→87.7 — pérdida sostenida. Debajo de Angelus en este período.</li>
+            <li><strong>KMPlus:</strong> Inalcanzable con 154.6. El dominio del segmento ultra-bajo precio es categórico en el acumulado.</li>
+          </ul>
+        </div>
+
+        <div class="info-box green">
+          <div class="ib-title">Perspectiva de cierre de año para Angelus</div>
+          <p>Si Angelus mantiene un crecimiento YTD de ~+19-21% y el mercado sigue cerrando hacia +34-36% anual, el Evol YTD a Diciembre 2026 podría terminar en torno a <strong>84-86</strong>. Para cerrar el año con Evol ≥100 necesitaría crecer al menos <strong>+41% en los meses de Junio-Diciembre</strong> — más del doble de su ritmo actual. Ese es el reto cuantificado.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="three-col" style="margin-top:2mm;">
+      <div class="info-box red">
+        <div class="ib-title">🚨 Diagnóstico convergente MAT+YTD+MES</div>
+        <p>Los 3 indicadores dicen lo mismo: Evol MAT 86.5 / Evol YTD 84.5 / Evol MES 87.7. La pérdida de participación es consistente en todos los marcos temporales. No hay período donde Angelus gane share.</p>
+      </div>
+      <div class="info-box gold">
+        <div class="ib-title">⚠ Precio — señal más crítica en YTD</div>
+        <p>El YTD confirma la tendencia: precio cae de $6.03 a $5.89 mientras el mercado acumulado está en $5.42. La brecha de solo $0.47 es la menor registrada en cualquiera de los 3 períodos.</p>
+      </div>
+      <div class="info-box green">
+        <div class="ib-title">✓ Única nota positiva</div>
+        <p>Angelus mejora su Evol YTD: 80.0→84.5. La tendencia es ascendente aunque marginal. Esto sugiere que 2026 no es peor que 2025 en términos relativos — simplemente no es lo suficientemente bueno.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 6</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 7 — RECOMENDACIONES CEO YTD -->
+<div class="page">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot" style="background:var(--gold);"></div><span class="ph-section">Recomendaciones Estratégicas · CEO Level</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Recomendaciones <span>Estratégicas</span></div>
+    <div class="section-sub">Plan de acción — Basado en análisis YTD Enero-Mayo 2026 · Perspectiva acumulada del año</div>
+
+    <div class="info-box" style="margin-bottom:4mm;background:linear-gradient(135deg,#0d1b3e,#1a2f5e);border:none;">
+      <div class="ib-title" style="color:var(--gold);font-size:10pt;">El YTD le da perspectiva al CEO: ¿cómo va el año?</div>
+      <p style="color:rgba(255,255,255,.85);">Con 5 meses acumulados, el YTD es el mejor indicador del estado real del año 2026 para Angelus. La conclusión es clara: Angelus crece a <strong style="color:var(--gold);">la mitad de la velocidad del mercado</strong> (+19.2% vs +41.0%). Para cerrar el año sin empeorar la posición relativa, necesita duplicar su ritmo de crecimiento en el segundo semestre. Las recomendaciones deben orientarse a ese objetivo concreto y medible.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">1</div>
+      <div class="rec-body">
+        <div class="rec-title">META ANNUAL CONCRETA — Definir target de crecimiento H2 para alcanzar Evol YTD ≥90 a Diciembre</div>
+        <div class="rec-desc">
+          Con 5 meses acumulados en +19.2% y el mercado en +41.0%, la Evol YTD de Angelus es 84.5. Para cerrar el año con Evol YTD ≥90, los meses Junio-Diciembre deben mostrar un crecimiento promedio de al menos <strong>+32-35%</strong>. Este es el umbral mínimo para detener el deterioro. Para llegar a Evol 100 al cierre, el H2 necesita +45-50% — ambicioso pero cuantificable.
+          <br><br>
+          <strong>Acción:</strong> Que la Dirección Comercial calcule, a nivel de portafolio y territorio, cuánto debe vender Angelus mensualmente en H2 para llegar a esa meta. Convertir el indicador IMS en una cuota de ventas internas con seguimiento semanal.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Meta mínima H2: +32% mensual</span>
+          <span class="rec-kpi-tag">Meta óptima H2: +45-50%</span>
+          <span class="rec-kpi-tag">KPI: Evol YTD ≥90 en Dic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">2</div>
+      <div class="rec-body">
+        <div class="rec-title">DETENER LA CAÍDA DE PRECIO — Establecer precio mínimo YTD de $6.00/u para H2</div>
+        <div class="rec-desc">
+          El precio YTD de Angelus cayó de $6.03 a $5.89 en 5 meses. La brecha con el mercado ($5.42) es de apenas $0.47. Si el precio continúa cayendo 5 céntimos por mes, en 10 meses Angelus venderá al precio promedio del mercado. El objetivo para el segundo semestre: <strong>mantener el precio YTD por encima de $6.00/u</strong> como piso estratégico irrenunciable.
+          <br><br>
+          <strong>Acción:</strong> Eliminación de descuentos no estructurados. Todo descuento mayor a X% debe pasar por aprobación gerencial. Implementar en 30 días.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Piso estratégico: $6.00/u YTD</span>
+          <span class="rec-kpi-tag">Meta: Brecha ≥$0.60 vs mercado</span>
+          <span class="rec-kpi-tag">Área: Pricing + Finanzas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">3</div>
+      <div class="rec-body">
+        <div class="rec-title">CAPITALIZAR EL CASO DISTRILAB — Están cediendo share YTD, actuar ahora</div>
+        <div class="rec-desc">
+          Distrilab tenía Evol YTD 103.0 en Marzo (ganador) y cayó a 98.4 en Mayo (perdedor). Opera en el mismo rango de precio que Angelus (~$6-7/u) y comparte segmento. Si su deterioro acumulado continúa, hay espacio que Angelus puede tomar con una estrategia comercial agresiva en los canales donde Distrilab retrocede.
+          <br><br>
+          <strong>Acción:</strong> Mapear los territorios donde Distrilab perdió ventas en Abril-Mayo. Enviar fuerza de ventas reforzada a esos puntos en Junio-Julio con oferta de producto y términos competitivos.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Oportunidad: Segmento $6-7/u</span>
+          <span class="rec-kpi-tag">Plazo: Junio-Julio 2026</span>
+          <span class="rec-kpi-tag">Área: Ventas + Trade</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-num">4</div>
+      <div class="rec-body">
+        <div class="rec-title">MONITOREO NEOQUÍMICA — Entender qué construyeron en 5 meses antes de que sea tarde</div>
+        <div class="rec-desc">
+          Neoquímica acumuló un Evol YTD de 153.3 en Mayo — partiendo de 126.5 en Marzo. No es un flash mensual: <strong>llevan 5 meses acumulados ganando share a un ritmo que triplica al mercado</strong>. Su precio YTD subió de $6.06 a $6.36, sugiriendo que tienen un producto premium nuevo con alta demanda. Si opera en categorías similares a Angelus, es una amenaza estructural del año 2026, no solo de Mayo.
+        </div>
+        <div class="rec-kpis">
+          <span class="rec-kpi-tag">Urgencia: Alta</span>
+          <span class="rec-kpi-tag">Investigar: Portafolio y categorías</span>
+          <span class="rec-kpi-tag">Área: Inteligencia Comercial</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:1mm;">
+      <div class="info-box green">
+        <div class="ib-title">Roadmap de recuperación — H2 2026</div>
+        <ul>
+          <li><strong>Junio:</strong> Audit de precios + mapeo Distrilab + brief Neoquímica</li>
+          <li><strong>Julio:</strong> Ofensiva comercial en territorios Distrilab + activar política precio $6+</li>
+          <li><strong>Agosto:</strong> Primer review IMS — ¿Evol YTD subió de 84.5?</li>
+          <li><strong>Septiembre:</strong> Si no hay mejora, escalar decisión portafolio (premium vs volumen)</li>
+          <li><strong>Diciembre:</strong> Meta: Evol YTD ≥90. Si no se alcanza, 2027 con nuevo plan estratégico.</li>
+        </ul>
+      </div>
+      <div class="info-box red">
+        <div class="ib-title">Escenario sin acción — proyección YTD Diciembre</div>
+        <ul>
+          <li>Crecimiento YTD continúa en ~+19-20% vs mercado ~+36%</li>
+          <li>Evol YTD cierre de año: ~83-85 (sin mejora estructural)</li>
+          <li>Precio YTD llegaría a ~$5.65-$5.70 (brecha vs mercado: $0.25)</li>
+          <li>Ranking: posible caída a #28-30 en YTD</li>
+          <li>Neoquímica podría superar a Angelus en ranking YTD en H2</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 7</span><span>Junio 2026</span>
+  </div>
+</div>
+
+
+<!-- PÁGINA 8 — APÉNDICE YTD -->
+<div class="page" style="min-height:auto;">
+  <div class="page-header">
+    <div class="ph-left"><div class="ph-dot"></div><span class="ph-section">Apéndice · Glosario y Metodología · YTD</span></div>
+    <div class="ph-right">Angelus Corp · Análisis YTD 2026</div>
+  </div>
+  <div class="page-accent"></div>
+  <div class="page-content">
+    <div class="section-title">Apéndice <span>YTD</span></div>
+    <div class="section-sub">Glosario, comparativo de los 3 períodos y metodología del análisis acumulado</div>
+
+    <div class="two-col">
+      <div>
+        <h3><span class="h3-line"></span>Resumen Triple: MAT vs YTD vs MES — Angelus</h3>
+        <table style="font-size:8pt;">
+          <thead>
+            <tr><th>Indicador</th><th>MAT Mayo</th><th>YTD Mayo</th><th>MES Mayo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Evol PY</strong></td><td class="dn">86.5</td><td class="dn">84.5</td><td class="dn">87.7</td></tr>
+            <tr><td><strong>Crecimiento</strong></td><td class="dn">+16.3%</td><td class="dn">+19.2%</td><td class="dn">+11.3%</td></tr>
+            <tr><td><strong>Precio/u</strong></td><td class="dn">$6.19 ▼</td><td class="dn">$5.89 ▼</td><td class="dn">$5.58 ▼</td></tr>
+            <tr><td><strong>Market Share</strong></td><td>0.696%</td><td>0.706%</td><td>0.728%</td></tr>
+            <tr><td><strong>Ranking</strong></td><td>#27</td><td>#26</td><td>#27</td></tr>
+            <tr><td><strong>Mdo. Referencia</strong></td><td>$2,014.6M</td><td>$897.2M</td><td>$188.5M</td></tr>
+            <tr><td><strong>Crecim. Mercado</strong></td><td>+34.4%</td><td>+41.0%</td><td>+26.9%</td></tr>
+            <tr><td><strong>Precio/u Mercado</strong></td><td>$4.99</td><td>$5.42</td><td>$5.33</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box" style="margin-top:3mm;">
+          <div class="ib-title">Veredicto integrado de los 3 períodos</div>
+          <p>Los tres indicadores — MAT, YTD y MES — convergen en el mismo diagnóstico para Angelus: <strong>pérdida sistemática de participación de mercado</strong> con precio en caída. No hay período favorable. La situación es coherente y estructural, no circunstancial.</p>
+        </div>
+      </div>
+      <div>
+        <h3><span class="h3-line"></span>Glosario de Períodos IMS</h3>
+        <table style="font-size:8pt;">
+          <thead>
+            <tr><th style="text-align:left;">Término</th><th style="text-align:left;">Definición y uso estratégico</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MAT</strong></td><td>Moving Annual Total — 12 meses rodantes. Indicador estructural. Elimina estacionalidad. Uso: estrategia de mediano plazo.</td></tr>
+            <tr><td><strong>YTD</strong></td><td>Year-to-Date — acumulado desde enero. Refleja el desempeño real del año en curso. Crece cada mes. Uso: seguimiento del año fiscal.</td></tr>
+            <tr><td><strong>MES/MTH</strong></td><td>Período mensual puntual. Muy volátil. Captura señales tempranas. Uso: detección de movimientos competitivos recientes.</td></tr>
+            <tr><td><strong>Evol PY</strong></td><td>Índice de evolución vs año anterior ajustado al mercado. 100=mercado. &gt;100=gana share. &lt;100=pierde share.</td></tr>
+            <tr><td><strong>PMV</strong></td><td>Panel de Muestra Venezuela. Base de datos IMS Health del mercado farmacéutico venezolano.</td></tr>
+            <tr><td><strong>Pre-Info</strong></td><td>Datos preliminares. Sujetos a ajuste en versión definitiva.</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box gold" style="margin-top:3mm;">
+          <div class="ib-title">Cuándo usar cada período</div>
+          <ul>
+            <li><strong>Junta directiva anual:</strong> YTD + MAT combinados</li>
+            <li><strong>Revisión mensual de ventas:</strong> MES + YTD</li>
+            <li><strong>Análisis competitivo estructural:</strong> MAT</li>
+            <li><strong>Detección de señales tempranas:</strong> MES</li>
+            <li><strong>Evaluación de desempeño del año fiscal:</strong> YTD</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="ib-title">Fuentes de Datos · YTD</div>
+          <p>IMS Health PMV Pre-Info:<br>
+          Pre_info_marzo_26_.xlsx → YTD = Ene-Mar 2026<br>
+          Pre_info_Abril_.xlsx → YTD = Ene-Abr 2026<br>
+          Pre_info_mayo_.xlsx → YTD = Ene-May 2026<br>
+          Hoja: RANKING DE CORPORACIONES · Columnas YTD</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--navy);border-radius:10px;padding:5mm 8mm;text-align:center;margin-top:3mm;">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:12pt;color:var(--white);margin-bottom:2mm;">ANGELUS CORP.</div>
+      <div style="color:rgba(255,255,255,.6);font-size:8pt;line-height:1.6;">
+        Análisis YTD (Year-to-Date) del Mercado Farmacéutico Venezolano · Junio 2026<br>
+        IMS Health PMV Pre-Info · YTD Enero-Marzo, Enero-Abril, Enero-Mayo 2026<br>
+        <strong style="color:var(--gold);">DOCUMENTO CONFIDENCIAL — USO INTERNO EXCLUSIVO</strong>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>IMS Health PMV Pre-Info · YTD · Confidencial</span><span>Página 8</span><span>Junio 2026</span>
+  </div>
+</div>
+
+</body>
+</html>
