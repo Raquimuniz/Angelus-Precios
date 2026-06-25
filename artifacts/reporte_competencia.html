@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Análisis de Competencia PMV 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --navy:#0d1b3e; --navy2:#152550; --navy3:#1e3a6e;
+  --red:#c0392b; --gold:#d4a843; --gold2:#e8c56a;
+  --white:#fff; --gray:#f4f6f9; --gray2:#e8ecf2;
+  --text:#1a2340; --muted:#6b7a99;
+  --green:#1a7f4b; --orange:#e67e22;
+  --mat:#1e3a6e; --ytd:#c0392b; --mes:#b8831a;
+}
+body { font-family:'Open Sans',sans-serif; color:var(--text); background:#fff; }
+.page { width:210mm; min-height:297mm; page-break-after:always; position:relative; overflow:hidden; }
+.page:last-child { page-break-after:auto; }
+@page { size:A4; margin:0; }
+@media print {
+  .page { width:210mm; min-height:297mm; }
+  body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+
+.ph { background:var(--navy); padding:18px 28px 14px; display:flex; justify-content:space-between; align-items:center; }
+.ph h2 { font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; color:#fff; }
+.ph .ph-sub { font-size:9px; color:rgba(255,255,255,.5); margin-top:2px; }
+.ph-tags { display:flex; gap:6px; }
+.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:8px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.t-mat { background:var(--mat); color:#a8c4ff; }
+.t-ytd { background:var(--ytd); color:#fff; }
+.t-mes { background:var(--gold); color:var(--navy); }
+
+.pb { padding:16px 24px; }
+.sec { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--navy); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.sec::after { content:''; flex:1; height:1px; background:var(--gray2); }
+.pn  { position:absolute; bottom:12px; right:24px; font-size:8px; color:var(--muted); }
+.pnl { position:absolute; bottom:12px; left:24px; font-size:8px; color:var(--muted); }
+
+/* ─── PAGE 1 COVER ─── */
+#p1 {
+  background:linear-gradient(150deg, #1a0a0a 0%, #3a0a0a 40%, #0d1b3e 100%);
+  display:flex; flex-direction:column; color:#fff;
+}
+.cv-top { padding:28px 32px 0; display:flex; justify-content:space-between; }
+.cv-logo { display:flex; align-items:center; gap:12px; }
+.cv-circle { width:42px; height:42px; border-radius:50%; border:2.5px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:900; font-size:13px; color:var(--gold); }
+.cv-name .l1 { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; }
+.cv-name .l2 { font-size:8px; color:rgba(255,255,255,.45); letter-spacing:1px; }
+.cv-stamp { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); border-radius:4px; padding:5px 12px; font-size:8px; font-weight:600; letter-spacing:1.5px; color:rgba(255,255,255,.6); text-transform:uppercase; }
+.cv-hero { flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 32px; }
+.cv-eye { font-size:9px; letter-spacing:3px; font-weight:600; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+.cv-title { font-family:'Montserrat',sans-serif; font-size:32px; font-weight:900; line-height:1.1; margin-bottom:8px; }
+.cv-title span { color:#ff7070; }
+.cv-sub { font-size:12px; font-weight:300; color:rgba(255,255,255,.65); margin-bottom:24px; }
+
+/* Threat matrix on cover */
+.threat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:0 32px 24px; }
+.threat-card { border-radius:8px; padding:12px 14px; border:1px solid; text-align:center; }
+.tc-danger { background:rgba(192,57,43,.25); border-color:rgba(192,57,43,.5); }
+.tc-warn   { background:rgba(230,126,34,.2);  border-color:rgba(230,126,34,.5); }
+.tc-stable { background:rgba(13,27,62,.3);    border-color:rgba(30,58,110,.5); }
+.tc-opport { background:rgba(26,127,75,.2);   border-color:rgba(26,127,75,.5); }
+.threat-card .tc-title { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.tc-danger .tc-title { color:#ff7070; }
+.tc-warn   .tc-title { color:var(--gold2); }
+.tc-stable .tc-title { color:#a8c4ff; }
+.tc-opport .tc-title { color:#7ee8a2; }
+.threat-card .tc-val { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; line-height:1; margin-bottom:4px; }
+.tc-danger .tc-val { color:#ff7070; }
+.tc-warn   .tc-val { color:var(--gold2); }
+.tc-stable .tc-val { color:#a8c4ff; }
+.tc-opport .tc-val { color:#7ee8a2; }
+.threat-card .tc-desc { font-size:8px; color:rgba(255,255,255,.5); line-height:1.4; }
+.cv-foot { padding:14px 32px; border-top:1px solid rgba(255,255,255,.1); display:flex; justify-content:space-between; align-items:center; }
+.cv-foot span { font-size:8px; color:rgba(255,255,255,.35); letter-spacing:1px; text-transform:uppercase; }
+.conf { font-size:8px; font-weight:700; letter-spacing:2px; color:var(--gold); border:1px solid var(--gold); padding:2px 8px; border-radius:3px; text-transform:uppercase; }
+
+/* ─── COMPETITION TABLE ─── */
+.comp-tbl { width:100%; border-collapse:collapse; font-size:9px; margin-bottom:12px; }
+.comp-tbl th { padding:5px 6px; font-family:'Montserrat',sans-serif; font-size:7px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:var(--gray); border-bottom:2px solid var(--gray2); text-align:center; }
+.comp-tbl th:first-child { text-align:left; border-bottom-color:var(--navy); }
+.comp-tbl td { padding:5px 6px; border-bottom:1px solid var(--gray2); text-align:center; vertical-align:middle; }
+.comp-tbl td:first-child { text-align:left; }
+.comp-tbl tr:last-child td { border-bottom:none; }
+.comp-tbl .num { font-family:'Montserrat',sans-serif; font-weight:700; }
+.comp-tbl .hi  { color:var(--green); }
+.comp-tbl .lo  { color:var(--red); }
+.comp-tbl .mid { color:var(--orange); }
+.comp-tbl .muted { color:var(--muted); }
+.comp-tbl .corp-name { font-weight:700; color:var(--text); font-size:9px; }
+.comp-tbl .ang-row td { background:#fff3f3 !important; }
+.comp-tbl .ang-row .corp-name { color:var(--red); font-weight:800; }
+.comp-tbl .gain-row td { background:#f2fbf6; }
+.comp-tbl .neutral-row td { background:#fafbfc; }
+.comp-tbl .lose-row td { background:#fffaf9; }
+
+/* Evol pill */
+.ev-pill { display:inline-block; padding:2px 7px; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800; }
+.ev-hi  { background:#d4edda; color:var(--green); }
+.ev-lo  { background:#fce8e6; color:var(--red); }
+.ev-mid { background:#fff3cd; color:var(--orange); }
+.ev-neu { background:var(--gray2); color:var(--muted); }
+
+/* Classification legend */
+.leg-row { display:flex; gap:10px; margin-bottom:12px; }
+.leg-item { display:flex; align-items:center; gap:5px; font-size:8.5px; color:var(--muted); }
+.leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* Peer group section */
+.peer-tbl { width:100%; border-collapse:collapse; font-size:9px; margin-bottom:12px; }
+.peer-tbl th { padding:5px 7px; font-family:'Montserrat',sans-serif; font-size:7px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:var(--gray); border-bottom:2px solid var(--gray2); text-align:center; }
+.peer-tbl th:first-child { text-align:left; }
+.peer-tbl td { padding:5px 7px; border-bottom:1px solid var(--gray2); text-align:center; }
+.peer-tbl td:first-child { text-align:left; }
+.peer-tbl .ang-row td { background:#fff0f0; border-left:3px solid var(--red); }
+.peer-tbl .ang-row .pn-name { color:var(--red); font-weight:800; }
+.peer-tbl .gain-row td { background:#f2fbf6; }
+.peer-tbl .threat-row td { background:#fffaee; border-left:3px solid var(--orange); }
+.peer-tbl .num { font-family:'Montserrat',sans-serif; font-weight:700; }
+.peer-tbl .pn-name { font-weight:700; font-size:9px; }
+
+/* Risk cards */
+.risk-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.risk-card { border-radius:7px; padding:10px 12px; }
+.rc-high { background:#fff0f0; border:1.5px solid var(--red); }
+.rc-med  { background:#fff8f0; border:1.5px solid var(--orange); }
+.rc-low  { background:#f0f8f4; border:1.5px solid var(--green); }
+.rc-info { background:#f0f4ff; border:1.5px solid var(--mat); }
+.risk-card .rc-title { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.rc-high .rc-title { color:var(--red); }
+.rc-med  .rc-title { color:var(--orange); }
+.rc-low  .rc-title { color:var(--green); }
+.rc-info .rc-title { color:var(--mat); }
+.risk-card .rc-text { font-size:8.5px; line-height:1.6; color:var(--text); }
+
+/* Summary conclusion */
+.sum-conclusion { background:var(--navy); border-radius:8px; padding:14px 18px; color:#fff; margin-top:4px; }
+.sum-conclusion .sc-title { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; color:var(--gold); margin-bottom:10px; }
+.sum-conclusion .sc-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.sc-col { }
+.sc-col .sc-head { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,.6); margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,.15); }
+.sc-col ul { list-style:none; }
+.sc-col li { font-size:8.5px; color:rgba(255,255,255,.75); line-height:1.6; padding-left:10px; position:relative; margin-bottom:2px; }
+.sc-col li::before { content:'▸'; position:absolute; left:0; color:rgba(255,255,255,.3); font-size:7px; top:2px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     PAGE 1 — COVER + LANDSCAPE
+══════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="cv-top">
+    <div class="cv-logo">
+      <div class="cv-circle">AC</div>
+      <div class="cv-name">
+        <div class="l1">ANGELUS CORP.</div>
+        <div class="l2">PHARMACEUTICAL GROUP</div>
+      </div>
+    </div>
+    <div class="cv-stamp">IMS Health PMV · Pre-Info 2026</div>
+  </div>
+
+  <div class="cv-hero">
+    <div class="cv-eye">Inteligencia Competitiva</div>
+    <div class="cv-title">Análisis de<br><span>Competencia PMV</span></div>
+    <div class="cv-sub">Top 20 corporaciones · Ganadores · Amenazas al ranking Angelus · Mayo 2026</div>
+  </div>
+
+  <!-- 4 summary cards -->
+  <div class="threat-grid">
+    <div class="threat-card tc-danger">
+      <div class="tc-title">Amenazas Directas</div>
+      <div class="tc-val">4</div>
+      <div class="tc-desc">Corporaciones dentro del rango #23–29 con Evol &gt; 110 ganando posición sobre Angelus</div>
+    </div>
+    <div class="threat-card tc-warn">
+      <div class="tc-title">Ganadores Consistentes</div>
+      <div class="tc-val">15</div>
+      <div class="tc-desc">Corporaciones con Evol MAT + YTD ambos por encima de 100 en Mayo 2026</div>
+    </div>
+    <div class="threat-card tc-stable">
+      <div class="tc-title">Perdedores de Cuota</div>
+      <div class="tc-val">22</div>
+      <div class="tc-desc">Corporaciones con Evol MAT &lt; 100 — también pierden cuota, como Angelus</div>
+    </div>
+    <div class="threat-card tc-opport">
+      <div class="tc-title">Posición Angelus</div>
+      <div class="tc-val">#27</div>
+      <div class="tc-desc">MAT Mayo · En riesgo de bajar a #28+ si TIARES y KMPLUS mantienen su ritmo</div>
+    </div>
+  </div>
+
+  <div class="cv-foot">
+    <span>Angelus Corp. · Inteligencia Competitiva · Junio 2026</span>
+    <span class="conf">Confidencial</span>
+    <span>IMS Health PMV Venezuela · Mayo 2026</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 2 — TOP 20 TABLE
+══════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="ph">
+    <div>
+      <h2>Top 20 Corporaciones — MAT · YTD · MES · Mayo 2026</h2>
+      <div class="ph-sub">Evol PY en los 3 períodos · Ventas MAT · Precio/unidad · Clasificación competitiva</div>
+    </div>
+    <div class="ph-tags">
+      <span class="tag t-mat">MAT</span><span class="tag t-ytd">YTD</span><span class="tag t-mes">MES</span>
+    </div>
+  </div>
+  <div class="pb">
+
+    <div class="leg-row">
+      <div class="leg-item"><div class="leg-dot" style="background:#d4edda;border:1px solid var(--green);"></div> Ganador (Ev &gt; 105)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fff3cd;border:1px solid var(--orange);"></div> Casi neutro (Ev 96–105)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fce8e6;border:1px solid var(--red);"></div> Pierde cuota (Ev &lt; 96)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fff0f0;border:1px solid var(--red);border-width:2px;"></div> Angelus Corp.</div>
+    </div>
+
+    <table class="comp-tbl">
+      <thead>
+        <tr>
+          <th style="width:24px;">#</th>
+          <th style="text-align:left;width:120px;">Corporación</th>
+          <th>USD MAT</th>
+          <th style="color:var(--mat);">Evol MAT</th>
+          <th style="color:var(--ytd);">Evol YTD</th>
+          <th style="color:var(--mes);">Evol MES</th>
+          <th>P/Un MAT</th>
+          <th>P/Un YTD</th>
+          <th>P/Un MES</th>
+          <th>Clasificación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Top 6 rank by MAT -->
+        <tr class="lose-row">
+          <td class="num muted">1</td>
+          <td class="corp-name">GRUPO LETI</td>
+          <td class="num">$247.5M</td>
+          <td><span class="ev-pill ev-lo">93</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">84</span></td>
+          <td class="num muted">$4.24</td><td class="num muted">$4.40</td><td class="num muted">$4.55</td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">2</td>
+          <td class="corp-name">CALOX CORP</td>
+          <td class="num">$172.1M</td>
+          <td><span class="ev-pill ev-lo">95</span></td>
+          <td><span class="ev-pill ev-neu">100</span></td>
+          <td><span class="ev-pill ev-neu">98</span></td>
+          <td class="num muted">$4.83</td><td class="num muted">$5.35</td><td class="num muted">$5.18</td>
+          <td style="font-size:8px;color:var(--muted);">Casi neutro YTD</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">3</td>
+          <td class="corp-name">PHARMETIQUE CORP.</td>
+          <td class="num">$149.9M</td>
+          <td><span class="ev-pill ev-lo">96</span></td>
+          <td><span class="ev-pill ev-lo">96</span></td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td class="num muted">$3.45</td><td class="num muted">$3.87</td><td class="num muted">$3.74</td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">4</td>
+          <td class="corp-name">L.O. OFTALMI</td>
+          <td class="num">$134.6M</td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td><span class="ev-pill ev-hi">109</span></td>
+          <td><span class="ev-pill ev-hi">118</span></td>
+          <td class="num muted">$3.95</td><td class="num muted">$4.72</td><td class="num muted">$5.24</td>
+          <td style="font-size:8px;color:var(--green);">↗ Gana en YTD/MES</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">5</td>
+          <td class="corp-name">FARMA CORP.</td>
+          <td class="num">$132.5M</td>
+          <td><span class="ev-pill ev-lo">95</span></td>
+          <td><span class="ev-pill ev-lo">97</span></td>
+          <td><span class="ev-pill ev-lo">89</span></td>
+          <td class="num muted">$7.54</td><td class="num muted">$8.14</td><td class="num muted">$7.28</td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">6</td>
+          <td class="corp-name">MEGALABS CORP.</td>
+          <td class="num">$117.0M</td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td><span class="ev-pill ev-hi">108</span></td>
+          <td><span class="ev-pill ev-hi">112</span></td>
+          <td class="num muted">$8.73</td><td class="num muted">$9.28</td><td class="num muted">$8.69</td>
+          <td style="font-size:8px;color:var(--green);">↗ Gana en YTD/MES</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">7</td>
+          <td class="corp-name">COFASA CORP</td>
+          <td class="num">$64.2M</td>
+          <td><span class="ev-pill ev-hi">121</span></td>
+          <td><span class="ev-pill ev-hi">122</span></td>
+          <td><span class="ev-pill ev-lo">81</span></td>
+          <td class="num muted">$5.08</td><td class="num muted">$5.50</td><td class="num muted">$5.25</td>
+          <td style="font-size:8px;color:var(--orange);">↗ MAT/YTD, cae MES</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">8</td>
+          <td class="corp-name">VALMORCA CORP.</td>
+          <td class="num">$58.0M</td>
+          <td><span class="ev-pill ev-lo">94</span></td>
+          <td><span class="ev-pill ev-neu">98</span></td>
+          <td><span class="ev-pill ev-hi">106</span></td>
+          <td class="num muted">$6.39</td><td class="num muted">$6.56</td><td class="num muted">$6.62</td>
+          <td style="font-size:8px;color:var(--muted);">Mixto — MES positivo</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">9</td>
+          <td class="corp-name">SIEGFRIED CORP.</td>
+          <td class="num">$55.1M</td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">75</span></td>
+          <td class="num muted">$5.40</td><td class="num muted">$5.29</td><td class="num muted">$5.15</td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota — similar a Angelus</td>
+        </tr>
+        <tr class="lose-row">
+          <td class="num muted">10</td>
+          <td class="corp-name">BIOTECH CORP.</td>
+          <td class="num">$36.2M</td>
+          <td><span class="ev-pill ev-lo">90</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">92</span></td>
+          <td class="num muted">$4.74</td><td class="num muted">$4.70</td><td class="num muted">$4.89</td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">11</td>
+          <td class="corp-name">NATURLIFES</td>
+          <td class="num">$31.3M</td>
+          <td><span class="ev-pill ev-hi">136</span></td>
+          <td><span class="ev-pill ev-hi">132</span></td>
+          <td><span class="ev-pill ev-hi">110</span></td>
+          <td class="num muted">$7.59</td><td class="num muted">$8.57</td><td class="num muted">$8.83</td>
+          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">12</td>
+          <td class="corp-name">VARGAS CORP.</td>
+          <td class="num">$29.4M</td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td><span class="ev-pill ev-hi">106</span></td>
+          <td><span class="ev-pill ev-hi">120</span></td>
+          <td class="num muted">$6.78</td><td class="num muted">$7.24</td><td class="num muted">$7.39</td>
+          <td style="font-size:8px;color:var(--green);">↗ Aceleración en MES</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">13</td>
+          <td class="corp-name">DISTRILAB</td>
+          <td class="num">$29.0M</td>
+          <td><span class="ev-pill ev-hi">104</span></td>
+          <td><span class="ev-pill ev-neu">98</span></td>
+          <td><span class="ev-pill ev-lo">93</span></td>
+          <td class="num muted">$5.78</td><td class="num muted">$6.72</td><td class="num muted">$6.17</td>
+          <td style="font-size:8px;color:var(--muted);">MAT positivo, MES cae</td>
+        </tr>
+        <tr class="neutral-row">
+          <td class="num muted">14</td>
+          <td class="corp-name">ELMOR CORP.</td>
+          <td class="num">$28.5M</td>
+          <td><span class="ev-pill ev-lo">94</span></td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td><span class="ev-pill ev-hi">109</span></td>
+          <td class="num muted">$4.38</td><td class="num muted">$4.81</td><td class="num muted">$4.64</td>
+          <td style="font-size:8px;color:var(--muted);">Mixto — recupera en MES</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">15</td>
+          <td class="corp-name">DOLLDER</td>
+          <td class="num">$25.5M</td>
+          <td><span class="ev-pill ev-hi">106</span></td>
+          <td><span class="ev-pill ev-hi">109</span></td>
+          <td><span class="ev-pill ev-hi">113</span></td>
+          <td class="num muted">$5.67</td><td class="num muted">$6.86</td><td class="num muted">$6.27</td>
+          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">18</td>
+          <td class="corp-name">PLUSANDEX CORP.</td>
+          <td class="num">$19.3M</td>
+          <td><span class="ev-pill ev-hi">116</span></td>
+          <td><span class="ev-pill ev-hi">133</span></td>
+          <td><span class="ev-pill ev-hi">141</span></td>
+          <td class="num muted">$2.08</td><td class="num muted">$2.59</td><td class="num muted">$2.63</td>
+          <td style="font-size:8px;color:var(--green);">★ Aceleración total</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num muted">17</td>
+          <td class="corp-name">NESTLE CORP</td>
+          <td class="num">$20.9M</td>
+          <td><span class="ev-pill ev-hi">130</span></td>
+          <td><span class="ev-pill ev-hi">114</span></td>
+          <td><span class="ev-pill ev-hi">121</span></td>
+          <td class="num muted">$17.37</td><td class="num muted">$19.17</td><td class="num muted">$19.75</td>
+          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
+        </tr>
+        <!-- Separator + Angelus -->
+        <tr><td colspan="10" style="background:var(--gray2);padding:3px 6px;font-family:'Montserrat',sans-serif;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">··· posición Angelus Corp ···</td></tr>
+        <tr class="ang-row">
+          <td class="num" style="color:var(--red);font-weight:800;">27</td>
+          <td class="corp-name">ANGELUS CORP.</td>
+          <td class="num" style="color:var(--red);">$14.0M</td>
+          <td><span class="ev-pill ev-lo">87</span></td>
+          <td><span class="ev-pill ev-lo">85</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td class="num" style="color:var(--red);">$6.19</td><td class="num" style="color:var(--red);">$5.89</td><td class="num" style="color:var(--red);">$5.58</td>
+          <td style="font-size:8px;color:var(--red);font-weight:700;">⚠ Pierde cuota · 3 períodos</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:var(--gray);border-radius:7px;padding:10px 14px;font-size:8.5px;color:var(--muted);line-height:1.6;">
+      <strong style="color:var(--navy);">Nota:</strong> Evol PY = índice donde 100 significa que la empresa crece al mismo ritmo que el mercado total.
+      Valores &gt;100 indican ganancia de participación relativa; &lt;100 indican pérdida de cuota aunque la empresa pueda estar creciendo en valor absoluto.
+    </div>
+
+  </div>
+  <div class="pn">02 · Top 20 Corporaciones</div>
+  <div class="pnl">ANGELUS CORP. CONFIDENCIAL</div>
+</div>
+
+
+<!-- ══════════════════════════════
+     PAGE 3 — PEER GROUP + THREATS
+══════════════════════════════ -->
+<div class="page" id="p3">
+  <div class="ph">
+    <div>
+      <h2>Grupo de Pares y Amenazas Directas al Ranking</h2>
+      <div class="ph-sub">Corporaciones en ranking #22–32 (rango de riesgo para Angelus #27) · Evolución Mayo 2026</div>
+    </div>
+    <div class="ph-tags">
+      <span class="tag t-mat">MAT</span><span class="tag t-ytd">YTD</span><span class="tag t-mes">MES</span>
+    </div>
+  </div>
+  <div class="pb">
+
+    <div class="sec">Peer Group — Rankeo #22 al #32 (Mayo 2026 MAT)</div>
+
+    <table class="peer-tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th style="text-align:left;">Corporación</th>
+          <th>USD MAT</th>
+          <th style="color:var(--mat);">Ev MAT</th>
+          <th style="color:var(--ytd);">Ev YTD</th>
+          <th style="color:var(--mes);">Ev MES</th>
+          <th>Tendencia</th>
+          <th>Riesgo para Angelus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="gain-row">
+          <td class="num">22</td>
+          <td class="pn-name">SPEFAR</td>
+          <td class="num">$16.3M</td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">86</span></td>
+          <td><span class="ev-pill ev-lo">86</span></td>
+          <td style="font-size:8px;color:var(--red);">Pierde cuota en todo</td>
+          <td style="font-size:8px;color:var(--green);">Bajo — también cae</td>
+        </tr>
+        <tr class="threat-row">
+          <td class="num">23</td>
+          <td class="pn-name">ARCO IRIS</td>
+          <td class="num">$16.3M</td>
+          <td><span class="ev-pill ev-hi">120</span></td>
+          <td><span class="ev-pill ev-hi">113</span></td>
+          <td><span class="ev-pill ev-hi">120</span></td>
+          <td style="font-size:8px;color:var(--green);">↗ Consistente</td>
+          <td style="font-size:8px;color:var(--orange);">Medio — $2.3M sobre Angelus</td>
+        </tr>
+        <tr class="threat-row">
+          <td class="num">24</td>
+          <td class="pn-name" style="color:var(--red);font-weight:800;">TIARES ⚠</td>
+          <td class="num" style="color:var(--red);">$15.5M</td>
+          <td><span class="ev-pill ev-hi">161</span></td>
+          <td><span class="ev-pill ev-hi">164</span></td>
+          <td><span class="ev-pill ev-hi">150</span></td>
+          <td style="font-size:8px;color:var(--red);font-weight:700;">↗ Altísimo — acelerado</td>
+          <td style="font-size:8px;color:var(--red);font-weight:700;">ALTO — Era #26 en Marzo</td>
+        </tr>
+        <tr class="neutral-row">
+          <td class="num">25</td>
+          <td class="pn-name">ALESS</td>
+          <td class="num">$15.3M</td>
+          <td><span class="ev-pill ev-hi">111</span></td>
+          <td><span class="ev-pill ev-lo">94</span></td>
+          <td><span class="ev-pill ev-lo">79</span></td>
+          <td style="font-size:8px;color:var(--orange);">Mixto — cae en MES</td>
+          <td style="font-size:8px;color:var(--muted);">Moderado — MES débil</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num">26</td>
+          <td class="pn-name">LABORATORIOS NOW</td>
+          <td class="num">$14.7M</td>
+          <td><span class="ev-pill ev-hi">108</span></td>
+          <td><span class="ev-pill ev-hi">101</span></td>
+          <td><span class="ev-pill ev-hi">105</span></td>
+          <td style="font-size:8px;color:var(--orange);">↗ Consistente pero leve</td>
+          <td style="font-size:8px;color:var(--orange);">Moderado — $0.7M sobre Ang.</td>
+        </tr>
+        <tr class="ang-row">
+          <td class="num" style="color:var(--red);font-weight:900;">27</td>
+          <td class="pn-name">ANGELUS CORP.</td>
+          <td class="num" style="color:var(--red);">$14.0M</td>
+          <td><span class="ev-pill ev-lo">87</span></td>
+          <td><span class="ev-pill ev-lo">85</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td style="font-size:8px;color:var(--red);font-weight:700;">↘ Pérdida en todo</td>
+          <td style="font-size:8px;color:var(--red);">POSICIÓN OBJETIVO</td>
+        </tr>
+        <tr class="gain-row">
+          <td class="num">28</td>
+          <td class="pn-name">BEHRENS CORP.</td>
+          <td class="num">$13.8M</td>
+          <td><span class="ev-pill ev-hi">105</span></td>
+          <td><span class="ev-pill ev-hi">104</span></td>
+          <td><span class="ev-pill ev-neu">97</span></td>
+          <td style="font-size:8px;color:var(--orange);">↗ Gana MAT/YTD</td>
+          <td style="font-size:8px;color:var(--orange);">Moderado — $0.2M detrás</td>
+        </tr>
+        <tr class="threat-row">
+          <td class="num">29</td>
+          <td class="pn-name" style="color:var(--orange);font-weight:800;">KMPLUS CORP ⚠</td>
+          <td class="num" style="color:var(--orange);">$13.4M</td>
+          <td><span class="ev-pill ev-hi">145</span></td>
+          <td><span class="ev-pill ev-hi">155</span></td>
+          <td><span class="ev-pill ev-hi">123</span></td>
+          <td style="font-size:8px;color:var(--orange);font-weight:700;">↗ Muy agresivo</td>
+          <td style="font-size:8px;color:var(--orange);font-weight:700;">ALTO — Era #29, sube rápido</td>
+        </tr>
+        <tr class="neutral-row">
+          <td class="num">30</td>
+          <td class="pn-name">SNC PHARMA CORP</td>
+          <td class="num">$12.9M</td>
+          <td><span class="ev-pill ev-neu">99</span></td>
+          <td><span class="ev-pill ev-lo">96</span></td>
+          <td><span class="ev-pill ev-hi">117</span></td>
+          <td style="font-size:8px;color:var(--muted);">Mixto — MES fuerte</td>
+          <td style="font-size:8px;color:var(--muted);">Bajo-Moderado</td>
+        </tr>
+        <tr>
+          <td class="num muted">31</td>
+          <td class="pn-name" style="color:var(--muted);">AVPHARMA CORP</td>
+          <td class="num muted">$11.7M</td>
+          <td><span class="ev-pill ev-neu">97</span></td>
+          <td><span class="ev-pill ev-lo">88</span></td>
+          <td><span class="ev-pill ev-lo">84</span></td>
+          <td style="font-size:8px;color:var(--muted);">↘ Cae en todos</td>
+          <td style="font-size:8px;color:var(--green);">Bajo — también cae</td>
+        </tr>
+        <tr class="threat-row">
+          <td class="num">34</td>
+          <td class="pn-name" style="color:var(--red);font-weight:800;">HERBAPLANT ⚠</td>
+          <td class="num" style="color:var(--red);">$10.1M</td>
+          <td><span class="ev-pill ev-hi">193</span></td>
+          <td><span class="ev-pill ev-hi">161</span></td>
+          <td><span class="ev-pill ev-hi">119</span></td>
+          <td style="font-size:8px;color:var(--red);font-weight:700;">↗ El más explosivo</td>
+          <td style="font-size:8px;color:var(--orange);">Medio — sube desde #34</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sec" style="margin-top:2px;">Análisis de Riesgo y Oportunidades para Angelus</div>
+
+    <div class="risk-grid">
+      <div class="risk-card rc-high">
+        <div class="rc-title">🔴 Amenaza Crítica — TIARES</div>
+        <div class="rc-text">
+          TIARES pasó de rank #26→#24 en 3 meses con Evol consistente de <strong>161–164 MAT/YTD</strong>.
+          Genera $15.5M MAT vs $14.0M Angelus. Si mantiene este ritmo, alcanzará el #23 en Q3 2026 y profundiza el diferencial con Angelus.
+          Su precio ($4.77 estimado) es inferior — compite por volumen.
+        </div>
+      </div>
+      <div class="risk-card rc-med">
+        <div class="rc-title">🟡 Amenaza Creciente — KMPLUS CORP</div>
+        <div class="rc-text">
+          KMPLUS sube de #29 con Evol <strong>145 MAT · 155 YTD · 123 MES</strong>.
+          Está a solo $0.6M de Angelus en MAT. Con su ritmo actual puede alcanzar y superar a Angelus en los próximos 2-3 meses.
+          Representa la amenaza directa más inmediata para el rank #27.
+        </div>
+      </div>
+      <div class="risk-card rc-med">
+        <div class="rc-title">🟡 Presión Desde Abajo — BEHRENS CORP.</div>
+        <div class="rc-text">
+          BEHRENS (#28) está a solo <strong>$0.2M de diferencia</strong> con Angelus en MAT.
+          Con Evol 105/104 (gana cuota lentamente), podría superar a Angelus en 1-2 meses si el ritmo se mantiene.
+          La brecha más estrecha del peer group — riesgo de caer a #28 antes de Q3.
+        </div>
+      </div>
+      <div class="risk-card rc-low">
+        <div class="rc-title">🟢 Oportunidad — Competidores que también caen</div>
+        <div class="rc-text">
+          SIEGFRIED (#9, Evol 88/88/75), GRUPO LETI (#1, Evol 93/88/84), BIOTECH (#10, 90/88/92) también pierden cuota.
+          Indican que el problema de Angelus no es único — hay debilidad estructural en varias corps grandes.
+          <strong>SPEFAR</strong> (#22, Evol 88/86/86) tiene el mismo perfil que Angelus — posibilidad de recuperar posición si mejora.
+        </div>
+      </div>
+    </div>
+
+    <!-- Final conclusion -->
+    <div class="sum-conclusion">
+      <div class="sc-title">Conclusión Competitiva — Prioridades para Angelus Corp</div>
+      <div class="sc-cols">
+        <div class="sc-col">
+          <div class="sc-head">Amenazas Prioritarias</div>
+          <ul>
+            <li><strong>KMPLUS</strong> es la amenaza más inmediata: sube 3 posiciones en 3 meses y está a $0.6M de Angelus</li>
+            <li><strong>BEHRENS</strong> está a $0.2M — Angelus podría caer a #28 en el próximo mes si no actúa</li>
+            <li><strong>TIARES</strong> consolida el #24 con Evol 161 — ya se separó significativamente de Angelus</li>
+            <li>HERBAPLANT (Evol 193 MAT) sube desde #34 — amenaza a mediano plazo</li>
+          </ul>
+        </div>
+        <div class="sc-col">
+          <div class="sc-head">Patrón de los Ganadores</div>
+          <ul>
+            <li>TIARES, KMPLUS, HERBAPLANT: precios por debajo del mercado — estrategia de volumen</li>
+            <li>NATURLIFES, NESTLE: precios premium (+$7-17/un) con alto Evol — segmentos diferenciados</li>
+            <li>PLUSANDEX: precio ultra-bajo ($2.08) con Evol 141 — escala masiva en genéricos</li>
+            <li>Los ganadores no siguen un único modelo de precio — cada uno domina su nicho</li>
+          </ul>
+        </div>
+        <div class="sc-col">
+          <div class="sc-head">Acción Recomendada</div>
+          <ul>
+            <li>Defensiva inmediata: proteger el rank #27 vs BEHRENS y KMPLUS — impulso comercial en categorías clave</li>
+            <li>Investigar qué mueve a TIARES y KMPLUS: categoría, canal, región</li>
+            <li>Benchmark de precio: Angelus a $5.58 MES vs mercado $5.33 — prima casi eliminada, sin ventaja clara</li>
+            <li>Target Evol: subir de 87 a 95+ en MES antes de fin de Q3 2026</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="pn">03 · Grupo de Pares y Amenazas</div>
+  <div class="pnl">ANGELUS CORP. CONFIDENCIAL</div>
+</div>
+
+</body>
+</html>
