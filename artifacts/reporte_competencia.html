@@ -2,658 +2,1712 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Análisis de Competencia PMV 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis de Competencia PMV 2026 — Angelus Corp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
 :root {
-  --navy:#0d1b3e; --navy2:#152550; --navy3:#1e3a6e;
-  --red:#c0392b; --gold:#d4a843; --gold2:#e8c56a;
-  --white:#fff; --gray:#f4f6f9; --gray2:#e8ecf2;
-  --text:#1a2340; --muted:#6b7a99;
-  --green:#1a7f4b; --orange:#e67e22;
-  --mat:#1e3a6e; --ytd:#c0392b; --mes:#b8831a;
+  --navy: #0d1b3e;
+  --red: #c0392b;
+  --gold: #d4a843;
+  --light: #f4f6fb;
+  --white: #ffffff;
+  --text: #1a2340;
+  --muted: #6b7a9e;
+  --border: #d8dff0;
+  --ang: #e8f0fe;
 }
-body { font-family:'Open Sans',sans-serif; color:var(--text); background:#fff; }
-.page { width:210mm; min-height:297mm; page-break-after:always; position:relative; overflow:hidden; }
-.page:last-child { page-break-after:auto; }
-@page { size:A4; margin:0; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Open Sans',sans-serif; background:var(--light); color:var(--text); font-size:10px; }
+
+/* Cover */
+.cover {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3068 60%, #0d1b3e 100%);
+  color: white;
+  padding: 60px 50px 50px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  page-break-after: always;
+}
+.cover-logo { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:40px; }
+.cover-title { font-family:'Montserrat',sans-serif; font-size:38px; font-weight:800; line-height:1.1; margin-bottom:16px; }
+.cover-subtitle { font-family:'Montserrat',sans-serif; font-size:16px; font-weight:600; color:rgba(255,255,255,0.75); margin-bottom:40px; }
+.cover-divider { width:60px; height:4px; background:var(--gold); margin-bottom:40px; }
+.cover-meta { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.cover-kpi { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px; }
+.cover-kpi-label { font-size:9px; font-weight:600; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:8px; }
+.cover-kpi-value { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; }
+.cover-kpi-sub { font-size:9px; color:rgba(255,255,255,0.6); margin-top:4px; }
+.cover-footer { margin-top:60px; font-size:9px; color:rgba(255,255,255,0.5); border-top:1px solid rgba(255,255,255,0.15); padding-top:20px; display:flex; justify-content:space-between; }
+
+/* Month section */
+.month-section { page-break-before: always; padding: 30px 40px; }
+.month-header { background:linear-gradient(90deg, var(--navy), #1a3068); color:white; padding:18px 24px; border-radius:10px; margin-bottom:20px; }
+.month-header h2 { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; }
+
+/* Period block */
+.period-block { margin-bottom:24px; background:var(--white); border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.period-header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--navy); color:white; }
+.period-tag { font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; background:var(--gold); color:var(--navy); padding:3px 10px; border-radius:20px; }
+.period-desc { font-size:10px; color:rgba(255,255,255,0.8); flex:1; }
+.mkt-info { font-size:10px; color:rgba(255,255,255,0.9); font-weight:600; }
+
+/* Table */
+.comp-table { width:100%; border-collapse:collapse; font-size:9.5px; }
+.comp-table thead tr { background:#f0f3fc; }
+.comp-table th { padding:7px 10px; text-align:left; font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:700; color:var(--navy); text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid var(--border); }
+.comp-table th.num, .comp-table td.num { text-align:right; }
+.comp-table td { padding:6px 10px; border-bottom:1px solid #eef1f8; }
+.comp-table tbody tr:hover { background:#f8f9fe; }
+.rk { width:32px; font-weight:700; color:var(--muted); text-align:center; }
+.ang-row { background:var(--ang) !important; }
+.ang-row td { border-left:3px solid var(--navy); }
+.ang-badge { background:var(--navy); color:white; font-size:7px; font-weight:700; padding:2px 5px; border-radius:3px; vertical-align:middle; margin-left:4px; }
+.sep { text-align:center; padding:4px; color:var(--muted); font-size:8px; background:#f9f9fc; border-top:1px dashed var(--border); border-bottom:1px dashed var(--border); }
+
+/* EvolPY badges */
+.ev-hi { background:#d4edda; color:#155724; padding:2px 6px; border-radius:4px; font-weight:700; font-size:9px; }
+.ev-mid { background:#fff3cd; color:#856404; padding:2px 6px; border-radius:4px; font-weight:700; font-size:9px; }
+.ev-lo { background:#f8d7da; color:#842029; padding:2px 6px; border-radius:4px; font-weight:700; font-size:9px; }
+
+/* Growth colors */
+.pos { color:#1a7a3c; font-weight:600; }
+.neg { color:#c0392b; font-weight:600; }
+
+/* Legend page */
+.legend-page { page-break-before:always; padding:40px; }
+.legend-box { background:white; border-radius:10px; padding:30px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:20px; }
+.legend-box h3 { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--navy); margin-bottom:14px; border-bottom:2px solid var(--gold); padding-bottom:8px; }
+.legend-item { display:flex; gap:12px; margin-bottom:8px; font-size:9.5px; }
+.legend-term { font-weight:700; color:var(--navy); min-width:120px; }
+.legend-def { color:var(--muted); }
+
 @media print {
-  .page { width:210mm; min-height:297mm; }
   body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .cover { min-height:297mm; }
+  .month-section { page-break-inside:avoid; }
 }
-
-.ph { background:var(--navy); padding:18px 28px 14px; display:flex; justify-content:space-between; align-items:center; }
-.ph h2 { font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; color:#fff; }
-.ph .ph-sub { font-size:9px; color:rgba(255,255,255,.5); margin-top:2px; }
-.ph-tags { display:flex; gap:6px; }
-.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:8px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
-.t-mat { background:var(--mat); color:#a8c4ff; }
-.t-ytd { background:var(--ytd); color:#fff; }
-.t-mes { background:var(--gold); color:var(--navy); }
-
-.pb { padding:16px 24px; }
-.sec { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--navy); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-.sec::after { content:''; flex:1; height:1px; background:var(--gray2); }
-.pn  { position:absolute; bottom:12px; right:24px; font-size:8px; color:var(--muted); }
-.pnl { position:absolute; bottom:12px; left:24px; font-size:8px; color:var(--muted); }
-
-/* ─── PAGE 1 COVER ─── */
-#p1 {
-  background:linear-gradient(150deg, #1a0a0a 0%, #3a0a0a 40%, #0d1b3e 100%);
-  display:flex; flex-direction:column; color:#fff;
-}
-.cv-top { padding:28px 32px 0; display:flex; justify-content:space-between; }
-.cv-logo { display:flex; align-items:center; gap:12px; }
-.cv-circle { width:42px; height:42px; border-radius:50%; border:2.5px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:900; font-size:13px; color:var(--gold); }
-.cv-name .l1 { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; }
-.cv-name .l2 { font-size:8px; color:rgba(255,255,255,.45); letter-spacing:1px; }
-.cv-stamp { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); border-radius:4px; padding:5px 12px; font-size:8px; font-weight:600; letter-spacing:1.5px; color:rgba(255,255,255,.6); text-transform:uppercase; }
-.cv-hero { flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 32px; }
-.cv-eye { font-size:9px; letter-spacing:3px; font-weight:600; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
-.cv-title { font-family:'Montserrat',sans-serif; font-size:32px; font-weight:900; line-height:1.1; margin-bottom:8px; }
-.cv-title span { color:#ff7070; }
-.cv-sub { font-size:12px; font-weight:300; color:rgba(255,255,255,.65); margin-bottom:24px; }
-
-/* Threat matrix on cover */
-.threat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:0 32px 24px; }
-.threat-card { border-radius:8px; padding:12px 14px; border:1px solid; text-align:center; }
-.tc-danger { background:rgba(192,57,43,.25); border-color:rgba(192,57,43,.5); }
-.tc-warn   { background:rgba(230,126,34,.2);  border-color:rgba(230,126,34,.5); }
-.tc-stable { background:rgba(13,27,62,.3);    border-color:rgba(30,58,110,.5); }
-.tc-opport { background:rgba(26,127,75,.2);   border-color:rgba(26,127,75,.5); }
-.threat-card .tc-title { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-.tc-danger .tc-title { color:#ff7070; }
-.tc-warn   .tc-title { color:var(--gold2); }
-.tc-stable .tc-title { color:#a8c4ff; }
-.tc-opport .tc-title { color:#7ee8a2; }
-.threat-card .tc-val { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; line-height:1; margin-bottom:4px; }
-.tc-danger .tc-val { color:#ff7070; }
-.tc-warn   .tc-val { color:var(--gold2); }
-.tc-stable .tc-val { color:#a8c4ff; }
-.tc-opport .tc-val { color:#7ee8a2; }
-.threat-card .tc-desc { font-size:8px; color:rgba(255,255,255,.5); line-height:1.4; }
-.cv-foot { padding:14px 32px; border-top:1px solid rgba(255,255,255,.1); display:flex; justify-content:space-between; align-items:center; }
-.cv-foot span { font-size:8px; color:rgba(255,255,255,.35); letter-spacing:1px; text-transform:uppercase; }
-.conf { font-size:8px; font-weight:700; letter-spacing:2px; color:var(--gold); border:1px solid var(--gold); padding:2px 8px; border-radius:3px; text-transform:uppercase; }
-
-/* ─── COMPETITION TABLE ─── */
-.comp-tbl { width:100%; border-collapse:collapse; font-size:9px; margin-bottom:12px; }
-.comp-tbl th { padding:5px 6px; font-family:'Montserrat',sans-serif; font-size:7px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:var(--gray); border-bottom:2px solid var(--gray2); text-align:center; }
-.comp-tbl th:first-child { text-align:left; border-bottom-color:var(--navy); }
-.comp-tbl td { padding:5px 6px; border-bottom:1px solid var(--gray2); text-align:center; vertical-align:middle; }
-.comp-tbl td:first-child { text-align:left; }
-.comp-tbl tr:last-child td { border-bottom:none; }
-.comp-tbl .num { font-family:'Montserrat',sans-serif; font-weight:700; }
-.comp-tbl .hi  { color:var(--green); }
-.comp-tbl .lo  { color:var(--red); }
-.comp-tbl .mid { color:var(--orange); }
-.comp-tbl .muted { color:var(--muted); }
-.comp-tbl .corp-name { font-weight:700; color:var(--text); font-size:9px; }
-.comp-tbl .ang-row td { background:#fff3f3 !important; }
-.comp-tbl .ang-row .corp-name { color:var(--red); font-weight:800; }
-.comp-tbl .gain-row td { background:#f2fbf6; }
-.comp-tbl .neutral-row td { background:#fafbfc; }
-.comp-tbl .lose-row td { background:#fffaf9; }
-
-/* Evol pill */
-.ev-pill { display:inline-block; padding:2px 7px; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800; }
-.ev-hi  { background:#d4edda; color:var(--green); }
-.ev-lo  { background:#fce8e6; color:var(--red); }
-.ev-mid { background:#fff3cd; color:var(--orange); }
-.ev-neu { background:var(--gray2); color:var(--muted); }
-
-/* Classification legend */
-.leg-row { display:flex; gap:10px; margin-bottom:12px; }
-.leg-item { display:flex; align-items:center; gap:5px; font-size:8.5px; color:var(--muted); }
-.leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-
-/* Peer group section */
-.peer-tbl { width:100%; border-collapse:collapse; font-size:9px; margin-bottom:12px; }
-.peer-tbl th { padding:5px 7px; font-family:'Montserrat',sans-serif; font-size:7px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:var(--gray); border-bottom:2px solid var(--gray2); text-align:center; }
-.peer-tbl th:first-child { text-align:left; }
-.peer-tbl td { padding:5px 7px; border-bottom:1px solid var(--gray2); text-align:center; }
-.peer-tbl td:first-child { text-align:left; }
-.peer-tbl .ang-row td { background:#fff0f0; border-left:3px solid var(--red); }
-.peer-tbl .ang-row .pn-name { color:var(--red); font-weight:800; }
-.peer-tbl .gain-row td { background:#f2fbf6; }
-.peer-tbl .threat-row td { background:#fffaee; border-left:3px solid var(--orange); }
-.peer-tbl .num { font-family:'Montserrat',sans-serif; font-weight:700; }
-.peer-tbl .pn-name { font-weight:700; font-size:9px; }
-
-/* Risk cards */
-.risk-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-.risk-card { border-radius:7px; padding:10px 12px; }
-.rc-high { background:#fff0f0; border:1.5px solid var(--red); }
-.rc-med  { background:#fff8f0; border:1.5px solid var(--orange); }
-.rc-low  { background:#f0f8f4; border:1.5px solid var(--green); }
-.rc-info { background:#f0f4ff; border:1.5px solid var(--mat); }
-.risk-card .rc-title { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
-.rc-high .rc-title { color:var(--red); }
-.rc-med  .rc-title { color:var(--orange); }
-.rc-low  .rc-title { color:var(--green); }
-.rc-info .rc-title { color:var(--mat); }
-.risk-card .rc-text { font-size:8.5px; line-height:1.6; color:var(--text); }
-
-/* Summary conclusion */
-.sum-conclusion { background:var(--navy); border-radius:8px; padding:14px 18px; color:#fff; margin-top:4px; }
-.sum-conclusion .sc-title { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; color:var(--gold); margin-bottom:10px; }
-.sum-conclusion .sc-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
-.sc-col { }
-.sc-col .sc-head { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,.6); margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,.15); }
-.sc-col ul { list-style:none; }
-.sc-col li { font-size:8.5px; color:rgba(255,255,255,.75); line-height:1.6; padding-left:10px; position:relative; margin-bottom:2px; }
-.sc-col li::before { content:'▸'; position:absolute; left:0; color:rgba(255,255,255,.3); font-size:7px; top:2px; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════
-     PAGE 1 — COVER + LANDSCAPE
-══════════════════════════════ -->
-<div class="page" id="p1">
-  <div class="cv-top">
-    <div class="cv-logo">
-      <div class="cv-circle">AC</div>
-      <div class="cv-name">
-        <div class="l1">ANGELUS CORP.</div>
-        <div class="l2">PHARMACEUTICAL GROUP</div>
-      </div>
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">Angelus Corp · PMV IMS Health</div>
+  <h1 class="cover-title">Análisis de<br>Competencia</h1>
+  <div class="cover-subtitle">Ranking de Corporaciones · Mercado Farmacéutico Venezuela</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-kpi">
+      <div class="cover-kpi-label">Período</div>
+      <div class="cover-kpi-value">Ene–Mayo 2026</div>
+      <div class="cover-kpi-sub">3 meses: Mar, Abr, Mayo</div>
     </div>
-    <div class="cv-stamp">IMS Health PMV · Pre-Info 2026</div>
-  </div>
-
-  <div class="cv-hero">
-    <div class="cv-eye">Inteligencia Competitiva</div>
-    <div class="cv-title">Análisis de<br><span>Competencia PMV</span></div>
-    <div class="cv-sub">Top 20 corporaciones · Ganadores · Amenazas al ranking Angelus · Mayo 2026</div>
-  </div>
-
-  <!-- 4 summary cards -->
-  <div class="threat-grid">
-    <div class="threat-card tc-danger">
-      <div class="tc-title">Amenazas Directas</div>
-      <div class="tc-val">4</div>
-      <div class="tc-desc">Corporaciones dentro del rango #23–29 con Evol &gt; 110 ganando posición sobre Angelus</div>
+    <div class="cover-kpi">
+      <div class="cover-kpi-label">Perspectivas</div>
+      <div class="cover-kpi-value">MAT · YTD · MES</div>
+      <div class="cover-kpi-sub">9 cortes de análisis</div>
     </div>
-    <div class="threat-card tc-warn">
-      <div class="tc-title">Ganadores Consistentes</div>
-      <div class="tc-val">15</div>
-      <div class="tc-desc">Corporaciones con Evol MAT + YTD ambos por encima de 100 en Mayo 2026</div>
-    </div>
-    <div class="threat-card tc-stable">
-      <div class="tc-title">Perdedores de Cuota</div>
-      <div class="tc-val">22</div>
-      <div class="tc-desc">Corporaciones con Evol MAT &lt; 100 — también pierden cuota, como Angelus</div>
-    </div>
-    <div class="threat-card tc-opport">
-      <div class="tc-title">Posición Angelus</div>
-      <div class="tc-val">#27</div>
-      <div class="tc-desc">MAT Mayo · En riesgo de bajar a #28+ si TIARES y KMPLUS mantienen su ritmo</div>
+    <div class="cover-kpi">
+      <div class="cover-kpi-label">Posición Angelus</div>
+      <div class="cover-kpi-value">Rank #26–28</div>
+      <div class="cover-kpi-sub">Top 30 de ~40+ corporaciones</div>
     </div>
   </div>
-
-  <div class="cv-foot">
-    <span>Angelus Corp. · Inteligencia Competitiva · Junio 2026</span>
-    <span class="conf">Confidencial</span>
-    <span>IMS Health PMV Venezuela · Mayo 2026</span>
+  <div class="cover-footer">
+    <span>Fuente: IMS Health PMV Pre-Info · Datos internos Angelus Corp</span>
+    <span>Confidencial · Junio 2026</span>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════
-     PAGE 2 — TOP 20 TABLE
-══════════════════════════════ -->
-<div class="page" id="p2">
-  <div class="ph">
-    <div>
-      <h2>Top 20 Corporaciones — MAT · YTD · MES · Mayo 2026</h2>
-      <div class="ph-sub">Evol PY en los 3 períodos · Ventas MAT · Precio/unidad · Clasificación competitiva</div>
+    <section class="month-section">
+      <div class="month-header">
+        <h2>Marzo 2026</h2>
+      </div>
+      
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MAT</span>
+        <span class="period-desc">MAT (12 meses móviles)</span>
+        <span class="mkt-info">Mercado: $1,936.65M <span class="pos">+35.33%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$242.36M</td>
+      <td class="num pos">+30.72%</td>
+      <td class="num"><span class="ev-mid">96.59</span></td>
+      <td class="num">12.51%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$165.45M</td>
+      <td class="num pos">+29.08%</td>
+      <td class="num"><span class="ev-lo">95.39</span></td>
+      <td class="num">8.54%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$145.07M</td>
+      <td class="num pos">+30.69%</td>
+      <td class="num"><span class="ev-mid">96.57</span></td>
+      <td class="num">7.49%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$129.35M</td>
+      <td class="num pos">+32.42%</td>
+      <td class="num"><span class="ev-mid">97.85</span></td>
+      <td class="num">6.68%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$126.13M</td>
+      <td class="num pos">+26.02%</td>
+      <td class="num"><span class="ev-lo">93.12</span></td>
+      <td class="num">6.51%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$110.79M</td>
+      <td class="num pos">+30.36%</td>
+      <td class="num"><span class="ev-mid">96.33</span></td>
+      <td class="num">5.72%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$61.73M</td>
+      <td class="num pos">+66.47%</td>
+      <td class="num"><span class="ev-hi">123.02</span></td>
+      <td class="num">3.19%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$55.51M</td>
+      <td class="num pos">+25.47%</td>
+      <td class="num"><span class="ev-lo">92.71</span></td>
+      <td class="num">2.87%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$54.75M</td>
+      <td class="num pos">+21.91%</td>
+      <td class="num"><span class="ev-lo">90.09</span></td>
+      <td class="num">2.83%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$35.27M</td>
+      <td class="num pos">+21.72%</td>
+      <td class="num"><span class="ev-lo">89.94</span></td>
+      <td class="num">1.82%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>NATURLIFES</td>
+      <td class="num">$28.72M</td>
+      <td class="num pos">+95.31%</td>
+      <td class="num"><span class="ev-hi">144.32</span></td>
+      <td class="num">1.48%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>DISTRILAB</td>
+      <td class="num">$28.18M</td>
+      <td class="num pos">+42.70%</td>
+      <td class="num"><span class="ev-hi">105.45</span></td>
+      <td class="num">1.46%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$27.49M</td>
+      <td class="num pos">+30.95%</td>
+      <td class="num"><span class="ev-mid">96.76</span></td>
+      <td class="num">1.42%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$27.48M</td>
+      <td class="num pos">+25.15%</td>
+      <td class="num"><span class="ev-lo">92.48</span></td>
+      <td class="num">1.42%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$24.25M</td>
+      <td class="num pos">+39.03%</td>
+      <td class="num"><span class="ev-mid">102.74</span></td>
+      <td class="num">1.25%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>RONAVA</td>
+      <td class="num">$21.52M</td>
+      <td class="num pos">+19.19%</td>
+      <td class="num"><span class="ev-lo">88.07</span></td>
+      <td class="num">1.11%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$19.60M</td>
+      <td class="num pos">+96.42%</td>
+      <td class="num"><span class="ev-hi">145.14</span></td>
+      <td class="num">1.01%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>DAC55</td>
+      <td class="num">$19.03M</td>
+      <td class="num pos">+32.32%</td>
+      <td class="num"><span class="ev-mid">97.77</span></td>
+      <td class="num">0.98%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$18.36M</td>
+      <td class="num pos">+31.35%</td>
+      <td class="num"><span class="ev-mid">97.06</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>C.C.M.CORP</td>
+      <td class="num">$18.11M</td>
+      <td class="num pos">+34.41%</td>
+      <td class="num"><span class="ev-mid">99.32</span></td>
+      <td class="num">0.94%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">27</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$13.62M</td>
+      <td class="num pos">+19.68%</td>
+      <td class="num"><span class="ev-lo">88.44</span></td>
+      <td class="num">0.70%</td>
+    </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="ph-tags">
-      <span class="tag t-mat">MAT</span><span class="tag t-ytd">YTD</span><span class="tag t-mes">MES</span>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">YTD</span>
+        <span class="period-desc">YTD (Ene–Mayo 2026)</span>
+        <span class="mkt-info">Mercado: $530.11M <span class="pos">+51.28%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$62.88M</td>
+      <td class="num pos">+34.15%</td>
+      <td class="num"><span class="ev-lo">88.68</span></td>
+      <td class="num">11.86%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$45.93M</td>
+      <td class="num pos">+53.75%</td>
+      <td class="num"><span class="ev-mid">101.63</span></td>
+      <td class="num">8.66%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$40.83M</td>
+      <td class="num pos">+44.64%</td>
+      <td class="num"><span class="ev-lo">95.61</span></td>
+      <td class="num">7.70%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$35.95M</td>
+      <td class="num pos">+57.15%</td>
+      <td class="num"><span class="ev-mid">103.88</span></td>
+      <td class="num">6.78%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$33.88M</td>
+      <td class="num pos">+56.89%</td>
+      <td class="num"><span class="ev-mid">103.71</span></td>
+      <td class="num">6.39%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$32.16M</td>
+      <td class="num pos">+62.79%</td>
+      <td class="num"><span class="ev-hi">107.61</span></td>
+      <td class="num">6.07%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$17.69M</td>
+      <td class="num pos">+112.29%</td>
+      <td class="num"><span class="ev-hi">140.33</span></td>
+      <td class="num">3.34%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$14.81M</td>
+      <td class="num pos">+45.12%</td>
+      <td class="num"><span class="ev-lo">95.93</span></td>
+      <td class="num">2.79%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$13.70M</td>
+      <td class="num pos">+41.69%</td>
+      <td class="num"><span class="ev-lo">93.66</span></td>
+      <td class="num">2.59%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$9.31M</td>
+      <td class="num pos">+27.88%</td>
+      <td class="num"><span class="ev-lo">84.53</span></td>
+      <td class="num">1.76%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>NATURLIFES</td>
+      <td class="num">$8.90M</td>
+      <td class="num pos">+114.37%</td>
+      <td class="num"><span class="ev-hi">141.71</span></td>
+      <td class="num">1.68%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$7.76M</td>
+      <td class="num pos">+51.42%</td>
+      <td class="num"><span class="ev-mid">100.09</span></td>
+      <td class="num">1.46%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$7.63M</td>
+      <td class="num pos">+50.66%</td>
+      <td class="num"><span class="ev-mid">99.59</span></td>
+      <td class="num">1.44%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>DISTRILAB</td>
+      <td class="num">$7.37M</td>
+      <td class="num pos">+55.80%</td>
+      <td class="num"><span class="ev-mid">102.99</span></td>
+      <td class="num">1.39%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$6.71M</td>
+      <td class="num pos">+64.55%</td>
+      <td class="num"><span class="ev-hi">108.77</span></td>
+      <td class="num">1.27%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$5.92M</td>
+      <td class="num pos">+81.03%</td>
+      <td class="num"><span class="ev-hi">119.66</span></td>
+      <td class="num">1.12%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$5.53M</td>
+      <td class="num pos">+91.11%</td>
+      <td class="num"><span class="ev-hi">126.33</span></td>
+      <td class="num">1.04%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>RONAVA</td>
+      <td class="num">$5.45M</td>
+      <td class="num pos">+29.40%</td>
+      <td class="num"><span class="ev-lo">85.54</span></td>
+      <td class="num">1.03%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>DAC55</td>
+      <td class="num">$4.94M</td>
+      <td class="num pos">+40.00%</td>
+      <td class="num"><span class="ev-lo">92.54</span></td>
+      <td class="num">0.93%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$4.88M</td>
+      <td class="num pos">+40.28%</td>
+      <td class="num"><span class="ev-lo">92.73</span></td>
+      <td class="num">0.92%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">26</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$3.64M</td>
+      <td class="num pos">+21.02%</td>
+      <td class="num"><span class="ev-lo">79.99</span></td>
+      <td class="num">0.69%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MES</span>
+        <span class="period-desc">MES (Marzo 2026)</span>
+        <span class="mkt-info">Mercado: $200.88M <span class="pos">+61.30%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$22.54M</td>
+      <td class="num pos">+32.99%</td>
+      <td class="num"><span class="ev-lo">82.45</span></td>
+      <td class="num">11.22%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$17.94M</td>
+      <td class="num pos">+73.43%</td>
+      <td class="num"><span class="ev-hi">107.52</span></td>
+      <td class="num">8.93%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$16.41M</td>
+      <td class="num pos">+71.26%</td>
+      <td class="num"><span class="ev-hi">106.18</span></td>
+      <td class="num">8.17%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$14.07M</td>
+      <td class="num pos">+80.56%</td>
+      <td class="num"><span class="ev-hi">111.94</span></td>
+      <td class="num">7.00%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$13.07M</td>
+      <td class="num pos">+76.87%</td>
+      <td class="num"><span class="ev-hi">109.66</span></td>
+      <td class="num">6.50%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$12.51M</td>
+      <td class="num pos">+58.80%</td>
+      <td class="num"><span class="ev-mid">98.45</span></td>
+      <td class="num">6.23%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$5.97M</td>
+      <td class="num pos">+97.28%</td>
+      <td class="num"><span class="ev-hi">122.31</span></td>
+      <td class="num">2.97%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$5.76M</td>
+      <td class="num pos">+48.80%</td>
+      <td class="num"><span class="ev-lo">92.25</span></td>
+      <td class="num">2.87%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$5.48M</td>
+      <td class="num pos">+60.91%</td>
+      <td class="num"><span class="ev-mid">99.76</span></td>
+      <td class="num">2.73%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>NATURLIFES</td>
+      <td class="num">$3.85M</td>
+      <td class="num pos">+132.44%</td>
+      <td class="num"><span class="ev-hi">144.11</span></td>
+      <td class="num">1.92%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$3.54M</td>
+      <td class="num pos">+30.19%</td>
+      <td class="num"><span class="ev-lo">80.71</span></td>
+      <td class="num">1.76%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>DISTRILAB</td>
+      <td class="num">$3.08M</td>
+      <td class="num pos">+101.91%</td>
+      <td class="num"><span class="ev-hi">125.18</span></td>
+      <td class="num">1.53%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$2.94M</td>
+      <td class="num pos">+61.95%</td>
+      <td class="num"><span class="ev-mid">100.41</span></td>
+      <td class="num">1.46%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$2.87M</td>
+      <td class="num pos">+80.86%</td>
+      <td class="num"><span class="ev-hi">112.13</span></td>
+      <td class="num">1.43%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$2.66M</td>
+      <td class="num pos">+89.45%</td>
+      <td class="num"><span class="ev-hi">117.46</span></td>
+      <td class="num">1.33%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$2.05M</td>
+      <td class="num pos">+87.85%</td>
+      <td class="num"><span class="ev-hi">116.47</span></td>
+      <td class="num">1.02%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$2.05M</td>
+      <td class="num pos">+120.26%</td>
+      <td class="num"><span class="ev-hi">136.56</span></td>
+      <td class="num">1.02%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>DAC55</td>
+      <td class="num">$1.98M</td>
+      <td class="num pos">+50.11%</td>
+      <td class="num"><span class="ev-lo">93.07</span></td>
+      <td class="num">0.99%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$1.95M</td>
+      <td class="num pos">+64.21%</td>
+      <td class="num"><span class="ev-mid">101.80</span></td>
+      <td class="num">0.97%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>RONAVA</td>
+      <td class="num">$1.94M</td>
+      <td class="num pos">+35.90%</td>
+      <td class="num"><span class="ev-lo">84.26</span></td>
+      <td class="num">0.97%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">28</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$1.31M</td>
+      <td class="num pos">+25.92%</td>
+      <td class="num"><span class="ev-lo">78.07</span></td>
+      <td class="num">0.65%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+    <section class="month-section">
+      <div class="month-header">
+        <h2>Abril 2026</h2>
+      </div>
+      
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MAT</span>
+        <span class="period-desc">MAT (12 meses móviles)</span>
+        <span class="mkt-info">Mercado: $1,974.86M <span class="pos">+34.72%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$245.83M</td>
+      <td class="num pos">+29.26%</td>
+      <td class="num"><span class="ev-lo">95.95</span></td>
+      <td class="num">12.45%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$168.74M</td>
+      <td class="num pos">+28.93%</td>
+      <td class="num"><span class="ev-lo">95.71</span></td>
+      <td class="num">8.54%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$147.01M</td>
+      <td class="num pos">+29.75%</td>
+      <td class="num"><span class="ev-mid">96.31</span></td>
+      <td class="num">7.44%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$130.83M</td>
+      <td class="num pos">+29.78%</td>
+      <td class="num"><span class="ev-mid">96.34</span></td>
+      <td class="num">6.62%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$130.18M</td>
+      <td class="num pos">+29.57%</td>
+      <td class="num"><span class="ev-mid">96.18</span></td>
+      <td class="num">6.59%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$113.43M</td>
+      <td class="num pos">+31.06%</td>
+      <td class="num"><span class="ev-mid">97.29</span></td>
+      <td class="num">5.74%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$64.01M</td>
+      <td class="num pos">+69.45%</td>
+      <td class="num"><span class="ev-hi">125.78</span></td>
+      <td class="num">3.24%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$56.57M</td>
+      <td class="num pos">+26.06%</td>
+      <td class="num"><span class="ev-lo">93.57</span></td>
+      <td class="num">2.86%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$54.81M</td>
+      <td class="num pos">+21.54%</td>
+      <td class="num"><span class="ev-lo">90.22</span></td>
+      <td class="num">2.78%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$35.76M</td>
+      <td class="num pos">+21.92%</td>
+      <td class="num"><span class="ev-lo">90.50</span></td>
+      <td class="num">1.81%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>NATURLIFES</td>
+      <td class="num">$30.29M</td>
+      <td class="num pos">+91.94%</td>
+      <td class="num"><span class="ev-hi">142.47</span></td>
+      <td class="num">1.53%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>DISTRILAB</td>
+      <td class="num">$28.55M</td>
+      <td class="num pos">+41.61%</td>
+      <td class="num"><span class="ev-hi">105.12</span></td>
+      <td class="num">1.45%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$28.14M</td>
+      <td class="num pos">+31.05%</td>
+      <td class="num"><span class="ev-mid">97.28</span></td>
+      <td class="num">1.42%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$27.73M</td>
+      <td class="num pos">+23.78%</td>
+      <td class="num"><span class="ev-lo">91.88</span></td>
+      <td class="num">1.40%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$24.76M</td>
+      <td class="num pos">+40.84%</td>
+      <td class="num"><span class="ev-mid">104.54</span></td>
+      <td class="num">1.25%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>RONAVA</td>
+      <td class="num">$21.77M</td>
+      <td class="num pos">+19.52%</td>
+      <td class="num"><span class="ev-lo">88.72</span></td>
+      <td class="num">1.10%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$20.07M</td>
+      <td class="num pos">+80.25%</td>
+      <td class="num"><span class="ev-hi">133.80</span></td>
+      <td class="num">1.02%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>DAC55</td>
+      <td class="num">$18.92M</td>
+      <td class="num pos">+28.88%</td>
+      <td class="num"><span class="ev-lo">95.66</span></td>
+      <td class="num">0.96%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$18.62M</td>
+      <td class="num pos">+30.30%</td>
+      <td class="num"><span class="ev-mid">96.72</span></td>
+      <td class="num">0.94%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$18.51M</td>
+      <td class="num pos">+49.86%</td>
+      <td class="num"><span class="ev-hi">111.24</span></td>
+      <td class="num">0.94%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">27</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$13.87M</td>
+      <td class="num pos">+18.52%</td>
+      <td class="num"><span class="ev-lo">87.98</span></td>
+      <td class="num">0.70%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">YTD</span>
+        <span class="period-desc">YTD (Ene–Mayo 2026)</span>
+        <span class="mkt-info">Mercado: $708.26M <span class="pos">+44.43%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$84.57M</td>
+      <td class="num pos">+29.82%</td>
+      <td class="num"><span class="ev-lo">89.88</span></td>
+      <td class="num">11.94%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$61.18M</td>
+      <td class="num pos">+45.98%</td>
+      <td class="num"><span class="ev-mid">101.07</span></td>
+      <td class="num">8.64%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$53.35M</td>
+      <td class="num pos">+37.62%</td>
+      <td class="num"><span class="ev-lo">95.29</span></td>
+      <td class="num">7.53%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$48.61M</td>
+      <td class="num pos">+54.13%</td>
+      <td class="num"><span class="ev-hi">106.71</span></td>
+      <td class="num">6.86%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$44.68M</td>
+      <td class="num pos">+44.38%</td>
+      <td class="num"><span class="ev-mid">99.97</span></td>
+      <td class="num">6.31%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$42.49M</td>
+      <td class="num pos">+54.68%</td>
+      <td class="num"><span class="ev-hi">107.10</span></td>
+      <td class="num">6.00%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$23.62M</td>
+      <td class="num pos">+98.15%</td>
+      <td class="num"><span class="ev-hi">137.20</span></td>
+      <td class="num">3.34%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$20.16M</td>
+      <td class="num pos">+38.98%</td>
+      <td class="num"><span class="ev-mid">96.22</span></td>
+      <td class="num">2.85%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$17.88M</td>
+      <td class="num pos">+33.16%</td>
+      <td class="num"><span class="ev-lo">92.20</span></td>
+      <td class="num">2.52%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>NATURLIFES</td>
+      <td class="num">$12.28M</td>
+      <td class="num pos">+105.45%</td>
+      <td class="num"><span class="ev-hi">142.25</span></td>
+      <td class="num">1.73%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$12.20M</td>
+      <td class="num pos">+25.90%</td>
+      <td class="num"><span class="ev-lo">87.17</span></td>
+      <td class="num">1.72%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$10.22M</td>
+      <td class="num pos">+45.57%</td>
+      <td class="num"><span class="ev-mid">100.79</span></td>
+      <td class="num">1.44%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$10.11M</td>
+      <td class="num pos">+39.83%</td>
+      <td class="num"><span class="ev-mid">96.81</span></td>
+      <td class="num">1.43%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>DISTRILAB</td>
+      <td class="num">$9.67M</td>
+      <td class="num pos">+45.65%</td>
+      <td class="num"><span class="ev-mid">100.85</span></td>
+      <td class="num">1.36%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$8.83M</td>
+      <td class="num pos">+56.77%</td>
+      <td class="num"><span class="ev-hi">108.55</span></td>
+      <td class="num">1.25%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$8.03M</td>
+      <td class="num pos">+63.35%</td>
+      <td class="num"><span class="ev-hi">113.10</span></td>
+      <td class="num">1.13%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$7.40M</td>
+      <td class="num pos">+89.24%</td>
+      <td class="num"><span class="ev-hi">131.03</span></td>
+      <td class="num">1.04%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>RONAVA</td>
+      <td class="num">$7.28M</td>
+      <td class="num pos">+25.45%</td>
+      <td class="num"><span class="ev-lo">86.86</span></td>
+      <td class="num">1.03%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$6.58M</td>
+      <td class="num pos">+33.79%</td>
+      <td class="num"><span class="ev-lo">92.64</span></td>
+      <td class="num">0.93%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>TIARES</td>
+      <td class="num">$6.31M</td>
+      <td class="num pos">+144.30%</td>
+      <td class="num"><span class="ev-hi">169.15</span></td>
+      <td class="num">0.89%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">26</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$4.96M</td>
+      <td class="num pos">+21.53%</td>
+      <td class="num"><span class="ev-lo">84.15</span></td>
+      <td class="num">0.70%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MES</span>
+        <span class="period-desc">MES (Abril 2026)</span>
+        <span class="mkt-info">Mercado: $177.12M <span class="pos">+26.46%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$21.59M</td>
+      <td class="num pos">+17.96%</td>
+      <td class="num"><span class="ev-lo">93.27</span></td>
+      <td class="num">12.19%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$14.99M</td>
+      <td class="num pos">+24.53%</td>
+      <td class="num"><span class="ev-mid">98.47</span></td>
+      <td class="num">8.47%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$12.62M</td>
+      <td class="num pos">+45.76%</td>
+      <td class="num"><span class="ev-hi">115.26</span></td>
+      <td class="num">7.13%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$12.42M</td>
+      <td class="num pos">+16.95%</td>
+      <td class="num"><span class="ev-lo">92.48</span></td>
+      <td class="num">7.01%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$10.78M</td>
+      <td class="num pos">+15.30%</td>
+      <td class="num"><span class="ev-lo">91.17</span></td>
+      <td class="num">6.09%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$10.29M</td>
+      <td class="num pos">+33.49%</td>
+      <td class="num"><span class="ev-hi">105.55</span></td>
+      <td class="num">5.81%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$5.91M</td>
+      <td class="num pos">+64.00%</td>
+      <td class="num"><span class="ev-hi">129.68</span></td>
+      <td class="num">3.34%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$5.34M</td>
+      <td class="num pos">+24.21%</td>
+      <td class="num"><span class="ev-mid">98.22</span></td>
+      <td class="num">3.02%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$4.12M</td>
+      <td class="num pos">+7.68%</td>
+      <td class="num"><span class="ev-lo">85.15</span></td>
+      <td class="num">2.32%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>NATURLIFES</td>
+      <td class="num">$3.38M</td>
+      <td class="num pos">+84.85%</td>
+      <td class="num"><span class="ev-hi">146.17</span></td>
+      <td class="num">1.91%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$2.87M</td>
+      <td class="num pos">+19.06%</td>
+      <td class="num"><span class="ev-lo">94.15</span></td>
+      <td class="num">1.62%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$2.58M</td>
+      <td class="num pos">+32.04%</td>
+      <td class="num"><span class="ev-mid">104.41</span></td>
+      <td class="num">1.46%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$2.34M</td>
+      <td class="num pos">+11.32%</td>
+      <td class="num"><span class="ev-lo">88.03</span></td>
+      <td class="num">1.32%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>DISTRILAB</td>
+      <td class="num">$2.30M</td>
+      <td class="num pos">+19.98%</td>
+      <td class="num"><span class="ev-lo">94.87</span></td>
+      <td class="num">1.30%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$2.11M</td>
+      <td class="num pos">+35.04%</td>
+      <td class="num"><span class="ev-hi">106.79</span></td>
+      <td class="num">1.19%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$2.11M</td>
+      <td class="num pos">+28.10%</td>
+      <td class="num"><span class="ev-mid">101.29</span></td>
+      <td class="num">1.19%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$1.86M</td>
+      <td class="num pos">+83.63%</td>
+      <td class="num"><span class="ev-hi">145.20</span></td>
+      <td class="num">1.05%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>RONAVA</td>
+      <td class="num">$1.82M</td>
+      <td class="num pos">+14.66%</td>
+      <td class="num"><span class="ev-lo">90.67</span></td>
+      <td class="num">1.03%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$1.69M</td>
+      <td class="num pos">+17.89%</td>
+      <td class="num"><span class="ev-lo">93.22</span></td>
+      <td class="num">0.96%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>TIARES</td>
+      <td class="num">$1.60M</td>
+      <td class="num pos">+82.22%</td>
+      <td class="num"><span class="ev-hi">144.09</span></td>
+      <td class="num">0.90%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">26</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$1.25M</td>
+      <td class="num pos">+16.84%</td>
+      <td class="num"><span class="ev-lo">92.39</span></td>
+      <td class="num">0.71%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+    <section class="month-section">
+      <div class="month-header">
+        <h2>Mayo 2026</h2>
+      </div>
+      
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MAT</span>
+        <span class="period-desc">MAT (12 meses móviles)</span>
+        <span class="mkt-info">Mercado: $2,014.59M <span class="pos">+34.42%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$247.46M</td>
+      <td class="num pos">+25.62%</td>
+      <td class="num"><span class="ev-lo">93.45</span></td>
+      <td class="num">12.28%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$172.09M</td>
+      <td class="num pos">+28.01%</td>
+      <td class="num"><span class="ev-lo">95.23</span></td>
+      <td class="num">8.54%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$149.86M</td>
+      <td class="num pos">+29.19%</td>
+      <td class="num"><span class="ev-mid">96.11</span></td>
+      <td class="num">7.44%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$134.61M</td>
+      <td class="num pos">+32.72%</td>
+      <td class="num"><span class="ev-mid">98.73</span></td>
+      <td class="num">6.68%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$132.53M</td>
+      <td class="num pos">+28.00%</td>
+      <td class="num"><span class="ev-lo">95.22</span></td>
+      <td class="num">6.58%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$117.00M</td>
+      <td class="num pos">+32.91%</td>
+      <td class="num"><span class="ev-mid">98.88</span></td>
+      <td class="num">5.81%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$64.16M</td>
+      <td class="num pos">+62.08%</td>
+      <td class="num"><span class="ev-hi">120.57</span></td>
+      <td class="num">3.18%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$58.02M</td>
+      <td class="num pos">+26.82%</td>
+      <td class="num"><span class="ev-lo">94.34</span></td>
+      <td class="num">2.88%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$55.09M</td>
+      <td class="num pos">+18.42%</td>
+      <td class="num"><span class="ev-lo">88.09</span></td>
+      <td class="num">2.73%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$36.24M</td>
+      <td class="num pos">+21.54%</td>
+      <td class="num"><span class="ev-lo">90.42</span></td>
+      <td class="num">1.80%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>NATURLIFES</td>
+      <td class="num">$31.25M</td>
+      <td class="num pos">+82.21%</td>
+      <td class="num"><span class="ev-hi">135.55</span></td>
+      <td class="num">1.55%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$29.36M</td>
+      <td class="num pos">+33.13%</td>
+      <td class="num"><span class="ev-mid">99.04</span></td>
+      <td class="num">1.46%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>DISTRILAB</td>
+      <td class="num">$28.96M</td>
+      <td class="num pos">+39.09%</td>
+      <td class="num"><span class="ev-mid">103.47</span></td>
+      <td class="num">1.44%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$28.49M</td>
+      <td class="num pos">+26.19%</td>
+      <td class="num"><span class="ev-lo">93.88</span></td>
+      <td class="num">1.41%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$25.48M</td>
+      <td class="num pos">+42.56%</td>
+      <td class="num"><span class="ev-hi">106.05</span></td>
+      <td class="num">1.26%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>RONAVA</td>
+      <td class="num">$22.08M</td>
+      <td class="num pos">+19.08%</td>
+      <td class="num"><span class="ev-lo">88.58</span></td>
+      <td class="num">1.10%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$20.92M</td>
+      <td class="num pos">+75.20%</td>
+      <td class="num"><span class="ev-hi">130.33</span></td>
+      <td class="num">1.04%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$19.31M</td>
+      <td class="num pos">+56.49%</td>
+      <td class="num"><span class="ev-hi">116.41</span></td>
+      <td class="num">0.96%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>DAC55</td>
+      <td class="num">$19.19M</td>
+      <td class="num pos">+25.25%</td>
+      <td class="num"><span class="ev-lo">93.17</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$19.09M</td>
+      <td class="num pos">+30.03%</td>
+      <td class="num"><span class="ev-mid">96.73</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">27</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$14.02M</td>
+      <td class="num pos">+16.33%</td>
+      <td class="num"><span class="ev-lo">86.54</span></td>
+      <td class="num">0.70%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">YTD</span>
+        <span class="period-desc">YTD (Ene–Mayo 2026)</span>
+        <span class="mkt-info">Mercado: $897.17M <span class="pos">+40.98%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$106.84M</td>
+      <td class="num pos">+24.45%</td>
+      <td class="num"><span class="ev-lo">88.28</span></td>
+      <td class="num">11.91%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$78.04M</td>
+      <td class="num pos">+40.65%</td>
+      <td class="num"><span class="ev-mid">99.76</span></td>
+      <td class="num">8.70%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$66.85M</td>
+      <td class="num pos">+35.10%</td>
+      <td class="num"><span class="ev-lo">95.82</span></td>
+      <td class="num">7.45%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$61.86M</td>
+      <td class="num pos">+53.11%</td>
+      <td class="num"><span class="ev-hi">108.61</span></td>
+      <td class="num">6.90%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$56.14M</td>
+      <td class="num pos">+36.54%</td>
+      <td class="num"><span class="ev-mid">96.85</span></td>
+      <td class="num">6.26%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$54.06M</td>
+      <td class="num pos">+52.07%</td>
+      <td class="num"><span class="ev-hi">107.87</span></td>
+      <td class="num">6.03%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>COFASA CORP</td>
+      <td class="num">$28.36M</td>
+      <td class="num pos">+71.59%</td>
+      <td class="num"><span class="ev-hi">121.71</span></td>
+      <td class="num">3.16%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$25.66M</td>
+      <td class="num pos">+38.02%</td>
+      <td class="num"><span class="ev-mid">97.90</span></td>
+      <td class="num">2.86%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$22.66M</td>
+      <td class="num pos">+23.41%</td>
+      <td class="num"><span class="ev-lo">87.53</span></td>
+      <td class="num">2.53%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>NATURLIFES</td>
+      <td class="num">$15.63M</td>
+      <td class="num pos">+86.51%</td>
+      <td class="num"><span class="ev-hi">132.29</span></td>
+      <td class="num">1.74%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$15.35M</td>
+      <td class="num pos">+24.02%</td>
+      <td class="num"><span class="ev-lo">87.97</span></td>
+      <td class="num">1.71%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$13.44M</td>
+      <td class="num pos">+48.78%</td>
+      <td class="num"><span class="ev-hi">105.53</span></td>
+      <td class="num">1.50%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$12.82M</td>
+      <td class="num pos">+39.42%</td>
+      <td class="num"><span class="ev-mid">98.89</span></td>
+      <td class="num">1.43%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>DISTRILAB</td>
+      <td class="num">$12.32M</td>
+      <td class="num pos">+38.70%</td>
+      <td class="num"><span class="ev-mid">98.38</span></td>
+      <td class="num">1.37%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>DOLLDER</td>
+      <td class="num">$11.14M</td>
+      <td class="num pos">+54.01%</td>
+      <td class="num"><span class="ev-hi">109.24</span></td>
+      <td class="num">1.24%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$10.42M</td>
+      <td class="num pos">+61.28%</td>
+      <td class="num"><span class="ev-hi">114.40</span></td>
+      <td class="num">1.16%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>RONAVA</td>
+      <td class="num">$9.21M</td>
+      <td class="num pos">+23.90%</td>
+      <td class="num"><span class="ev-lo">87.88</span></td>
+      <td class="num">1.03%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$9.19M</td>
+      <td class="num pos">+87.21%</td>
+      <td class="num"><span class="ev-hi">132.79</span></td>
+      <td class="num">1.02%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$8.51M</td>
+      <td class="num pos">+33.08%</td>
+      <td class="num"><span class="ev-lo">94.40</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>DAC55</td>
+      <td class="num">$8.20M</td>
+      <td class="num pos">+23.59%</td>
+      <td class="num"><span class="ev-lo">87.66</span></td>
+      <td class="num">0.91%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">26</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$6.33M</td>
+      <td class="num pos">+19.20%</td>
+      <td class="num"><span class="ev-lo">84.55</span></td>
+      <td class="num">0.71%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="period-block">
+      <div class="period-header">
+        <span class="period-tag">MES</span>
+        <span class="period-desc">MES (Mayo 2026)</span>
+        <span class="mkt-info">Mercado: $188.45M <span class="pos">+26.91%</span></span>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rk">#</th>
+            <th>Corporación</th>
+            <th class="num">USD</th>
+            <th class="num">Crecim.</th>
+            <th class="num">Evol PY</th>
+            <th class="num">Market Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <td class="rk">1</td>
+      <td>GRUPO LETI</td>
+      <td class="num">$22.14M</td>
+      <td class="num pos">+6.98%</td>
+      <td class="num"><span class="ev-lo">84.29</span></td>
+      <td class="num">11.75%</td>
+    </tr><tr>
+      <td class="rk">2</td>
+      <td>CALOX CORP</td>
+      <td class="num">$16.81M</td>
+      <td class="num pos">+23.96%</td>
+      <td class="num"><span class="ev-mid">97.68</span></td>
+      <td class="num">8.92%</td>
+    </tr><tr>
+      <td class="rk">3</td>
+      <td>PHARMETIQUE CORP.</td>
+      <td class="num">$13.47M</td>
+      <td class="num pos">+25.89%</td>
+      <td class="num"><span class="ev-mid">99.19</span></td>
+      <td class="num">7.15%</td>
+    </tr><tr>
+      <td class="rk">4</td>
+      <td>L.O. OFTALMI</td>
+      <td class="num">$13.22M</td>
+      <td class="num pos">+49.41%</td>
+      <td class="num"><span class="ev-hi">117.73</span></td>
+      <td class="num">7.02%</td>
+    </tr><tr>
+      <td class="rk">5</td>
+      <td>MEGALABS CORP.</td>
+      <td class="num">$11.51M</td>
+      <td class="num pos">+42.67%</td>
+      <td class="num"><span class="ev-hi">112.42</span></td>
+      <td class="num">6.11%</td>
+    </tr><tr>
+      <td class="rk">6</td>
+      <td>FARMA CORP.</td>
+      <td class="num">$11.39M</td>
+      <td class="num pos">+12.61%</td>
+      <td class="num"><span class="ev-lo">88.73</span></td>
+      <td class="num">6.04%</td>
+    </tr><tr>
+      <td class="rk">7</td>
+      <td>VALMORCA CORP.</td>
+      <td class="num">$5.46M</td>
+      <td class="num pos">+33.93%</td>
+      <td class="num"><span class="ev-hi">105.53</span></td>
+      <td class="num">2.90%</td>
+    </tr><tr>
+      <td class="rk">8</td>
+      <td>COFASA CORP</td>
+      <td class="num">$4.72M</td>
+      <td class="num pos">+2.67%</td>
+      <td class="num"><span class="ev-lo">80.90</span></td>
+      <td class="num">2.51%</td>
+    </tr><tr>
+      <td class="rk">9</td>
+      <td>SIEGFRIED CORP.</td>
+      <td class="num">$4.72M</td>
+      <td class="num neg">-4.28%</td>
+      <td class="num"><span class="ev-lo">75.42</span></td>
+      <td class="num">2.51%</td>
+    </tr><tr>
+      <td class="rk">10</td>
+      <td>NATURLIFES</td>
+      <td class="num">$3.33M</td>
+      <td class="num pos">+39.02%</td>
+      <td class="num"><span class="ev-hi">109.55</span></td>
+      <td class="num">1.77%</td>
+    </tr><tr>
+      <td class="rk">11</td>
+      <td>BIOTECH CORP.</td>
+      <td class="num">$3.14M</td>
+      <td class="num pos">+16.91%</td>
+      <td class="num"><span class="ev-lo">92.12</span></td>
+      <td class="num">1.66%</td>
+    </tr><tr>
+      <td class="rk">12</td>
+      <td>VARGAS CORP.</td>
+      <td class="num">$3.05M</td>
+      <td class="num pos">+51.88%</td>
+      <td class="num"><span class="ev-hi">119.68</span></td>
+      <td class="num">1.62%</td>
+    </tr><tr>
+      <td class="rk">13</td>
+      <td>ELMOR CORP.</td>
+      <td class="num">$2.70M</td>
+      <td class="num pos">+37.69%</td>
+      <td class="num"><span class="ev-hi">108.49</span></td>
+      <td class="num">1.43%</td>
+    </tr><tr>
+      <td class="rk">14</td>
+      <td>DISTRILAB</td>
+      <td class="num">$2.65M</td>
+      <td class="num pos">+17.95%</td>
+      <td class="num"><span class="ev-lo">92.94</span></td>
+      <td class="num">1.41%</td>
+    </tr><tr>
+      <td class="rk">15</td>
+      <td>NESTLE CORP</td>
+      <td class="num">$2.38M</td>
+      <td class="num pos">+54.00%</td>
+      <td class="num"><span class="ev-hi">121.35</span></td>
+      <td class="num">1.26%</td>
+    </tr><tr>
+      <td class="rk">16</td>
+      <td>DOLLDER</td>
+      <td class="num">$2.30M</td>
+      <td class="num pos">+43.64%</td>
+      <td class="num"><span class="ev-hi">113.19</span></td>
+      <td class="num">1.22%</td>
+    </tr><tr>
+      <td class="rk">17</td>
+      <td>FC LABORATORIOS CO</td>
+      <td class="num">$1.93M</td>
+      <td class="num pos">+30.75%</td>
+      <td class="num"><span class="ev-mid">103.02</span></td>
+      <td class="num">1.03%</td>
+    </tr><tr>
+      <td class="rk">18</td>
+      <td>RONAVA</td>
+      <td class="num">$1.93M</td>
+      <td class="num pos">+18.18%</td>
+      <td class="num"><span class="ev-lo">93.12</span></td>
+      <td class="num">1.02%</td>
+    </tr><tr>
+      <td class="rk">19</td>
+      <td>DAC55</td>
+      <td class="num">$1.79M</td>
+      <td class="num pos">+4.98%</td>
+      <td class="num"><span class="ev-lo">82.72</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr>
+      <td class="rk">20</td>
+      <td>PLUSANDEX CORP.</td>
+      <td class="num">$1.79M</td>
+      <td class="num pos">+78.98%</td>
+      <td class="num"><span class="ev-hi">141.03</span></td>
+      <td class="num">0.95%</td>
+    </tr><tr><td colspan="6" class="sep">··· posiciones intermedias ···</td></tr><tr class="ang-row">
+      <td class="rk">27</td>
+      <td><strong>ANGELUS CORP</strong> <span class="ang-badge">ANG</span></td>
+      <td class="num">$1.37M</td>
+      <td class="num pos">+11.27%</td>
+      <td class="num"><span class="ev-lo">87.68</span></td>
+      <td class="num">0.73%</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    </section>
+
+<!-- LEGEND PAGE -->
+<div class="legend-page">
+  <div class="legend-box">
+    <h3>Glosario de Indicadores</h3>
+    <div class="legend-item">
+      <span class="legend-term">MAT</span>
+      <span class="legend-def">Moving Annual Total — acumulado móvil de 12 meses hasta el mes del corte</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-term">YTD</span>
+      <span class="legend-def">Year-to-Date — acumulado desde enero hasta el mes del corte</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-term">MES</span>
+      <span class="legend-def">Dato puntual del mes específico (no acumulado)</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-term">Crecim.</span>
+      <span class="legend-def">Variación porcentual vs. mismo período del año anterior</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-term">Evol PY</span>
+      <span class="legend-def">Evolución vs. año anterior relativa al mercado total. 100 = igual al mercado; &gt;100 = ganando participación; &lt;100 = perdiendo participación</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-term">Market Share</span>
+      <span class="legend-def">Participación de mercado en USD = ventas corporación / ventas mercado × 100</span>
     </div>
   </div>
-  <div class="pb">
-
-    <div class="leg-row">
-      <div class="leg-item"><div class="leg-dot" style="background:#d4edda;border:1px solid var(--green);"></div> Ganador (Ev &gt; 105)</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#fff3cd;border:1px solid var(--orange);"></div> Casi neutro (Ev 96–105)</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#fce8e6;border:1px solid var(--red);"></div> Pierde cuota (Ev &lt; 96)</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#fff0f0;border:1px solid var(--red);border-width:2px;"></div> Angelus Corp.</div>
+  <div class="legend-box">
+    <h3>Clasificación Evol PY</h3>
+    <div class="legend-item">
+      <span class="legend-term"><span class="ev-hi">≥ 105</span></span>
+      <span class="legend-def">Ganando participación significativamente</span>
     </div>
-
-    <table class="comp-tbl">
-      <thead>
-        <tr>
-          <th style="width:24px;">#</th>
-          <th style="text-align:left;width:120px;">Corporación</th>
-          <th>USD MAT</th>
-          <th style="color:var(--mat);">Evol MAT</th>
-          <th style="color:var(--ytd);">Evol YTD</th>
-          <th style="color:var(--mes);">Evol MES</th>
-          <th>P/Un MAT</th>
-          <th>P/Un YTD</th>
-          <th>P/Un MES</th>
-          <th>Clasificación</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Top 6 rank by MAT -->
-        <tr class="lose-row">
-          <td class="num muted">1</td>
-          <td class="corp-name">GRUPO LETI</td>
-          <td class="num">$247.5M</td>
-          <td><span class="ev-pill ev-lo">93</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">84</span></td>
-          <td class="num muted">$4.24</td><td class="num muted">$4.40</td><td class="num muted">$4.55</td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">2</td>
-          <td class="corp-name">CALOX CORP</td>
-          <td class="num">$172.1M</td>
-          <td><span class="ev-pill ev-lo">95</span></td>
-          <td><span class="ev-pill ev-neu">100</span></td>
-          <td><span class="ev-pill ev-neu">98</span></td>
-          <td class="num muted">$4.83</td><td class="num muted">$5.35</td><td class="num muted">$5.18</td>
-          <td style="font-size:8px;color:var(--muted);">Casi neutro YTD</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">3</td>
-          <td class="corp-name">PHARMETIQUE CORP.</td>
-          <td class="num">$149.9M</td>
-          <td><span class="ev-pill ev-lo">96</span></td>
-          <td><span class="ev-pill ev-lo">96</span></td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td class="num muted">$3.45</td><td class="num muted">$3.87</td><td class="num muted">$3.74</td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">4</td>
-          <td class="corp-name">L.O. OFTALMI</td>
-          <td class="num">$134.6M</td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td><span class="ev-pill ev-hi">109</span></td>
-          <td><span class="ev-pill ev-hi">118</span></td>
-          <td class="num muted">$3.95</td><td class="num muted">$4.72</td><td class="num muted">$5.24</td>
-          <td style="font-size:8px;color:var(--green);">↗ Gana en YTD/MES</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">5</td>
-          <td class="corp-name">FARMA CORP.</td>
-          <td class="num">$132.5M</td>
-          <td><span class="ev-pill ev-lo">95</span></td>
-          <td><span class="ev-pill ev-lo">97</span></td>
-          <td><span class="ev-pill ev-lo">89</span></td>
-          <td class="num muted">$7.54</td><td class="num muted">$8.14</td><td class="num muted">$7.28</td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">6</td>
-          <td class="corp-name">MEGALABS CORP.</td>
-          <td class="num">$117.0M</td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td><span class="ev-pill ev-hi">108</span></td>
-          <td><span class="ev-pill ev-hi">112</span></td>
-          <td class="num muted">$8.73</td><td class="num muted">$9.28</td><td class="num muted">$8.69</td>
-          <td style="font-size:8px;color:var(--green);">↗ Gana en YTD/MES</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">7</td>
-          <td class="corp-name">COFASA CORP</td>
-          <td class="num">$64.2M</td>
-          <td><span class="ev-pill ev-hi">121</span></td>
-          <td><span class="ev-pill ev-hi">122</span></td>
-          <td><span class="ev-pill ev-lo">81</span></td>
-          <td class="num muted">$5.08</td><td class="num muted">$5.50</td><td class="num muted">$5.25</td>
-          <td style="font-size:8px;color:var(--orange);">↗ MAT/YTD, cae MES</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">8</td>
-          <td class="corp-name">VALMORCA CORP.</td>
-          <td class="num">$58.0M</td>
-          <td><span class="ev-pill ev-lo">94</span></td>
-          <td><span class="ev-pill ev-neu">98</span></td>
-          <td><span class="ev-pill ev-hi">106</span></td>
-          <td class="num muted">$6.39</td><td class="num muted">$6.56</td><td class="num muted">$6.62</td>
-          <td style="font-size:8px;color:var(--muted);">Mixto — MES positivo</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">9</td>
-          <td class="corp-name">SIEGFRIED CORP.</td>
-          <td class="num">$55.1M</td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">75</span></td>
-          <td class="num muted">$5.40</td><td class="num muted">$5.29</td><td class="num muted">$5.15</td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota — similar a Angelus</td>
-        </tr>
-        <tr class="lose-row">
-          <td class="num muted">10</td>
-          <td class="corp-name">BIOTECH CORP.</td>
-          <td class="num">$36.2M</td>
-          <td><span class="ev-pill ev-lo">90</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">92</span></td>
-          <td class="num muted">$4.74</td><td class="num muted">$4.70</td><td class="num muted">$4.89</td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">11</td>
-          <td class="corp-name">NATURLIFES</td>
-          <td class="num">$31.3M</td>
-          <td><span class="ev-pill ev-hi">136</span></td>
-          <td><span class="ev-pill ev-hi">132</span></td>
-          <td><span class="ev-pill ev-hi">110</span></td>
-          <td class="num muted">$7.59</td><td class="num muted">$8.57</td><td class="num muted">$8.83</td>
-          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">12</td>
-          <td class="corp-name">VARGAS CORP.</td>
-          <td class="num">$29.4M</td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td><span class="ev-pill ev-hi">106</span></td>
-          <td><span class="ev-pill ev-hi">120</span></td>
-          <td class="num muted">$6.78</td><td class="num muted">$7.24</td><td class="num muted">$7.39</td>
-          <td style="font-size:8px;color:var(--green);">↗ Aceleración en MES</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">13</td>
-          <td class="corp-name">DISTRILAB</td>
-          <td class="num">$29.0M</td>
-          <td><span class="ev-pill ev-hi">104</span></td>
-          <td><span class="ev-pill ev-neu">98</span></td>
-          <td><span class="ev-pill ev-lo">93</span></td>
-          <td class="num muted">$5.78</td><td class="num muted">$6.72</td><td class="num muted">$6.17</td>
-          <td style="font-size:8px;color:var(--muted);">MAT positivo, MES cae</td>
-        </tr>
-        <tr class="neutral-row">
-          <td class="num muted">14</td>
-          <td class="corp-name">ELMOR CORP.</td>
-          <td class="num">$28.5M</td>
-          <td><span class="ev-pill ev-lo">94</span></td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td><span class="ev-pill ev-hi">109</span></td>
-          <td class="num muted">$4.38</td><td class="num muted">$4.81</td><td class="num muted">$4.64</td>
-          <td style="font-size:8px;color:var(--muted);">Mixto — recupera en MES</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">15</td>
-          <td class="corp-name">DOLLDER</td>
-          <td class="num">$25.5M</td>
-          <td><span class="ev-pill ev-hi">106</span></td>
-          <td><span class="ev-pill ev-hi">109</span></td>
-          <td><span class="ev-pill ev-hi">113</span></td>
-          <td class="num muted">$5.67</td><td class="num muted">$6.86</td><td class="num muted">$6.27</td>
-          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">18</td>
-          <td class="corp-name">PLUSANDEX CORP.</td>
-          <td class="num">$19.3M</td>
-          <td><span class="ev-pill ev-hi">116</span></td>
-          <td><span class="ev-pill ev-hi">133</span></td>
-          <td><span class="ev-pill ev-hi">141</span></td>
-          <td class="num muted">$2.08</td><td class="num muted">$2.59</td><td class="num muted">$2.63</td>
-          <td style="font-size:8px;color:var(--green);">★ Aceleración total</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num muted">17</td>
-          <td class="corp-name">NESTLE CORP</td>
-          <td class="num">$20.9M</td>
-          <td><span class="ev-pill ev-hi">130</span></td>
-          <td><span class="ev-pill ev-hi">114</span></td>
-          <td><span class="ev-pill ev-hi">121</span></td>
-          <td class="num muted">$17.37</td><td class="num muted">$19.17</td><td class="num muted">$19.75</td>
-          <td style="font-size:8px;color:var(--green);">★ Ganador consistente</td>
-        </tr>
-        <!-- Separator + Angelus -->
-        <tr><td colspan="10" style="background:var(--gray2);padding:3px 6px;font-family:'Montserrat',sans-serif;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);">··· posición Angelus Corp ···</td></tr>
-        <tr class="ang-row">
-          <td class="num" style="color:var(--red);font-weight:800;">27</td>
-          <td class="corp-name">ANGELUS CORP.</td>
-          <td class="num" style="color:var(--red);">$14.0M</td>
-          <td><span class="ev-pill ev-lo">87</span></td>
-          <td><span class="ev-pill ev-lo">85</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td class="num" style="color:var(--red);">$6.19</td><td class="num" style="color:var(--red);">$5.89</td><td class="num" style="color:var(--red);">$5.58</td>
-          <td style="font-size:8px;color:var(--red);font-weight:700;">⚠ Pierde cuota · 3 períodos</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div style="background:var(--gray);border-radius:7px;padding:10px 14px;font-size:8.5px;color:var(--muted);line-height:1.6;">
-      <strong style="color:var(--navy);">Nota:</strong> Evol PY = índice donde 100 significa que la empresa crece al mismo ritmo que el mercado total.
-      Valores &gt;100 indican ganancia de participación relativa; &lt;100 indican pérdida de cuota aunque la empresa pueda estar creciendo en valor absoluto.
+    <div class="legend-item">
+      <span class="legend-term"><span class="ev-mid">96–104</span></span>
+      <span class="legend-def">En línea con el mercado</span>
     </div>
-
-  </div>
-  <div class="pn">02 · Top 20 Corporaciones</div>
-  <div class="pnl">ANGELUS CORP. CONFIDENCIAL</div>
-</div>
-
-
-<!-- ══════════════════════════════
-     PAGE 3 — PEER GROUP + THREATS
-══════════════════════════════ -->
-<div class="page" id="p3">
-  <div class="ph">
-    <div>
-      <h2>Grupo de Pares y Amenazas Directas al Ranking</h2>
-      <div class="ph-sub">Corporaciones en ranking #22–32 (rango de riesgo para Angelus #27) · Evolución Mayo 2026</div>
-    </div>
-    <div class="ph-tags">
-      <span class="tag t-mat">MAT</span><span class="tag t-ytd">YTD</span><span class="tag t-mes">MES</span>
+    <div class="legend-item">
+      <span class="legend-term"><span class="ev-lo">&lt; 96</span></span>
+      <span class="legend-def">Perdiendo participación de mercado</span>
     </div>
   </div>
-  <div class="pb">
-
-    <div class="sec">Peer Group — Rankeo #22 al #32 (Mayo 2026 MAT)</div>
-
-    <table class="peer-tbl">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th style="text-align:left;">Corporación</th>
-          <th>USD MAT</th>
-          <th style="color:var(--mat);">Ev MAT</th>
-          <th style="color:var(--ytd);">Ev YTD</th>
-          <th style="color:var(--mes);">Ev MES</th>
-          <th>Tendencia</th>
-          <th>Riesgo para Angelus</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="gain-row">
-          <td class="num">22</td>
-          <td class="pn-name">SPEFAR</td>
-          <td class="num">$16.3M</td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">86</span></td>
-          <td><span class="ev-pill ev-lo">86</span></td>
-          <td style="font-size:8px;color:var(--red);">Pierde cuota en todo</td>
-          <td style="font-size:8px;color:var(--green);">Bajo — también cae</td>
-        </tr>
-        <tr class="threat-row">
-          <td class="num">23</td>
-          <td class="pn-name">ARCO IRIS</td>
-          <td class="num">$16.3M</td>
-          <td><span class="ev-pill ev-hi">120</span></td>
-          <td><span class="ev-pill ev-hi">113</span></td>
-          <td><span class="ev-pill ev-hi">120</span></td>
-          <td style="font-size:8px;color:var(--green);">↗ Consistente</td>
-          <td style="font-size:8px;color:var(--orange);">Medio — $2.3M sobre Angelus</td>
-        </tr>
-        <tr class="threat-row">
-          <td class="num">24</td>
-          <td class="pn-name" style="color:var(--red);font-weight:800;">TIARES ⚠</td>
-          <td class="num" style="color:var(--red);">$15.5M</td>
-          <td><span class="ev-pill ev-hi">161</span></td>
-          <td><span class="ev-pill ev-hi">164</span></td>
-          <td><span class="ev-pill ev-hi">150</span></td>
-          <td style="font-size:8px;color:var(--red);font-weight:700;">↗ Altísimo — acelerado</td>
-          <td style="font-size:8px;color:var(--red);font-weight:700;">ALTO — Era #26 en Marzo</td>
-        </tr>
-        <tr class="neutral-row">
-          <td class="num">25</td>
-          <td class="pn-name">ALESS</td>
-          <td class="num">$15.3M</td>
-          <td><span class="ev-pill ev-hi">111</span></td>
-          <td><span class="ev-pill ev-lo">94</span></td>
-          <td><span class="ev-pill ev-lo">79</span></td>
-          <td style="font-size:8px;color:var(--orange);">Mixto — cae en MES</td>
-          <td style="font-size:8px;color:var(--muted);">Moderado — MES débil</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num">26</td>
-          <td class="pn-name">LABORATORIOS NOW</td>
-          <td class="num">$14.7M</td>
-          <td><span class="ev-pill ev-hi">108</span></td>
-          <td><span class="ev-pill ev-hi">101</span></td>
-          <td><span class="ev-pill ev-hi">105</span></td>
-          <td style="font-size:8px;color:var(--orange);">↗ Consistente pero leve</td>
-          <td style="font-size:8px;color:var(--orange);">Moderado — $0.7M sobre Ang.</td>
-        </tr>
-        <tr class="ang-row">
-          <td class="num" style="color:var(--red);font-weight:900;">27</td>
-          <td class="pn-name">ANGELUS CORP.</td>
-          <td class="num" style="color:var(--red);">$14.0M</td>
-          <td><span class="ev-pill ev-lo">87</span></td>
-          <td><span class="ev-pill ev-lo">85</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td style="font-size:8px;color:var(--red);font-weight:700;">↘ Pérdida en todo</td>
-          <td style="font-size:8px;color:var(--red);">POSICIÓN OBJETIVO</td>
-        </tr>
-        <tr class="gain-row">
-          <td class="num">28</td>
-          <td class="pn-name">BEHRENS CORP.</td>
-          <td class="num">$13.8M</td>
-          <td><span class="ev-pill ev-hi">105</span></td>
-          <td><span class="ev-pill ev-hi">104</span></td>
-          <td><span class="ev-pill ev-neu">97</span></td>
-          <td style="font-size:8px;color:var(--orange);">↗ Gana MAT/YTD</td>
-          <td style="font-size:8px;color:var(--orange);">Moderado — $0.2M detrás</td>
-        </tr>
-        <tr class="threat-row">
-          <td class="num">29</td>
-          <td class="pn-name" style="color:var(--orange);font-weight:800;">KMPLUS CORP ⚠</td>
-          <td class="num" style="color:var(--orange);">$13.4M</td>
-          <td><span class="ev-pill ev-hi">145</span></td>
-          <td><span class="ev-pill ev-hi">155</span></td>
-          <td><span class="ev-pill ev-hi">123</span></td>
-          <td style="font-size:8px;color:var(--orange);font-weight:700;">↗ Muy agresivo</td>
-          <td style="font-size:8px;color:var(--orange);font-weight:700;">ALTO — Era #29, sube rápido</td>
-        </tr>
-        <tr class="neutral-row">
-          <td class="num">30</td>
-          <td class="pn-name">SNC PHARMA CORP</td>
-          <td class="num">$12.9M</td>
-          <td><span class="ev-pill ev-neu">99</span></td>
-          <td><span class="ev-pill ev-lo">96</span></td>
-          <td><span class="ev-pill ev-hi">117</span></td>
-          <td style="font-size:8px;color:var(--muted);">Mixto — MES fuerte</td>
-          <td style="font-size:8px;color:var(--muted);">Bajo-Moderado</td>
-        </tr>
-        <tr>
-          <td class="num muted">31</td>
-          <td class="pn-name" style="color:var(--muted);">AVPHARMA CORP</td>
-          <td class="num muted">$11.7M</td>
-          <td><span class="ev-pill ev-neu">97</span></td>
-          <td><span class="ev-pill ev-lo">88</span></td>
-          <td><span class="ev-pill ev-lo">84</span></td>
-          <td style="font-size:8px;color:var(--muted);">↘ Cae en todos</td>
-          <td style="font-size:8px;color:var(--green);">Bajo — también cae</td>
-        </tr>
-        <tr class="threat-row">
-          <td class="num">34</td>
-          <td class="pn-name" style="color:var(--red);font-weight:800;">HERBAPLANT ⚠</td>
-          <td class="num" style="color:var(--red);">$10.1M</td>
-          <td><span class="ev-pill ev-hi">193</span></td>
-          <td><span class="ev-pill ev-hi">161</span></td>
-          <td><span class="ev-pill ev-hi">119</span></td>
-          <td style="font-size:8px;color:var(--red);font-weight:700;">↗ El más explosivo</td>
-          <td style="font-size:8px;color:var(--orange);">Medio — sube desde #34</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="sec" style="margin-top:2px;">Análisis de Riesgo y Oportunidades para Angelus</div>
-
-    <div class="risk-grid">
-      <div class="risk-card rc-high">
-        <div class="rc-title">🔴 Amenaza Crítica — TIARES</div>
-        <div class="rc-text">
-          TIARES pasó de rank #26→#24 en 3 meses con Evol consistente de <strong>161–164 MAT/YTD</strong>.
-          Genera $15.5M MAT vs $14.0M Angelus. Si mantiene este ritmo, alcanzará el #23 en Q3 2026 y profundiza el diferencial con Angelus.
-          Su precio ($4.77 estimado) es inferior — compite por volumen.
-        </div>
-      </div>
-      <div class="risk-card rc-med">
-        <div class="rc-title">🟡 Amenaza Creciente — KMPLUS CORP</div>
-        <div class="rc-text">
-          KMPLUS sube de #29 con Evol <strong>145 MAT · 155 YTD · 123 MES</strong>.
-          Está a solo $0.6M de Angelus en MAT. Con su ritmo actual puede alcanzar y superar a Angelus en los próximos 2-3 meses.
-          Representa la amenaza directa más inmediata para el rank #27.
-        </div>
-      </div>
-      <div class="risk-card rc-med">
-        <div class="rc-title">🟡 Presión Desde Abajo — BEHRENS CORP.</div>
-        <div class="rc-text">
-          BEHRENS (#28) está a solo <strong>$0.2M de diferencia</strong> con Angelus en MAT.
-          Con Evol 105/104 (gana cuota lentamente), podría superar a Angelus en 1-2 meses si el ritmo se mantiene.
-          La brecha más estrecha del peer group — riesgo de caer a #28 antes de Q3.
-        </div>
-      </div>
-      <div class="risk-card rc-low">
-        <div class="rc-title">🟢 Oportunidad — Competidores que también caen</div>
-        <div class="rc-text">
-          SIEGFRIED (#9, Evol 88/88/75), GRUPO LETI (#1, Evol 93/88/84), BIOTECH (#10, 90/88/92) también pierden cuota.
-          Indican que el problema de Angelus no es único — hay debilidad estructural en varias corps grandes.
-          <strong>SPEFAR</strong> (#22, Evol 88/86/86) tiene el mismo perfil que Angelus — posibilidad de recuperar posición si mejora.
-        </div>
-      </div>
-    </div>
-
-    <!-- Final conclusion -->
-    <div class="sum-conclusion">
-      <div class="sc-title">Conclusión Competitiva — Prioridades para Angelus Corp</div>
-      <div class="sc-cols">
-        <div class="sc-col">
-          <div class="sc-head">Amenazas Prioritarias</div>
-          <ul>
-            <li><strong>KMPLUS</strong> es la amenaza más inmediata: sube 3 posiciones en 3 meses y está a $0.6M de Angelus</li>
-            <li><strong>BEHRENS</strong> está a $0.2M — Angelus podría caer a #28 en el próximo mes si no actúa</li>
-            <li><strong>TIARES</strong> consolida el #24 con Evol 161 — ya se separó significativamente de Angelus</li>
-            <li>HERBAPLANT (Evol 193 MAT) sube desde #34 — amenaza a mediano plazo</li>
-          </ul>
-        </div>
-        <div class="sc-col">
-          <div class="sc-head">Patrón de los Ganadores</div>
-          <ul>
-            <li>TIARES, KMPLUS, HERBAPLANT: precios por debajo del mercado — estrategia de volumen</li>
-            <li>NATURLIFES, NESTLE: precios premium (+$7-17/un) con alto Evol — segmentos diferenciados</li>
-            <li>PLUSANDEX: precio ultra-bajo ($2.08) con Evol 141 — escala masiva en genéricos</li>
-            <li>Los ganadores no siguen un único modelo de precio — cada uno domina su nicho</li>
-          </ul>
-        </div>
-        <div class="sc-col">
-          <div class="sc-head">Acción Recomendada</div>
-          <ul>
-            <li>Defensiva inmediata: proteger el rank #27 vs BEHRENS y KMPLUS — impulso comercial en categorías clave</li>
-            <li>Investigar qué mueve a TIARES y KMPLUS: categoría, canal, región</li>
-            <li>Benchmark de precio: Angelus a $5.58 MES vs mercado $5.33 — prima casi eliminada, sin ventaja clara</li>
-            <li>Target Evol: subir de 87 a 95+ en MES antes de fin de Q3 2026</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="pn">03 · Grupo de Pares y Amenazas</div>
-  <div class="pnl">ANGELUS CORP. CONFIDENCIAL</div>
 </div>
 
 </body>
