@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Consolidado PMV 2026 — Angelus Corp</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:  #0d1b3e;
+    --navy2: #152550;
+    --navy3: #1e3a6e;
+    --red:   #c0392b;
+    --gold:  #d4a843;
+    --gold2: #e8c56a;
+    --white: #ffffff;
+    --gray:  #f4f6f9;
+    --gray2: #e8ecf2;
+    --text:  #1a2340;
+    --muted: #6b7a99;
+    --green: #1a7f4b;
+    --orange:#e67e22;
+  }
+
+  body { font-family: 'Open Sans', sans-serif; color: var(--text); background: #fff; }
+
+  /* ─── PAGE SETUP ──────────────────────────────── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  @page { size: A4; margin: 0; }
+  @media print {
+    .page { width: 210mm; min-height: 297mm; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ─── SHARED COMPONENTS ───────────────────────── */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .tag-mat  { background: var(--navy3); color: #fff; }
+  .tag-ytd  { background: var(--red);   color: #fff; }
+  .tag-mes  { background: var(--gold);  color: var(--navy); }
+
+  .badge-ev-up   { color: var(--green);  font-weight: 700; }
+  .badge-ev-down { color: var(--red);    font-weight: 700; }
+  .badge-ev-flat { color: var(--orange); font-weight: 700; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE 1 — COVER
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  #p1 {
+    background: linear-gradient(150deg, var(--navy) 0%, var(--navy2) 55%, #0f2a5a 100%);
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+  }
+
+  .cover-top {
+    padding: 30px 36px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .cover-logo-block { display: flex; align-items: center; gap: 12px; }
+  .cover-logo-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 14px; color: var(--gold);
+    letter-spacing: -1px;
+  }
+  .cover-logo-text { font-family: 'Montserrat', sans-serif; }
+  .cover-logo-text .line1 { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+  .cover-logo-text .line2 { font-size: 9px; font-weight: 400; color: rgba(255,255,255,.55); letter-spacing: 1px; }
+  .cover-badge {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: rgba(255,255,255,.7);
+    text-transform: uppercase;
+  }
+
+  .cover-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 36px; }
+
+  .cover-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .cover-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .cover-title span { color: var(--gold); }
+
+  .cover-sub {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,.7);
+    margin-bottom: 28px;
+    letter-spacing: .5px;
+  }
+
+  /* Period pills */
+  .period-pills { display: flex; gap: 10px; margin-bottom: 36px; }
+  .period-pill {
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pill-mat { background: rgba(30,58,110,.7); border: 1.5px solid var(--navy3); color: #a8c4ff; }
+  .pill-ytd { background: rgba(192,57,43,.5);  border: 1.5px solid var(--red);   color: #ffb3ad; }
+  .pill-mes { background: rgba(212,168,67,.15); border: 1.5px solid var(--gold);  color: var(--gold2); }
+
+  /* 9-cell KPI grid on cover */
+  .cover-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1px;
+    background: rgba(255,255,255,.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 36px;
+  }
+  .cover-kpi-cell {
+    background: rgba(255,255,255,.05);
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .cover-kpi-cell.header-row {
+    background: rgba(255,255,255,.12);
+    padding: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.8);
+  }
+  .cover-kpi-cell .kpi-label {
+    font-size: 9px;
+    color: rgba(255,255,255,.5);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .cover-kpi-cell .kpi-val {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+  }
+  .cover-kpi-cell .kpi-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,.5);
+    margin-top: 2px;
+  }
+  .kv-mat { color: #a8c4ff !important; }
+  .kv-ytd { color: #ff9d9d !important; }
+  .kv-mes { color: var(--gold2) !important; }
+
+  .cover-footer {
+    padding: 18px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,.1);
+    margin-top: 24px;
+  }
+  .cover-footer span { font-size: 9px; color: rgba(255,255,255,.4); letter-spacing: 1px; text-transform: uppercase; }
+  .confidential {
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase;
+    border: 1px solid var(--gold); padding: 3px 10px; border-radius: 3px;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE 2 — MARKET DASHBOARD
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .page-header {
+    background: var(--navy);
+    padding: 20px 32px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px; font-weight: 800;
+    color: #fff; letter-spacing: .5px;
+  }
+  .page-header .ph-sub { font-size: 10px; color: rgba(255,255,255,.5); margin-top: 2px; }
+  .ph-pills { display: flex; gap: 6px; }
+  .ph-pill {
+    font-size: 8px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .ph-mat { background: var(--navy3); color: #a8c4ff; }
+  .ph-ytd { background: var(--red);   color: #fff; }
+  .ph-mes { background: var(--gold);  color: var(--navy); }
+
+  .page-body { padding: 20px 28px; }
+
+  /* Section label */
+  .sec-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--navy); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--gray2);
+  }
+
+  /* Big comparison table */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-bottom: 18px;
+  }
+  .comp-table th {
+    padding: 8px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    text-align: center;
+    background: var(--gray);
+    border-bottom: 2px solid var(--gray2);
+  }
+  .comp-table th.th-mat { border-bottom-color: var(--navy3); color: var(--navy3); }
+  .comp-table th.th-ytd { border-bottom-color: var(--red);   color: var(--red); }
+  .comp-table th.th-mes { border-bottom-color: var(--gold);  color: #b8831a; }
+  .comp-table th.th-label { text-align: left; color: var(--muted); }
+
+  .comp-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray2);
+    vertical-align: middle;
+  }
+  .comp-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--navy);
+    padding-left: 4px;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr.month-row td { background: var(--gray); }
+  .comp-table .month-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); text-align: left;
+    background: var(--gray2) !important;
+    padding: 5px 10px !important;
+  }
+  .comp-table .num { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+  .comp-table .big { font-size: 13px; }
+  .comp-table .small-txt { font-size: 9px; color: var(--muted); display: block; margin-top: 1px; }
+
+  .gr-up   { color: var(--green); }
+  .gr-down { color: var(--red); }
+  .gr-flat { color: var(--orange); }
+
+  /* 3-column summary boxes */
+  .three-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+  .sum-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-top: 3px solid;
+  }
+  .sum-box.mat { border-color: var(--navy3); background: #f0f5ff; }
+  .sum-box.ytd { border-color: var(--red);   background: #fff4f3; }
+  .sum-box.mes { border-color: var(--gold);  background: #fffbf0; }
+  .sum-box .sb-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .sum-box .sb-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .mat .sb-title { color: var(--navy3); }
+  .ytd .sb-title { color: var(--red); }
+  .mes .sb-title { color: #b8831a; }
+  .sum-box .sb-desc { font-size: 9px; color: var(--muted); }
+  .sum-box .sb-kpi { text-align: center; }
+  .sum-box .sb-kpi .v1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px; font-weight: 900; line-height: 1;
+  }
+  .mat .sb-kpi .v1 { color: var(--navy); }
+  .ytd .sb-kpi .v1 { color: var(--red); }
+  .mes .sb-kpi .v1 { color: #b8831a; }
+  .sum-box .sb-kpi .v2 { font-size: 10px; color: var(--muted); margin-top: 3px; }
+  .sum-box .sb-row {
+    display: flex; justify-content: space-between;
+    border-top: 1px solid rgba(0,0,0,.08);
+    padding-top: 6px; margin-top: 6px;
+  }
+  .sum-box .sb-item { text-align: center; }
+  .sum-box .sb-item .k { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+  .sum-box .sb-item .v { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); }
+
+  /* Trend arrow */
+  .arr-up   { color: var(--green); font-size: 11px; }
+  .arr-down { color: var(--red);   font-size: 11px; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE 3 — ANGELUS CORP DIAGNOSIS
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .ang-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .ang-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray2);
+  }
+  .ang-card-header {
+    padding: 8px 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mat-h { background: var(--navy);  color: #fff; }
+  .ytd-h { background: var(--red);   color: #fff; }
+  .mes-h { background: var(--gold);  color: var(--navy); }
+  .ang-card-header .ah-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .ang-card-header .ah-def { font-size: 8px; opacity: .7; }
+  .ang-card-body { padding: 12px; background: #fff; }
+  .ang-metric { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--gray); }
+  .ang-metric:last-child { border-bottom: none; }
+  .ang-metric .am-label { font-size: 9px; color: var(--muted); }
+  .ang-metric .am-val   { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); }
+  .ang-metric .am-val.red   { color: var(--red); }
+  .ang-metric .am-val.green { color: var(--green); }
+
+  /* Evol gauge bar */
+  .ev-row { margin-bottom: 16px; }
+  .ev-row-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .ev-bars { display: flex; gap: 8px; }
+  .ev-bar-wrap { flex: 1; }
+  .ev-bar-label { font-size: 8px; color: var(--muted); margin-bottom: 3px; text-align: center; }
+  .ev-bar-track {
+    height: 24px; background: var(--gray2);
+    border-radius: 4px; position: relative; overflow: hidden;
+  }
+  .ev-bar-fill {
+    height: 100%; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: #fff;
+  }
+  .ev-bar-fill.under { background: var(--red); }
+  .ev-bar-fill.over  { background: var(--green); }
+  .ev-bar-100 {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 2px; background: rgba(0,0,0,.3);
+  }
+
+  /* Month evolution mini-table */
+  .mini-ev-table {
+    width: 100%; border-collapse: collapse; font-size: 10px;
+    border: 1px solid var(--gray2); border-radius: 8px; overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .mini-ev-table th {
+    background: var(--gray); padding: 6px 8px;
+    font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    border-bottom: 1px solid var(--gray2); text-align: center;
+  }
+  .mini-ev-table th:first-child { text-align: left; }
+  .mini-ev-table td { padding: 7px 8px; border-bottom: 1px solid var(--gray2); text-align: center; }
+  .mini-ev-table td:first-child { text-align: left; font-weight: 600; color: var(--navy); font-size: 10px; }
+  .mini-ev-table tr:last-child td { border-bottom: none; }
+  .mini-ev-table .num { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE 4 — GAINERS + CONCLUSIONS
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .gainers-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 10px; margin-bottom: 16px;
+  }
+  .gainer-col {
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--gray2);
+  }
+  .gainer-col-header {
+    padding: 8px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .gc-mat { background: var(--navy);  color: #a8c4ff; }
+  .gc-ytd { background: var(--red);   color: #ffb3ad; }
+  .gc-mes { background: var(--gold);  color: var(--navy); }
+  .gainer-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 10px; border-bottom: 1px solid var(--gray);
+    font-size: 9px;
+  }
+  .gainer-item:last-child { border-bottom: none; }
+  .gainer-item .gi-name { color: var(--text); font-weight: 500; }
+  .gainer-item .gi-ev   {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px; font-weight: 800;
+  }
+  .gi-ev.hi  { color: var(--green); }
+  .gi-ev.mid { color: var(--orange); }
+
+  /* Consistent gainers highlight */
+  .winners-3 {
+    background: linear-gradient(135deg, #f0f8f4, #e8f5ee);
+    border: 1.5px solid #2ecc71;
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;
+  }
+  .winners-3 .w3-title {
+    font-family: 'Montserrat', sans-serif; font-size: 10px;
+    font-weight: 800; color: var(--green); text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 8px;
+  }
+  .winners-3-list {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .w3-chip {
+    background: rgba(46,204,113,.15);
+    border: 1px solid rgba(46,204,113,.4);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: 9px; font-weight: 600; color: var(--green);
+  }
+
+  /* Conclusions 3-col */
+  .conc-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+  .conc-col { border-radius: 8px; overflow: hidden; }
+  .conc-col-header {
+    padding: 8px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .cc-mat { background: var(--navy);  color: #a8c4ff; }
+  .cc-ytd { background: var(--red);   color: #fff; }
+  .cc-mes { background: var(--gold);  color: var(--navy); }
+  .conc-col-body {
+    padding: 10px 12px; background: var(--gray);
+    font-size: 9px; line-height: 1.6; color: var(--text);
+  }
+  .conc-col-body li { margin-bottom: 5px; list-style: none; padding-left: 14px; position: relative; }
+  .conc-col-body li::before { content: '▶'; position: absolute; left: 0; color: var(--muted); font-size: 7px; top: 1px; }
+
+  /* Priority action box */
+  .priority-box {
+    background: var(--navy);
+    border-radius: 8px; padding: 14px 18px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .priority-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: var(--navy);
+  }
+  .priority-content .pc-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 800; color: #fff;
+    margin-bottom: 6px; letter-spacing: .5px;
+  }
+  .priority-content .pc-text {
+    font-size: 9px; color: rgba(255,255,255,.7); line-height: 1.6;
+  }
+  .priority-content .pc-kpis {
+    display: flex; gap: 12px; margin-top: 10px;
+  }
+  .pc-kpi {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px; padding: 6px 10px; text-align: center;
+  }
+  .pc-kpi .pk-val { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: var(--gold); }
+  .pc-kpi .pk-label { font-size: 8px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .8px; margin-top: 2px; }
+
+  /* Page number footer */
+  .page-num {
+    position: absolute; bottom: 14px; right: 28px;
+    font-size: 8px; color: var(--muted); letter-spacing: 1px;
+  }
+  .page-num-left {
+    position: absolute; bottom: 14px; left: 28px;
+    font-size: 8px; color: var(--muted); letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     PAGE 1 — COVER
+════════════════════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="cover-top">
+    <div class="cover-logo-block">
+      <div class="cover-logo-circle">AC</div>
+      <div class="cover-logo-text">
+        <div class="line1">ANGELUS CORP.</div>
+        <div class="line2">PHARMACEUTICAL GROUP</div>
+      </div>
+    </div>
+    <div class="cover-badge">IMS Health PMV · Pre-Info 2026</div>
+  </div>
+
+  <div class="cover-hero">
+    <div class="cover-eyebrow">Reporte Estratégico Consolidado</div>
+    <div class="cover-title">
+      Análisis de Mercado<br><span>PMV Venezuela 2026</span>
+    </div>
+    <div class="cover-sub">Comparativo integrado MAT · YTD · MES — Marzo / Abril / Mayo 2026</div>
+
+    <div class="period-pills">
+      <div class="period-pill pill-mat">MAT · 12 meses móviles</div>
+      <div class="period-pill pill-ytd">YTD · Acumulado año</div>
+      <div class="period-pill pill-mes">MES · Puntual mensual</div>
+    </div>
+  </div>
+
+  <!-- 3x3 KPI grid: rows = period, cols = metric -->
+  <div class="cover-kpi-grid">
+    <!-- Header row -->
+    <div class="cover-kpi-cell header-row" style="color:rgba(255,255,255,.4);">Período</div>
+    <div class="cover-kpi-cell header-row">Mercado Mayo (USD)</div>
+    <div class="cover-kpi-cell header-row">Crecimiento</div>
+
+    <!-- MAT -->
+    <div class="cover-kpi-cell header-row" style="background:rgba(30,58,110,.3);">
+      <span class="tag tag-mat">MAT</span>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Facturación Anual</div>
+      <div class="kpi-val kv-mat">$2,014.6M</div>
+      <div class="kpi-sub">403.7M unidades</div>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Vs. Año Anterior</div>
+      <div class="kpi-val kv-mat">+34.4%</div>
+      <div class="kpi-sub">$4.99 / unidad</div>
+    </div>
+
+    <!-- YTD -->
+    <div class="cover-kpi-cell header-row" style="background:rgba(192,57,43,.25);">
+      <span class="tag tag-ytd">YTD</span>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Acumulado Ene–May</div>
+      <div class="kpi-val kv-ytd">$897.2M</div>
+      <div class="kpi-sub">165.4M unidades</div>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Vs. Año Anterior</div>
+      <div class="kpi-val kv-ytd">+41.0%</div>
+      <div class="kpi-sub">$5.42 / unidad</div>
+    </div>
+
+    <!-- MES -->
+    <div class="cover-kpi-cell header-row" style="background:rgba(212,168,67,.15);">
+      <span class="tag tag-mes">MES</span>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Mayo 2026</div>
+      <div class="kpi-val kv-mes">$188.5M</div>
+      <div class="kpi-sub">35.3M unidades</div>
+    </div>
+    <div class="cover-kpi-cell">
+      <div class="kpi-label">Vs. Mayo 2025</div>
+      <div class="kpi-val kv-mes">+26.9%</div>
+      <div class="kpi-sub">$5.33 / unidad</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span>Angelus Corp. · Inteligencia Comercial · Junio 2026</span>
+    <span class="confidential">Confidencial</span>
+    <span>Fuente: IMS Health PMV Venezuela</span>
+  </div>
+</div><!-- /page 1 -->
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 2 — MARKET DASHBOARD
+════════════════════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="page-header">
+    <div>
+      <h2>Dashboard de Mercado PMV Venezuela</h2>
+      <div class="ph-sub">Evolución mensual por período de análisis — Marzo · Abril · Mayo 2026</div>
+    </div>
+    <div class="ph-pills">
+      <span class="ph-pill ph-mat">MAT</span>
+      <span class="ph-pill ph-ytd">YTD</span>
+      <span class="ph-pill ph-mes">MES</span>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- 3 summary boxes -->
+    <div class="three-cols" style="margin-bottom:16px;">
+      <div class="sum-box mat">
+        <div class="sb-header">
+          <div>
+            <div class="sb-title">MAT</div>
+            <div class="sb-desc">12 meses móviles acumulados</div>
+          </div>
+        </div>
+        <div class="sb-kpi">
+          <div class="v1">$2,014.6M</div>
+          <div class="v2">Mayo 2026 · 403.7M unidades</div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-item"><div class="k">Crecimiento</div><div class="v gr-up">+34.4%</div></div>
+          <div class="sb-item"><div class="k">Precio / Un.</div><div class="v">$4.99</div></div>
+          <div class="sb-item"><div class="k">Tendencia</div><div class="v">↗ Estable</div></div>
+        </div>
+      </div>
+      <div class="sum-box ytd">
+        <div class="sb-header">
+          <div>
+            <div class="sb-title">YTD</div>
+            <div class="sb-desc">Acumulado enero–mayo 2026</div>
+          </div>
+        </div>
+        <div class="sb-kpi">
+          <div class="v1">$897.2M</div>
+          <div class="v2">Mayo 2026 · 165.4M unidades</div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-item"><div class="k">Crecimiento</div><div class="v gr-up">+41.0%</div></div>
+          <div class="sb-item"><div class="k">Precio / Un.</div><div class="v">$5.42</div></div>
+          <div class="sb-item"><div class="k">Tendencia</div><div class="v gr-down">↘ Desacelerando</div></div>
+        </div>
+      </div>
+      <div class="sum-box mes">
+        <div class="sb-header">
+          <div>
+            <div class="sb-title">MES</div>
+            <div class="sb-desc">Dato puntual mensual</div>
+          </div>
+        </div>
+        <div class="sb-kpi">
+          <div class="v1">$188.5M</div>
+          <div class="v2">Mayo 2026 · 35.3M unidades</div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-item"><div class="k">Crecimiento</div><div class="v gr-down">+26.9%</div></div>
+          <div class="sb-item"><div class="k">Precio / Un.</div><div class="v">$5.33</div></div>
+          <div class="sb-item"><div class="k">Tendencia</div><div class="v gr-down">↘ Fuerte caída</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table: rows = metric, cols = month × period -->
+    <div class="sec-title">Evolución Mensual del Mercado — 9 indicadores</div>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th class="th-label">Indicador</th>
+          <th class="th-mat" colspan="3">MAT</th>
+          <th class="th-ytd" colspan="3">YTD</th>
+          <th class="th-mes" colspan="3">MES</th>
+        </tr>
+        <tr>
+          <th class="th-label"></th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Mar</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Abr</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">May</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Mar</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Abr</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">May</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Mar</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">Abr</th>
+          <th style="font-size:8px;color:#6b7a99;background:#f4f6f9;">May</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Facturación (M USD)</td>
+          <td class="num">$1,937</td><td class="num">$1,975</td><td class="num big" style="color:var(--navy3);font-weight:800;">$2,015</td>
+          <td class="num">$530</td><td class="num">$708</td><td class="num big" style="color:var(--red);font-weight:800;">$897</td>
+          <td class="num">$201</td><td class="num">$177</td><td class="num big" style="color:#b8831a;font-weight:800;">$189</td>
+        </tr>
+        <tr>
+          <td>Crecimiento % PY</td>
+          <td class="num gr-up">+35.3%</td><td class="num gr-up">+34.7%</td><td class="num gr-up">+34.4%</td>
+          <td class="num gr-up">+51.3%</td><td class="num gr-up">+44.4%</td><td class="num gr-up">+41.0%</td>
+          <td class="num gr-up">+61.3%</td><td class="num gr-up">+26.5%</td><td class="num gr-up">+26.9%</td>
+        </tr>
+        <tr>
+          <td>Unidades (M)</td>
+          <td class="num">405.0</td><td class="num">404.8</td><td class="num">403.7</td>
+          <td class="num">98.9</td><td class="num">130.4</td><td class="num">165.4</td>
+          <td class="num">39.2</td><td class="num">32.1</td><td class="num">35.3</td>
+        </tr>
+        <tr>
+          <td>Precio prom. (USD/Un)</td>
+          <td class="num">$4.78</td><td class="num">$4.88</td><td class="num">$4.99</td>
+          <td class="num">$5.36</td><td class="num">$5.43</td><td class="num">$5.42</td>
+          <td class="num">$5.12</td><td class="num">$5.52</td><td class="num">$5.33</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Key insight callout -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div style="background:#f0f5ff;border-left:3px solid var(--navy3);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;color:var(--navy3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">MAT · Clave</div>
+        <div style="font-size:9px;color:var(--text);line-height:1.5;">Crecimiento estabilizado en torno al <strong>+34–35%</strong>. El MAT refleja una base estructural sólida de mercado.</div>
+      </div>
+      <div style="background:#fff4f3;border-left:3px solid var(--red);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">YTD · Clave</div>
+        <div style="font-size:9px;color:var(--text);line-height:1.5;">El acumulado <strong>supera al MAT</strong> (+41% vs +34%), indicando que Q1 2026 fue de alto crecimiento que se modera.</div>
+      </div>
+      <div style="background:#fffbf0;border-left:3px solid var(--gold);border-radius:6px;padding:10px 12px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;color:#b8831a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">MES · Clave</div>
+        <div style="font-size:9px;color:var(--text);line-height:1.5;">El MES muestra <strong>fuerte desaceleración</strong>: de +61.3% en Marzo a +26.9% en Mayo. El ritmo mensual cae.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-num">02 · Mercado PMV</div>
+  <div class="page-num-left">ANGELUS CORP. CONFIDENCIAL</div>
+</div><!-- /page 2 -->
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 3 — ANGELUS CORP DIAGNOSIS
+════════════════════════════════════════════ -->
+<div class="page" id="p3">
+  <div class="page-header">
+    <div>
+      <h2>Diagnóstico Angelus Corp — Tres Perspectivas</h2>
+      <div class="ph-sub">Posición, evolución y precio vs. mercado en MAT · YTD · MES</div>
+    </div>
+    <div class="ph-pills">
+      <span class="ph-pill ph-mat">MAT</span>
+      <span class="ph-pill ph-ytd">YTD</span>
+      <span class="ph-pill ph-mes">MES</span>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- 3 diagnosis cards -->
+    <div class="ang-grid" style="margin-bottom:16px;">
+
+      <!-- MAT card -->
+      <div class="ang-card">
+        <div class="ang-card-header mat-h">
+          <span class="ah-title">MAT · 12M Móviles</span>
+          <span class="ah-def">Mayo 2026</span>
+        </div>
+        <div class="ang-card-body">
+          <div class="ang-metric"><span class="am-label">Ranking USD</span><span class="am-val">#27</span></div>
+          <div class="ang-metric"><span class="am-label">Ventas USD</span><span class="am-val">$14.02M</span></div>
+          <div class="ang-metric"><span class="am-label">Market Share</span><span class="am-val">0.70%</span></div>
+          <div class="ang-metric"><span class="am-label">Crecimiento PY</span><span class="am-val gr-up">+34.4%*</span></div>
+          <div class="ang-metric"><span class="am-label">Evol PY</span><span class="am-val red">86.5</span></div>
+          <div class="ang-metric"><span class="am-label">Precio / Unidad</span><span class="am-val">$6.19</span></div>
+          <div class="ang-metric"><span class="am-label">Prima vs Mdo</span><span class="am-val">+24.1%</span></div>
+          <div class="ang-metric"><span class="am-label">Unidades</span><span class="am-val">2.26M</span></div>
+        </div>
+      </div>
+
+      <!-- YTD card -->
+      <div class="ang-card">
+        <div class="ang-card-header ytd-h">
+          <span class="ah-title">YTD · Ene–May</span>
+          <span class="ah-def">Mayo 2026</span>
+        </div>
+        <div class="ang-card-body">
+          <div class="ang-metric"><span class="am-label">Ranking USD</span><span class="am-val">#26</span></div>
+          <div class="ang-metric"><span class="am-label">Ventas USD</span><span class="am-val">$6.33M</span></div>
+          <div class="ang-metric"><span class="am-label">Market Share</span><span class="am-val">0.71%</span></div>
+          <div class="ang-metric"><span class="am-label">Crecimiento PY</span><span class="am-val gr-up">+41.0%*</span></div>
+          <div class="ang-metric"><span class="am-label">Evol PY</span><span class="am-val red">84.5</span></div>
+          <div class="ang-metric"><span class="am-label">Precio / Unidad</span><span class="am-val">$5.89</span></div>
+          <div class="ang-metric"><span class="am-label">Prima vs Mdo</span><span class="am-val">+8.6%</span></div>
+          <div class="ang-metric"><span class="am-label">Unidades</span><span class="am-val">1.08M</span></div>
+        </div>
+      </div>
+
+      <!-- MES card -->
+      <div class="ang-card">
+        <div class="ang-card-header mes-h">
+          <span class="ah-title">MES · Mayo 2026</span>
+          <span class="ah-def">Dato puntual</span>
+        </div>
+        <div class="ang-card-body">
+          <div class="ang-metric"><span class="am-label">Ranking USD</span><span class="am-val">#27</span></div>
+          <div class="ang-metric"><span class="am-label">Ventas USD</span><span class="am-val">$1.37M</span></div>
+          <div class="ang-metric"><span class="am-label">Market Share</span><span class="am-val">0.73%</span></div>
+          <div class="ang-metric"><span class="am-label">Crecimiento PY</span><span class="am-val gr-up">+26.9%*</span></div>
+          <div class="ang-metric"><span class="am-label">Evol PY</span><span class="am-val red">87.7</span></div>
+          <div class="ang-metric"><span class="am-label">Precio / Unidad</span><span class="am-val">$5.58</span></div>
+          <div class="ang-metric"><span class="am-label">Prima vs Mdo</span><span class="am-val">+4.7%</span></div>
+          <div class="ang-metric"><span class="am-label">Unidades</span><span class="am-val">246K</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- *crecimiento similar al mercado — Evol < 100 indica pérdida de cuota relativa -->
+    <div style="font-size:8px;color:var(--muted);margin-bottom:14px;">* Crecimiento absoluto similar al del mercado. Evol&nbsp;PY&nbsp;&lt;&nbsp;100 indica que Angelus crece <em>más lento</em> que el mercado, perdiendo participación relativa.</div>
+
+    <!-- Evolución mensual de Angelus -->
+    <div class="sec-title">Evolución Mensual Angelus Corp — Evol PY por período</div>
+
+    <table class="mini-ev-table">
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th colspan="3" style="color:var(--navy3);">MAT</th>
+          <th colspan="3" style="color:var(--red);">YTD</th>
+          <th colspan="3" style="color:#b8831a;">MES</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>Rank</th><th>USD</th><th>Evol</th>
+          <th>Rank</th><th>USD</th><th>Evol</th>
+          <th>Rank</th><th>USD</th><th>Evol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Marzo 2026</td>
+          <td class="num">#27</td><td class="num">$13.62M</td><td class="num" style="color:var(--red);">88.4</td>
+          <td class="num">#26</td><td class="num">$3.64M</td><td class="num" style="color:var(--red);">80.0</td>
+          <td class="num">#28</td><td class="num">$1.31M</td><td class="num" style="color:var(--red);">78.1</td>
+        </tr>
+        <tr>
+          <td>Abril 2026</td>
+          <td class="num">#27</td><td class="num">$13.87M</td><td class="num" style="color:var(--red);">88.0</td>
+          <td class="num">#26</td><td class="num">$4.96M</td><td class="num" style="color:var(--red);">84.1</td>
+          <td class="num">#26</td><td class="num">$1.25M</td><td class="num" style="color:var(--orange);">92.4</td>
+        </tr>
+        <tr style="font-weight:600;background:#fafbff;">
+          <td>Mayo 2026 ★</td>
+          <td class="num">#27</td><td class="num">$14.02M</td><td class="num" style="color:var(--red);">86.5</td>
+          <td class="num">#26</td><td class="num">$6.33M</td><td class="num" style="color:var(--red);">84.5</td>
+          <td class="num">#27</td><td class="num">$1.37M</td><td class="num" style="color:var(--red);">87.7</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Price compression alert -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:#fff0f0;border:1.5px solid var(--red);border-radius:8px;padding:12px 14px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;">⚠ Compresión de Prima de Precio</div>
+        <div style="font-size:9px;line-height:1.6;color:var(--text);">
+          La brecha de precio de Angelus vs. mercado se estrecha en todos los períodos:<br>
+          <strong>MAT +24.1% → YTD +8.6% → MES +4.7%</strong><br>
+          El corto plazo muestra que Angelus ya casi no tiene prima. Riesgo de guerra de precios.
+        </div>
+      </div>
+      <div style="background:#f0f5ff;border:1.5px solid var(--navy3);border-radius:8px;padding:12px 14px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:800;color:var(--navy3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;">📊 Lectura Integral de Períodos</div>
+        <div style="font-size:9px;line-height:1.6;color:var(--text);">
+          <strong>MAT</strong> muestra la posición estructural: rank estable en #27, pérdida lenta de cuota.<br>
+          <strong>YTD</strong> refleja 2026: recuperación parcial (Evol 80→84.5).<br>
+          <strong>MES</strong> es volátil: Abril 92.4 (casi neutro) pero Mayo regresó a 87.7.
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-num">03 · Angelus Corp</div>
+  <div class="page-num-left">ANGELUS CORP. CONFIDENCIAL</div>
+</div><!-- /page 3 -->
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 4 — GAINERS + CONCLUSIONS
+════════════════════════════════════════════ -->
+<div class="page" id="p4">
+  <div class="page-header">
+    <div>
+      <h2>Ganadores del Mercado y Conclusiones Ejecutivas</h2>
+      <div class="ph-sub">Corporaciones con Evol PY &gt; 100 · Acciones prioritarias para Angelus Corp</div>
+    </div>
+    <div class="ph-pills">
+      <span class="ph-pill ph-mat">MAT</span>
+      <span class="ph-pill ph-ytd">YTD</span>
+      <span class="ph-pill ph-mes">MES</span>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- Consistent gainers highlight -->
+    <div class="winners-3" style="margin-bottom:12px;">
+      <div class="w3-title">★ Ganadores Consistentes — Evol &gt; 100 en MAT + YTD (Mayo 2026)</div>
+      <div class="winners-3-list">
+        <span class="w3-chip">HERBAPLANT ·193/161</span>
+        <span class="w3-chip">NEOQUIMICA ·161/153</span>
+        <span class="w3-chip">TIARES ·161/164</span>
+        <span class="w3-chip">KMPLUS ·145/155</span>
+        <span class="w3-chip">NATURLIFES ·136/132</span>
+        <span class="w3-chip">NESTLE ·130/114</span>
+        <span class="w3-chip">ADN MEDICAL ·124/118</span>
+        <span class="w3-chip">MEDIFARM ·123/132</span>
+        <span class="w3-chip">PONCE BENZO ·122/124</span>
+        <span class="w3-chip">COFASA ·121/122</span>
+        <span class="w3-chip">PLUSANDEX ·116/133</span>
+        <span class="w3-chip">LABORAT. NOW ·108/101</span>
+        <span class="w3-chip">BLUE MEDICAL ·107/117</span>
+        <span class="w3-chip">DOLLDER ·106/109</span>
+        <span class="w3-chip">BEHRENS ·105/104</span>
+      </div>
+    </div>
+
+    <!-- Top gainers per period -->
+    <div class="gainers-grid" style="margin-bottom:14px;">
+      <div class="gainer-col">
+        <div class="gainer-col-header gc-mat">Top Ganadores MAT</div>
+        <div class="gainer-item"><span class="gi-name">HERBAPLANT</span><span class="gi-ev hi">193</span></div>
+        <div class="gainer-item"><span class="gi-name">NEOQUIMICA</span><span class="gi-ev hi">161</span></div>
+        <div class="gainer-item"><span class="gi-name">TIARES</span><span class="gi-ev hi">161</span></div>
+        <div class="gainer-item"><span class="gi-name">KMPLUS CORP</span><span class="gi-ev hi">145</span></div>
+        <div class="gainer-item"><span class="gi-name">BEIERSDORF</span><span class="gi-ev hi">141</span></div>
+        <div class="gainer-item"><span class="gi-name">NATURLIFES</span><span class="gi-ev hi">136</span></div>
+        <div class="gainer-item"><span class="gi-name">NESTLE CORP</span><span class="gi-ev mid">130</span></div>
+        <div class="gainer-item"><span class="gi-name">ADN MEDICAL</span><span class="gi-ev mid">124</span></div>
+        <div class="gainer-item"><span class="gi-name">MEDIFARM</span><span class="gi-ev mid">123</span></div>
+        <div class="gainer-item"><span class="gi-name">PONCE BENZO</span><span class="gi-ev mid">122</span></div>
+      </div>
+      <div class="gainer-col">
+        <div class="gainer-col-header gc-ytd">Top Ganadores YTD</div>
+        <div class="gainer-item"><span class="gi-name">TIARES</span><span class="gi-ev hi">164</span></div>
+        <div class="gainer-item"><span class="gi-name">HERBAPLANT</span><span class="gi-ev hi">161</span></div>
+        <div class="gainer-item"><span class="gi-name">NEOQUIMICA</span><span class="gi-ev hi">153</span></div>
+        <div class="gainer-item"><span class="gi-name">KMPLUS CORP</span><span class="gi-ev hi">155</span></div>
+        <div class="gainer-item"><span class="gi-name">NATURLIFES</span><span class="gi-ev hi">132</span></div>
+        <div class="gainer-item"><span class="gi-name">MEDIFARM</span><span class="gi-ev hi">132</span></div>
+        <div class="gainer-item"><span class="gi-name">PLUSANDEX</span><span class="gi-ev mid">133</span></div>
+        <div class="gainer-item"><span class="gi-name">PONCE BENZO</span><span class="gi-ev mid">124</span></div>
+        <div class="gainer-item"><span class="gi-name">COFASA CORP</span><span class="gi-ev mid">122</span></div>
+        <div class="gainer-item"><span class="gi-name">ADN MEDICAL</span><span class="gi-ev mid">118</span></div>
+      </div>
+      <div class="gainer-col">
+        <div class="gainer-col-header gc-mes">Top Ganadores MES</div>
+        <div class="gainer-item"><span class="gi-name">NEOQUIMICA</span><span class="gi-ev hi">267</span></div>
+        <div class="gainer-item"><span class="gi-name">L.O. OFTALMI</span><span class="gi-ev hi">118</span></div>
+        <div class="gainer-item"><span class="gi-name">HERBAPLANT</span><span class="gi-ev mid">119</span></div>
+        <div class="gainer-item"><span class="gi-name">ZORIAK</span><span class="gi-ev mid">119</span></div>
+        <div class="gainer-item"><span class="gi-name">TIARES</span><span class="gi-ev mid">150</span></div>
+        <div class="gainer-item"><span class="gi-name">PLUSANDEX</span><span class="gi-ev mid">141</span></div>
+        <div class="gainer-item"><span class="gi-name">KMPLUS CORP</span><span class="gi-ev mid">123</span></div>
+        <div class="gainer-item"><span class="gi-name">MEGALABS</span><span class="gi-ev mid">112</span></div>
+        <div class="gainer-item"><span class="gi-name">DOLLDER</span><span class="gi-ev mid">113</span></div>
+        <div class="gainer-item"><span class="gi-name">ADN MEDICAL</span><span class="gi-ev mid">113</span></div>
+      </div>
+    </div>
+
+    <!-- Conclusions 3-col -->
+    <div class="sec-title">Conclusiones por Período</div>
+
+    <div class="conc-cols">
+      <div class="conc-col">
+        <div class="conc-col-header cc-mat">MAT — Perspectiva Estructural</div>
+        <div class="conc-col-body">
+          <ul>
+            <li>El mercado crece +34.4% MAT de forma estable — demanda sostenida.</li>
+            <li>Angelus pierde cuota progresivamente (Evol 88.4→88.0→86.5).</li>
+            <li>Precio Angelus $6.19 vs $4.99 mercado: prima cae de 32% a 24% en 3 meses.</li>
+            <li>Rank estancado en #27 — sin mejora en posición relativa anual.</li>
+            <li>15 competidores ganan cuota vs. mercado en el MAT.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="conc-col">
+        <div class="conc-col-header cc-ytd">YTD — Perspectiva 2026</div>
+        <div class="conc-col-body">
+          <ul>
+            <li>El mercado 2026 (+41%) crece más rápido que el MAT — año fuerte.</li>
+            <li>Angelus mejora gradualmente: Evol 80.0→84.1→84.5 — señal positiva.</li>
+            <li>Pero Evol YTD sigue bajo 100 — no se recupera cuota aún.</li>
+            <li>Q1 arrastró mal desempeño (Evol 80 en Marzo), Q2 mejora lentamente.</li>
+            <li>Precio YTD $5.89 vs $5.42 mercado: prima rebajada a solo +8.6%.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="conc-col">
+        <div class="conc-col-header cc-mes">MES — Señal de Corto Plazo</div>
+        <div class="conc-col-body">
+          <ul>
+            <li>Abril fue el mejor mes de Angelus (Evol 92.4) — casi neutro.</li>
+            <li>Mayo retrocede a 87.7 — volatilidad operacional o estacional.</li>
+            <li>El mercado mensual desacelera de +61% a +27% — efecto base 2025.</li>
+            <li>Precio MES $5.58 casi sin prima vs $5.33 mercado (+4.7%).</li>
+            <li>NEOQUIMICA domina el MES con Evol 267 — disruptor mensual.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority action -->
+    <div class="priority-box" style="margin-top:14px;">
+      <div class="priority-icon">!</div>
+      <div class="priority-content">
+        <div class="pc-title">Prioridad Estratégica Integral — Lectura Unificada MAT · YTD · MES</div>
+        <div class="pc-text">
+          Los tres lentes confirman el mismo diagnóstico: Angelus crece pero más lento que el mercado en todos los períodos.
+          La recuperación YTD (80→84.5) es alentadora pero insuficiente. El precio se comprime en el corto plazo (MES +4.7%)
+          mientras la posición MAT muestra deterioro estructural (Evol 86.5). Acción inmediata: acelerar el mix hacia
+          categorías de alto crecimiento (analizar los ganadores HERBAPLANT, KMPLUS, TIARES como referencias competitivas)
+          y defender la prima de precio en el canal corto antes de perderla completamente.
+        </div>
+        <div class="pc-kpis">
+          <div class="pc-kpi"><div class="pk-val">86.5</div><div class="pk-label">Evol MAT</div></div>
+          <div class="pc-kpi"><div class="pk-val">84.5</div><div class="pk-label">Evol YTD</div></div>
+          <div class="pc-kpi"><div class="pk-val">87.7</div><div class="pk-label">Evol MES</div></div>
+          <div class="pc-kpi"><div class="pk-val">#27</div><div class="pk-label">Rank Actual</div></div>
+          <div class="pc-kpi"><div class="pk-val">Meta</div><div class="pk-label">Evol &gt; 100</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-num">04 · Ganadores y Conclusiones</div>
+  <div class="page-num-left">ANGELUS CORP. CONFIDENCIAL</div>
+</div><!-- /page 4 -->
+
+</body>
+</html>
