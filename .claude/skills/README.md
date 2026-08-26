@@ -20,9 +20,17 @@ Desde la raiz del repo, en la maquina que las tenga:
 bash scripts/sync-skills.sh
 ```
 
-Copia todo lo que haya en `~/.claude/skills/` a esta carpeta, omite las de
-Anthropic (que ya se sincronizan por cuenta), avisa si detecta posibles
-secretos y deja los archivos en staging listos para commitear.
+Primero lista todas las skills que encuentra en la maquina —personales, de
+plugins y de otros proyectos— indicando de donde sale cada una. Luego copia las
+personales a esta carpeta, omite las de Anthropic (que ya se sincronizan por
+cuenta), avisa si detecta posibles secretos y deja todo en staging.
+
+Si en el listado aparece una skill bajo `otro proyecto` o `de plugin`, pasa su
+ruta como argumento para copiarla tambien:
+
+```bash
+bash scripts/sync-skills.sh ~/ruta/a/la/skill ~/otra/skill
+```
 
 ## Antes de commitear
 
